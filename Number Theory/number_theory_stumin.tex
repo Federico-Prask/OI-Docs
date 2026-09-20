@@ -1,20 +1,22 @@
 % !TeX program = xelatex
 % 自动生成的独立源码；无需章节文件。编译两遍以生成目录。
-\documentclass[UTF8,a4paper,11pt,oneside,openany,fontset=fandol]{ctexbook}
+\documentclass[UTF8,a4paper,11pt,twoside,openright,fontset=fandol]{ctexbook}
 \usepackage{amsmath,amssymb,amsthm,mathtools}
-\usepackage[margin=2.3cm,headheight=16pt]{geometry}
+\usepackage[twoside,top=2.3cm,bottom=2.3cm,inner=2.75cm,outer=1.85cm,headheight=16pt]{geometry}% twoside：装订侧留得宽一点；正文宽度与单面版一致，避免重新断行。
+
 \usepackage{enumitem,booktabs,longtable,array,multicol}
 \usepackage[dvipsnames]{xcolor}
 \usepackage[most]{tcolorbox}
 \usepackage{fancyhdr,listings,tikz}
+\usepackage{emptypage}
 \usetikzlibrary{arrows.meta,positioning,trees}
 \usepackage{hyperref}
-\hypersetup{colorlinks=true,linkcolor=MidnightBlue,urlcolor=MidnightBlue,bookmarksnumbered=true,pdfauthor={Federico Prask},pdftitle={数论·基础版}}
+\hypersetup{colorlinks=true,linkcolor=MidnightBlue,urlcolor=MidnightBlue,bookmarksnumbered=true,pdfauthor={Federico Prask},pdftitle={数论讲义}}
 \definecolor{ink}{HTML}{173A51}
 \definecolor{accent}{HTML}{187C82}
 \definecolor{soft}{HTML}{F1F6F8}
-\definecolor{warn}{HTML}{A46B21}
-\ctexset{chapter={format=\Huge\bfseries\color{ink},name={第,章},number=\arabic{chapter}},section={format=\Large\bfseries\color{ink}},subsection={format=\large\bfseries\color{accent}}}
+\definecolor{warn}{HTML}{AA8055}
+\ctexset{chapter={format=\raggedright,nameformat=\Large\bfseries\color{ink},titleformat=\Huge\bfseries\color{ink},name={第,章},number=\arabic{chapter},aftername=\par},section={format=\Large\bfseries\color{ink}},subsection={format=\large\bfseries\color{accent}}}
 \setlength{\parskip}{0.25em}
 \linespread{1.16}
 \setlist{nosep,leftmargin=2em,topsep=0.25em}
@@ -22,8 +24,8 @@
 \emergencystretch=2em
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\small\color{ink} 数论}
-\fancyhead[R]{\small\nouppercase{\leftmark}}
+\fancyhead[LE]{\small\color{ink} 数论 \docversion}      % 偶数页（左手页）外侧
+\fancyhead[RO]{\small\nouppercase{\leftmark}}  % 奇数页（右手页）外侧
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0.3pt}
 \fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}}
@@ -36,7 +38,10 @@
 \renewcommand{\proofname}{证明}
 \newtcolorbox{problem}[1]{enhanced,breakable,colback=soft,colframe=ink!60,boxrule=0.5pt,arc=1mm,title={#1},fonttitle=\bfseries,coltitle=white,colbacktitle=ink,left=2mm,right=2mm,top=1mm,bottom=1mm,before skip=8pt,after skip=6pt}
 \newtcolorbox{teach}[1][教学提示]{enhanced,breakable,colback=accent!4,colframe=accent!60,boxrule=0.4pt,arc=2mm,title={#1},fonttitle=\bfseries,colbacktitle=accent,coltitle=white,left=2mm,right=2mm}
-\newtcolorbox{pitfall}[1][易错点]{enhanced,breakable,colback=warn!4,colframe=warn!60,boxrule=0.4pt,arc=2mm,title={#1},fonttitle=\bfseries,colbacktitle=warn,coltitle=white,left=2mm,right=2mm}
+\newtcolorbox{pitfall}[1][易错点]{enhanced,breakable,colback=warn!4,colframe=warn,boxrule=0.4pt,arc=2mm,title={#1},fonttitle=\bfseries,colbacktitle=warn,coltitle=white,left=2mm,right=2mm}
+% 小 tip 框：与 \teach 同一配方（colback=基色!4、colframe=基色!60、标题条实色、白字），基色取 #63F8DC 同色系中较暗的 #079C81。
+\definecolor{tipbase}{HTML}{079C81}
+\newtcolorbox{tip}[1][顺带说明]{enhanced,breakable,colback=tipbase!4,colframe=tipbase!60,boxrule=0.4pt,arc=2mm,title={#1},fonttitle=\bfseries,colbacktitle=tipbase,coltitle=white,left=2mm,right=2mm,top=1mm,bottom=1mm,before skip=6pt,after skip=6pt}
 \newcommand{\Z}{\mathbb Z}
 \newcommand{\N}{\mathbb N}
 \newcommand{\Pp}{\mathbb P}
@@ -49,10 +54,12 @@
 \newcommand{\floor}[1]{\left\lfloor #1\right\rfloor}
 \newcommand{\ceil}[1]{\left\lceil #1\right\rceil}
 \newcommand{\iva}[1]{\left[#1\right]}
-\newcommand{\sol}{\par\noindent\textbf{解析.}\ }
 \newcommand{\hint}{\par\noindent\textbf{解题方向.}\ }
 \newcommand{\cost}{\par\noindent\textbf{复杂度与实现.}\ }
 \newcommand{\src}[1]{\par\noindent{\footnotesize 题目／延伸资料：\url{#1}}\par}
+\newcommand{\docversion}{v2.0}
+\definecolor{chapterguide}{HTML}{DB8080}
+\newtcolorbox{chapterintro}[1][章节导读]{enhanced,breakable,colback=chapterguide!5,colframe=chapterguide,boxrule=0.4pt,arc=2mm,title={#1},fonttitle=\bfseries,colbacktitle=chapterguide,coltitle=white,left=2mm,right=2mm,top=1mm,bottom=1mm,before skip=6pt,after skip=8pt}
 \lstset{language=C++,basicstyle=\ttfamily\footnotesize,keywordstyle=\color{MidnightBlue}\bfseries,commentstyle=\color{gray},stringstyle=\color{accent},showstringspaces=false,breaklines=true,columns=fullflexible,keepspaces=true,frame=single,rulecolor=\color{ink!25},backgroundcolor=\color{soft},tabsize=2}
 \begin{document}
 \frontmatter
@@ -61,27 +68,40 @@
 \vspace*{1.2cm}
 {\large\color{accent}NUMBER THEORY}\par
 \vspace{1cm}
-{\fontsize{46}{56}\selectfont\bfseries\color{ink}数论}\par
+{\fontsize{46}{65}\selectfont\bfseries\color{ink}数论 \huge{\docversion}}\par
 \vspace{0.5cm}
-{\Large 基础版}\par
+% {\Huge\bfseries 学生基础版}\par
+% \vspace{0.8cm}
+{\Large 学生基础版}\par
 \vspace{0.5cm}
 {\color{accent}\rule{\textwidth}{1.2pt}}\par
 \vspace{0.3cm}
 \begin{minipage}{0.9\textwidth}
 \large 麓山国际实验学校 Federico Prask · 2026
+% \large 两份原稿的主题式合并、数学勘误与教学扩充\\[0.8em]
+% 基础数论与同余代数\quad 组合数与阶乘取模\\[0.5em]
+% 数论函数与求和\quad 概率算法与综合专题
 \end{minipage}\par
 \vfill
 {\normalsize }\par
+% \vspace{0.5cm}
 {\small}
+% {\small 原稿 A：《数论》（用户提供）；原稿 B：《数论》，署名周雨衡，2025 年 9 月 26 日。新增讲解、重写证明及勘误为本次整理内容，并非原作者原文。}
 \end{titlepage}
 \chapter*{阅读说明与课程地图}
 \addcontentsline{toc}{chapter}{阅读说明与课程地图}
+% \textbf{版}保留定义、主要结论、基础证明、全部原有例题的题意摘要及解题方向，可作课堂讲义。\textbf{学生基础版}在相同主线中增加证明拆解、例题完整推导、反例、追问、算法边界与课堂组织建议。两版均已经校订，并非原稿的逐字存档。
 
 \begin{pitfall}[适用范围与阅读边界]
-本资料面向已经学习基本代数、递归、复杂度与 C++ 的信息学竞赛学生，不能把全文定位为“小学二年级难度”。同余、线性不定方程可以作为入门；二维积性函数、洲阁筛、AGC031F 属于选修提高内容。
+本资料面向已经学习基本代数、递归、复杂度与 C++ 的信息学竞赛学生，不能把整本资料定位成“小学二年级难度”。同余、线性不定方程可以作为入门；二维积性函数、洲阁筛、AGC031F 属于选修提高内容。
 
-题目采用教学性摘要，不代替评测网站的完整输入输出说明。标为“研究拓展”的 Bonus 或最优复杂度改进，给出可验证的数学路线，不冒充可直接提交的完整程序。实现模板也不等于各原题的完整提交代码。
+题目这里只给教学性摘要，不替代评测网站的完整输入输出说明。标为“研究拓展”的 Bonus 或最优复杂度改进，只给出可验证的数学路线，不冒充可直接提交的完整程序。实现模板也不等于各原题的完整提交代码。
 \end{pitfall}
+
+\begin{tip}[导读：不认识的词去哪查]
+本书第 0 章专门解释词与符号。读到某个词不知道它在说什么，先回第 0 章查；查不到的，就在正文里看旁边的绿色 tip。
+\end{tip}
+
 
 \section*{统一记号}
 \begin{longtable}{p{0.23\textwidth}p{0.69\textwidth}}
@@ -101,12 +121,23 @@ $\ord_m(a)$ & $a$ 模 $m$ 的乘法阶；与原稿 $\delta_m(a)$ 相同。\\
 \bottomrule
 \end{longtable}
 
+\begin{tip}[说明：这张速查表怎么用]
+上面这张表是「速查表」，用术语解释术语，适合已经会的人。第 0 章把每一行都翻译成了大白话，并说明这个词为什么会出现。
+\end{tip}
+
+
 所有复杂度默认采用竞赛中的字长运算模型。高精度题目的“多项式时间”以输入位数 $\log n$ 为变量；$O(n^{1/4})$ 并不是关于输入位数的多项式时间。哈希表复杂度默认期望，随机算法的经验性能与严格最坏界会明确区分。
 
-\section*{建议的学习层级}
+\begin{tip}[词义：字长模型]
+「字长模型」= 假设 $64$ 位整数的一次加减乘比较都算一步。它不是真实机器模型（内存不连续时会慢），也不是高精度模型（那时乘法是 $O(n^2)$）。凡是遇到 $10^9$ 以上相乘、$10^{18}$ 以上相加，先想「会不会溢出 \texttt{long long}」。
+\end{tip}
+
+
+
+\section*{建议的教学分层}
 \begin{longtable}{p{0.12\textwidth}p{0.40\textwidth}p{0.38\textwidth}}
 \toprule
-层次 & 主线 & 可检查的学习内容\\\midrule
+层次 & 主线 & 可检查的学习产出\\\midrule
 A：基础 & 整除、gcd、exgcd、逆元、CRT、快速幂 & 能写出条件、通解、最小可行解；能说明一次取模是否丢信息。\\
 B：核心 & 阶、BSGS、LTE、组合数取模、筛法与反演 & 能完成质因数拆分、交换求和、解释分母为何可逆。\\
 C：提高 & 杜教筛、PN、洲阁筛、Miller--Rabin、Pollard--Rho & 能区分预处理和查询成本，证明递归状态集的大小。\\
@@ -114,11 +145,287 @@ D：专题 & 二维积性函数、图上的同余、已知特殊信息分解、�
 \bottomrule
 \end{longtable}
 
+建议按每讲 $90$ 分钟安排：A 层 $5$--$6$ 讲，B 层 $6$--$8$ 讲，C 层 $5$--$6$ 讲，D 层按选题增加 $4$--$6$ 讲；上机训练另计。课时仅作备课建议，不应在一节课内从逆元跳到二维卷积。
+
+% \section*{本次校订的重点}
+% 已重写 exgcd 的整除条件与缩放、数学游戏的平方 gcd、CRT 构造式、欧拉反演中的错误等式、LTE 的指数笔误、广义逆元与 BSGS 的条件、杜教筛及 PN 的复杂度表达。还特别修正了 CF516E 的错误“最小起点支配全环”结论，以及 $m=n\varphi(n)$ 题解中把 $-1$ 当成非平凡平方根的错误。完整勘误表保留在附录 B 的历史资料区。
+
+% 高级题的公开题解中也可能存在笔误。正文优先给出重新推导的式子，引用只用于核对题意与进一步学习；不得把“题解里写了”当成证明。
+
+
 \tableofcontents
 \mainmatter
+% 第 0 章为预备章：把全书的术语与记号翻译成高中语言
+\setcounter{chapter}{-1}
+\chapter{数学用词与使用方法说明}
+\begin{chapterintro}[章节导读]
+后面的数论章节会默认使用约数、同余、可逆、赋值、卷积、双射等术语。先把这些词和记号统一起来，后面遇到新算法时就可以把注意力放在数学本身，而不是被术语卡住。
+\end{chapterintro}
+
+\begin{tip}[这一章解决什么问题]
+作者在后面的章节默认你会说一种“数学黑话”：约数、模、可逆、赋值、卷积、双射、记忆化、阈值……这些词每一个似乎都能用一句话解释清楚，但正文一般不会专门说。本章把全书会用到、而高中课本不一定会说的词与记号一次交代清楚，并在末尾给出一张“高中叫法 $\leftrightarrow$ 本书叫法”的对照表和一段的证明示范。
+
+本章不教新的数学知识。你以后在阅读正文遇到哪个词把你卡住了，就可以回到这里查它到底是什么意思。
+\end{tip}
+
+\section{怎么读这本书}
+% 本书有三个版本，内容按“同一条主线、三种深浅”组织：
+
+%\begin{itemize}
+%\item \textbf{基础版}：定理、定义、例题与提示，不展开证明。适合第一遍上课用，或你还没学过某个定理时先建立整体印象。
+%\item \textbf{完整版}：在基础版之上补上证明、解析、易错点与代码。适合自学与备赛。
+%\item \textbf{学生基础版}：完整版 + 课堂设计、追问与评量。
+%\end{itemize}
+
+正文里有四种带颜色的框，它们分工不同：
+
+\begin{itemize}
+\item \textbf{定义/定理/引理/推论/例}：黑色小标题，是必须记住的结论。看书时先问自己“条件是什么、结论是什么”，再往下看。
+\item \textbf{题目框}（深蓝色标题）：题目与它的解析。标“统一练习”的不是原题，而是把几道题共用的想法抽出来。
+\item \textbf{易错框}（橙棕色标题，标注“易错点”）：这里写的是“大多数人会错在哪”，以及一个具体反例。跳过它最省时间，也最亏。
+\item \textbf{本章新增的绿色 tip 框}：只解释一个词、一步跳步或一个例子。它可以单独读懂，不需要你先看懂上下文。
+\end{itemize}
+
+\begin{tip}[一句话学习方法]
+每读完一节，合上书回答三个问题：这一节要解决什么问题？它的条件少一条会怎样（举出反例）？我能把结论写成几行代码吗？三个问题答不上来，就说明只是“看过了”，不是“会了”。
+\end{tip}
+
+\section{集合、元素与逻辑用语}
+高中课本已经给了你绝大部分记号，这里只把本书用得多的补齐。
+
+\subsection{集合与元素}
+集合就是“一些确定的东西放在一起”，记 $a\in A$ 读作“$a$ 是 $A$ 的元素”，$a\notin A$ 读作“不是”；$A\subseteq B$ 读作“$A$ 的每个元素都在 $B$ 里”（$A$ 含于 $B$）；$\varnothing$ 是空集，即不含任何元素的集合。两个集合相等，当且仅当它们互相含于。
+
+本书最常用的几个数集：
+\[
+\Z=\{\ldots,-2,-1,0,1,2,\ldots\},\qquad \N=\{0,1,2,\ldots\},\qquad \Pp=\{2,3,5,7,11,\ldots\},
+\]
+分别是整数集、非负整数集、素数集。$\mathbb Q$、$\mathbb R$ 是有理数集与实数集，本书只在说明“范围放宽了”时提到。注意本书约定 $\N$ 含 $0$；如果你所在的教材不含 $0$，读到 $\N$ 时就按本书的约定来。
+
+描述法的写法 $\{x\in\Z:0\le x<m\}$ 表示“满足后面条件的那些 $x$”，它等于 $\{0,1,\ldots,m-1\}$。冒号也可写成竖线。$\{0,1,\ldots,m-1\}$ 有 $m$ 个元素，别把“从 $0$ 到 $m-1$”数成 $m-1$ 个。
+
+\subsection{“或”“且”“当且仅当”}
+\begin{itemize}
+\item “$P$ 且 $Q$”：两者同时成立，符号 $P\land Q$。
+\item “$P$ 或 $Q$”：至少一个成立（可以两个都成立），符号 $P\lor Q$。数学里的“或”不是“二选一”。
+\item “$P\Rightarrow Q$”：$P$ 成立时 $Q$ 必须成立，读作“$P$ 推出 $Q$”。这时也说“$P$ 是 $Q$ 的\textbf{充分}条件”“$Q$ 是 $P$ 的\textbf{必要}条件”。
+\item “$P\iff Q$”（$P\Leftrightarrow Q$）：互相推出，读作“$P$ 当且仅当 $Q$”，也读作“$P$ 是 $Q$ 的充要条件”。
+\end{itemize}
+
+\begin{tip}[“必要性来自……充分性来自……”是在说什么]
+这是正文证明里最常见的句式，翻译成人话就是：“两个方向分开证”。写 $P\iff Q$ 时，
+\textbf{必要性}指“已知 $P$ 成立，去证 $Q$”（不做到的话 $P$ 就不成立，所以 $Q$ 是\emph{必须}的）；
+\textbf{充分性}指“已知 $Q$ 成立，去造出 $P$”（$Q$ 一条就\emph{足够}了）。
+一个方向没证，结论就还只是猜测。本书第 0 章第 11 节会完整示范一次双向证明，第 1 章的裴蜀定理也给了不跳步的版本。
+\end{tip}
+
+\subsection{量词：任意与存在}
+$\forall$ 读“对任意（所有）”，$\exists$ 读“存在（至少有一个）”，$\exists!$ 读“存在且唯一”。顺序改变含义：
+\[
+\forall n\in\N,\ \exists p\in\Pp,\ p>n\qquad\text{（素数无穷多个）},
+\]
+$\forall$ 在前表示“先给我 $n$，我再找 $p$”，$p$ 可以依赖 $n$。若写成 $\exists p,\ \forall n$，就变成“有一个固定素数比所有数都大”，荒谬。
+
+否定规则要背熟：$\lnot(\forall x,P(x))$ 等价于“存在一个 $x$ 使 $P(x)$ 不成立”，即 $\exists x,\lnot P(x)$。因此要推翻“所有情况都好”，只需\textbf{举一个反例}；反之，要反驳“存在坏情况”，必须证明“全都好”。
+
+\subsection{Iverson 括号与“示性函数”}
+本书写 $\iva{\gcd(i,n)=1}$，读作“Iverson 括号”：方括号里是一句话（命题），成立时这个式子的值为 $1$，不成立时为 $0$。例如 $\iva{5>3}=1$，$\iva{4\text{ 是奇数}}=0$。
+
+它的好处是把“只在某些情况下计入”写成算式，从而能自由交换求和顺序：
+\[
+\sum_{i=1}^{n}\iva{i\text{ 与 }n\text{ 互质}}\ =\ \text{“}1\text{ 到 }n\text{ 中与 }n\text{ 互质的数的个数”}.
+\]
+看到 $\iva{\cdot}$ 别慌，它只是一个“条件成立记 $1$、否则记 $0$”的开关。
+
+\section{求和、取整、下标：把式子读成程序}
+\subsection{求和与求积}
+$\sum_{i=1}^{n}a_i=a_1+a_2+\cdots+a_n$，$\prod_{i=1}^{n}a_i=a_1a_2\cdots a_n$。下标从 $1$ 还是 $0$ 开始、到 $n$ 还是 $n-1$ 结束，务必按式子读；差一项在很多题里就是 $100$ 分与 $0$ 分的差距。空和（一项都没有）约定为 $0$，空积约定为 $1$，这是为了让递推式在边界也成立。
+
+换序（“交换求和”）是本书用得最多的技术，合法条件是：项数有限。有限项相加，先算哪一项都行。示例：
+\[
+\sum_{d=1}^{n}\ \sum_{\substack{k\ge 1\\dk\le n}}\ 1\ =\ \sum_{m=1}^{n}\ \sum_{d\mid m}\ 1,
+\]
+左边是“对每个 $d$ 数它有多少个不超过 $n/d$ 的倍数 $k$”，右边是“对每个 $m$ 数它有多少个约数 $d$”；两边数的是同一批满足 $dk\le n$ 的整数对 $(d,k)$，所以相等。\textbf{遇到换序，先像这样把“数的是什么”说清楚}，比背公式可靠。
+
+\subsection{取整}
+$\floor{x}$ 是“不超过 $x$ 的最大整数”（向下取整，floor 是地板），$\ceil{x}$ 是“不小于 $x$ 的最小整数”（向上取整）。例如 $\floor{7/2}=3$，$\ceil{7/2}=4$，$\floor{-7/2}=-4$（注意不是 $-3$：$-4$ 才是不超过 $-3.5$ 的最大整数）。
+
+两条最常用性质：对整数 $a$ 与正整数 $b$，
+\[
+\floor{\frac{a}{b}}=q\iff qb\le a<(q+1)b,\qquad \ceil{\frac{a}{b}}=q\iff (q-1)b<a\le qb.
+\]
+第二条也可以写成 $\ceil{a/b}=\floor{(a+b-1)/b}$（$a\ge0$ 时）。C++ 的 `/` 是\textbf{向零取整}（截断），不是向下取整：$-7/2=-3\ne\floor{-3.5}$。所以本书模板里所有“整除取商”都写成 \texttt{floor\_div}（见附录“核心模板与接口”与第 1 章）。
+
+\subsection{下标、递推与“记号说明”}
+$a_i$ 读“$a$ 下标 $i$”，是数列的第 $i$ 项（本书默认从 $a_1$ 开始，除非写了 $a_0$）。“递推式”是用前一项表示后一项，例如 $T_h=a^{T_{h-1}}$；要它可用，必须同时给\textbf{起点}（$T_0=1$）和\textbf{方向}（$h$ 递增）。看到“类似地”“同理”“不难验证”，但你自己验不出来，就把它当成一个待填的空。
+
+\section{整数：约数、倍数、最大公约数与素因数分解}
+\begin{itemize}
+\item \textbf{整除}：$a\mid b$ 读“$a$ 整除 $b$”，意思是“存在整数 $k$ 使 $b=ka$”。此时 $a$ 是 $b$ 的\textbf{约数}（高中课本常叫“因数”），$b$ 是 $a$ 的\textbf{倍数}。规定 $0\mid 0$ 成立（取 $k$ 任意），而 $a\mid b$ 中若 $a=0,b\ne0$ 则不成立。符号 $\nmid$ 表示“不整除”。
+\item \textbf{公约数与最大公约数}：同时整除 $a,b$ 的正整数叫公约数，其中最大的叫 $\gcd(a,b)$（greatest common divisor）。本书也写 $(a,b)$ 表示同一个东西。
+\item \textbf{公倍数与最小公倍数}：同时被 $a,b$ 整除的正整数中最小的叫 $\lcm(a,b)$。有 $\gcd(a,b)\lcm(a,b)=ab$（$a,b>0$）。
+\item \textbf{互质}：$\gcd(a,b)=1$，即“公约数只有 $1$”。注意：$1$ 与 $1$ 互质；$0$ 与 $1$ 互质；$0$ 与 $5$ 不互质（$\gcd(0,5)=5$）。两个互质的数不必都是素数（$8$ 与 $9$）。
+\item \textbf{素数与合数}：大于 $1$ 且约数只有 $1$ 与自身的叫素数（本书与“质数”混用，同义）；大于 $1$ 又不是素数的叫合数。$1$ 既不是素数也不是合数。
+\item \textbf{唯一分解定理}：每个大于 $1$ 的整数都能写成素数的乘积，且不计顺序时写法唯一，$n=p_1^{e_1}\cdots p_t^{e_t}$。于是“$n$ 的约数”与“指数向量 $(f_1,\ldots,f_t)$，$0\le f_j\le e_j$”一一对应，约数个数为
+$\tau(n)=\prod_j(e_j+1)$。本书把原稿用的 $d(n)$ 统一记作 $\tau(n)$，避免与 $\gcd$ 的括号写法混淆。
+\item \textbf{素因数（本书常写“素因子”）}：出现在分解式里的素数。$\rad(n)=\prod_{p\mid n}p$ 是所有不同素因子的乘积。
+\item \textbf{平方自由}：分解式中每个指数都 $\le1$，即不被 $4,9,25,\ldots$ 这类平方数整除。例如 $30=2\cdot3\cdot5$ 平方自由，$12=2^2\cdot3$ 不是。
+\item \textbf{素数幂}：形如 $Q=p^\alpha$ 的数（$p$ 为素数，$\alpha\ge1$）。本书大量结论先在素数幂下证明，再用中国剩余定理拼回一般模数，这条路线第 3 章起会反复出现。
+\end{itemize}
+
+\begin{tip}[“素因子”与“质因数”是同一个东西]
+中学课本说“分解质因数”，大学教材与竞赛资料常说“素因子”“素因数”。本书四个词混用，含义相同。类似地，“最大公约数”与“最大公因数”相同。看到新词先怀疑它是不是老词的别名，这是读数学资料省时间的诀窍。
+\end{tip}
+
+\begin{tip}[为什么要关心“平方自由”]
+因为很多计数公式里会出现一个开关：$\mu(n)$（莫比乌斯函数）。它的定义只有一行——$n=1$ 时为 $1$；$n$ 平方自由且有偶数个素因子时为 $1$、奇数个时为 $-1$；一旦有平方因子就是 $0$。所以“平方自由”不是趣味知识，而是“哪些项会消失”的判断条件。第 7 章与第 8 章大量使用它。
+\end{tip}
+
+\section{同余：按余数把整数分堆}
+$a\equiv b\pmod m$ 读作“$a$ 与 $b$ 模 $m$ 同余”，定义就是 $m\mid a-b$。它只关心“除以 $m$ 的余数是否相同”，所以两个数同余，等价于它们落在同一堆里。把整数按余数分成 $m$ 堆，这 $m$ 堆合起来称为\textbf{完全剩余系}；每一堆里挑一个代表写出来的数叫\textbf{代表元}，本书默认用 $0,1,\ldots,m-1$（最小非负代表元）。
+
+为什么同余式能加减乘？因为 $(a\pm b)\bmod m$ 只由 $a,b$ 各自的余数决定；$m\mid a-b$ 且 $m\mid c-d$ 时 $m\mid(a+c)-(b+d)$、$m\mid ac-bd$。所以“每步取模”不改变结果。\textbf{除法不行}：除法是同余式里唯一的陷阱，它要求先检查可除性，且往往要把模数一起缩小，见第 2 章的约分定理与易错框。
+
+两个必记词：
+\begin{itemize}
+\item \textbf{模运算的“负数”}：$-1\bmod 7=6$，不是 $-1$。规范做法是先取余再加模数。C++ 里写成 \texttt{((a\%m)+m)\%m}；本书模板中的 \texttt{norm(a,m)} 干的就是这件事。
+\item \textbf{单位（可逆元）}：若存在 $x$ 使 $ax\equiv1\pmod m$，称 $a$ 是模 $m$ 的\textbf{单位}，$x$ 叫 $a$ 的\textbf{逆元}。$m=7$ 时 $1$ 到 $6$ 都是单位；$m=8$ 时只有 $1,3,5,7$ 是单位（偶数不行，因为 $\gcd$ 不为 $1$）。这些单位凑在一起，就是下面 0.8 节说的“单位群”。
+\end{itemize}
+
+\begin{tip}[“剩余系”这三个字到底在说什么]
+把 $0$ 到 $m-1$ 排成一圈，只保留余数信息：$m=5$ 时的剩余系是 $\{0,1,2,3,4\}$。其中与 $5$ 互质的有 $\{1,2,3,4\}$，这就是“简化剩余系”，它的个数记 $\varphi(5)=4$。$m=8$ 时全部 $8$ 个余数里，与 $8$ 互质的是 $\{1,3,5,7\}$，所以 $\varphi(8)=4$。“乘以 $2$”在 $\{0,1,\ldots,7\}$ 上不是一一对应，因为 $1\cdot2$ 与 $5\cdot2$ 都是 $2$；但“乘以 $3$”在四个单位 $\{1,3,5,7\}$ 上是：$1\to3,3\to1,5\to7,7\to5$，每个余数恰好出现一次——这就是一次“双射”的手算。这个“在互质的那几格里可以一一对应”的事实，就是第 2 章证明欧拉定理时最关键的一步。
+\end{tip}
+
+\section{幂、阶乘与组合数}
+$a^n$ 表示 $n$ 个 $a$ 相乘，$a^0=1$（包括 $0^0=1$，本书按组合意义约定）。指数律 $a^{m}a^{n}=a^{m+n}$、$(a^m)^n=a^{mn}$ 在整数指数下要额外注意 $a=0$ 与负指数。
+
+$n!=1\cdot2\cdots n$，并约定 $0!=1$。$\binom{n}{k}=\dfrac{n!}{k!(n-k)!}$ 是“从 $n$ 个里选 $k$ 个”的方法数，高中课本里的写法也是 $\mathrm{C}_n^k$；本书用 $\binom{n}{k}$，因为分式形式在“约掉公共因子”时更好用。二项式定理：$(x+y)^n=\sum_{k}\binom{n}{k}x^{k}y^{n-k}$。
+
+\textbf{幂塔}（“高德纳箭号”的最小情形）：$a^{b^{c}}$ 按\textbf{右结合}读，等于 $a^{(b^c)}$，而不是 $(a^b)^c=a^{bc}$。$3^{3^{3}}=3^{27}$ 已经约 $7.6\times10^{12}$，所以处理幂塔的核心矛盾是：指数巨大，而余数只有 $m$ 种可能。第 2 章的“扩展欧拉定理”与“截断塔接口”就是为此准备的。
+
+\begin{tip}[“降幂”是什么意思]
+“降幂”不是初中因式分解里的“降次”。在数论里，它指：要算 $a^E\bmod m$，但 $E$ 大到写不下来，于是把 $E$ 换成一个更小、余数不变的指数（例如 $E\bmod\varphi(m)$）。这个替换\textbf{只在特定条件下合法}，条件不满足时必须保留“$E$ 是否已经很大”这一位信息。第 2 章用 $2^4\bmod 8$ 这个反例演示了乱降幂的错误。
+\end{tip}
+
+\begin{tip}[$\nu_p(n)$：一个只有“数因子”动作的记号]
+$\nu_p(n)$ 读作“$n$ 的 $p$-进赋值”，做法是：拿 $n$ 不断除以 $p$，能除几次就是几。例如 $\nu_2(24)=3$（$24\to12\to6\to3$，停了），$\nu_3(24)=0$，$\nu_5(100)=2$。它满足两条：$\nu_p(xy)=\nu_p(x)+\nu_p(y)$（乘法变加法），以及 $\nu_p(x+y)\ge\min(\nu_p(x),\nu_p(y))$（加法只能“更好”，除非两项赋值相同才可能大幅抵消）。第 5 章的升幂引理（LTE）本质上就是“什么时候恰好等于最小值”的判据。看到“赋值”这个词，先在心里换成“这个素因子出现了几次”。
+\end{tip}
+
+\section{数论函数、前缀和与卷积}
+\textbf{数论函数}只是“定义在正整数上的函数”$f:\N_{>0}\to\Z$（或 $\mathbb R$）：$\varphi(n)$ 数互质个数、$\tau(n)$ 数约数个数、$\mu(n)$ 是上面那个开关。别把它想得太高深，它其实就是一张表：$f(1),f(2),f(3),\ldots$
+
+\begin{itemize}
+\item \textbf{积性}与\textbf{完全积性}：若 $\gcd(a,b)=1$ 时总有 $f(ab)=f(a)f(b)$，叫 $f$ 是\textbf{积性}的；若不要求互质也成立，叫\textbf{完全积性}的。例：$\id_t(n)=n^t$ 完全积性；$\varphi$、$\tau$、$\mu$ 只是积性（拿 $f=\tau$，$a=b=2$ 试：$\tau(4)=3\ne\tau(2)\tau(2)=4$，一眼看出“互质”这条不能丢）。有了积性，只要知道 $f$ 在每个素数幂上的值，整张表就全知道了。
+\item \textbf{狄利克雷卷积}：给两个数论函数定义一种新乘法
+$(f*g)(n)=\sum_{d\mid n}f(d)g(n/d)$。它不是多项式乘法，也不是逐点相乘。手算一次就懂：$f=\one$（常一函数，$\one(n)\equiv1$）、$g=\id_1(n)=n$，则 $(\one*\id_1)(6)=1\cdot6+1\cdot3+1\cdot2+1\cdot1$ 按 $d=1,2,3,6$ 取 $\id_1(6/d)$，等于 $6+3+2+1=12$，正好是 $6$ 的约数和。本书用 $\sum_{d\mid n}$ 表示“对 $n$ 的每个约数 $d$ 求和”。
+\item \textbf{单位函数} $\eps$：$\eps(1)=1$、$\eps(n)=0$（$n>1$）。它扮演“数字 $1$”的角色：$f*\eps=f$。于是“卷积逆”就是满足 $f*f^{-1}=\eps$ 的那个 $f^{-1}$——可以把它完全类比成“倒数”，只是这里的乘法换成了上面的卷积。
+\item \textbf{前缀和}：$S_f(n)=\sum_{i=1}^{n}f(i)$，即“表的前 $n$ 项之和”，约定 $S_f(0)=0$。第 9 章“杜教筛”要解决的问题只有一个：$n$ 高达 $10^{10}$，表建不出来，怎么仍算出 $S_f(n)$。
+\end{itemize}
+
+\begin{tip}[为什么要费劲定义一种“新乘法”]
+因为很多数论恒等式会变成“乘法等式”。经典例子：$\sum_{d\mid n}\varphi(d)=n$，用卷积语言就是 $\one*\varphi=\id_1$。一旦写成这样，两边同时“乘 $\mu$”（$\mu$ 是 $\one$ 的卷积逆）就自动得到 $\varphi=\mu*\id_1$，反演公式不再需要灵光一现。第 7 章与第 8 章的整套机械就是把这个类比推到底。初学时你要掌握的只有三件事：怎么按定义展开、$*$ 满足交换律与结合律、$\one$ 的逆是 $\mu$。
+\end{tip}
+
+\section{“群、环、域、同态”：这一页只需听懂，不必学会}
+本书不要求你会群论，但正文会用这些词压缩语言。下面是够用的最小版本：
+
+\begin{itemize}
+\item \textbf{群}：一个集合 $G$ 加一种运算（写成乘法），满足：任取两元素运算结果还在 $G$ 里（封闭）；$(ab)c=a(bc)$（结合律）；有“什么都不做”的元素 $e$（单位元）；每个元素都有能把结果变回 $e$ 的逆元。例：$\Z$ 与加法、非零有理数与乘法。
+\item \textbf{子群}：$G$ 的一部分，自己也是群。例：$\Z$ 里的偶数在加法下是子群。
+\item \textbf{阶}：有限群的元素个数叫群的阶；元素 $a$ 的阶是使 $a^r=e$ 的最小正整数 $r$。本书第 4 章的“乘法阶”就是它在模 $m$ 乘法下的具体版本。
+\item \textbf{循环群}：整个群由一个元素不断自乘得到（如模 $7$ 的单位 $\{1,2,3,4,5,6\}$，取 $3$：$3,2,6,4,5,1$ 恰好遍历）。那个能遍历全体的元素就叫\textbf{原根}。
+\item \textbf{单位群}：$(\Z/m\Z)^{\times}$ 表示“模 $m$ 的可逆余数全体，配上乘法”。它的阶是 $\varphi(m)$。第 2 章说“乘以 $a$ 是单位群上的双射”，意思就是“在这张余数表上乘同一个可逆数，元素只是换了位置，一个不多一个不少”。
+\item \textbf{环}：可以做加、减、乘（不必能除）的体系，如 $\Z$、模 $m$ 的余数集合。
+\item \textbf{域}：环上还额外保证“非零元素都能除”，如 $\mathbb Q$、$\mathbb R$，以及素数模下的余数 $\mathbb F_p=\Z/p\Z$。这就是为什么“$d$ 次多项式至多 $d$ 个根”在 $\mathbb F_p$ 成立、在 $\Z/8\Z$ 不成立（$x^2=1$ 模 $8$ 有 $4$ 个根）。
+\item \textbf{同态/同构}：“两个体系结构相同”的精确说法。同态是保持运算的映射 $f(xy)=f(x)f(y)$；同构还是一一对应。本书只在“指数把乘法变成加法”这类场合用一次，见第 4 章。
+\end{itemize}
+
+\begin{tip}[遇到“群”字时的实用策略]
+先把它换成“一组余数 + 一种运算”，再问：这些余数是谁（是不是都得跟模数互质）？运算是取模后的普通乘法吗？90\% 的场合这么一换，句子就懂了。真需要群论工具时（第 12、14 章的少数段落），正文会把要用的性质单独陈述成引理，不会拿“由群论知”糊弄你。
+\end{tip}
+
+\section{算法行话：复杂度、预处理、在线、对拍、溢出}
+\begin{itemize}
+\item \textbf{大 $O$}：$T(n)=O(f(n))$ 表示存在常数 $C$ 与 $n_0$，使 $n\ge n_0$ 时 $T(n)\le C f(n)$。它只关心增长快慢，不承诺绝对时间，也不管常数。本书还写 $O,\Omega,\Theta$（下界、同阶）与“期望 $O(\cdot)$”（随机算法在平均意义下的界）。
+\item \textbf{字长模型}：竞赛里默认 $64$ 位整数加减乘比较都是 $O(1)$。因此“$n$ 位数”的高精度乘法是 $O(n^2)$，而不是 $O(1)$。本书说某算法“多项式时间”时，变量是位数 $\log n$；$O(n^{1/4})$ 关于位数\textbf{不是}多项式。
+\item \textbf{预处理 / 查询}：预处理是开始前先算好一张表，查询是每次问一行。“$O(N)$ 预处理、$O(1)$ 查询”与“$O(1)$ 预处理、$O(\log N)$ 查询”是两种不同取舍，总时间相同也可能一个内存爆一个不爆。本书凡给复杂度都分开报这两项。
+\item \textbf{离线 / 在线}：在线是“来一问答一问，不许先看后面”；离线是“所有问题一次读完，可以重排、分块、按模数分组”。同一道题，两种口径的最优做法可能完全不同。
+\item \textbf{记忆化}：递归时把算过的结果存进哈希表或数组，下次直接查。它把“指数级重复计算”压成“状态数个”，是第 9 章杜教筛不可缺的一步。
+\item \textbf{摊还}：单步可能很贵，但 $m$ 步的总代价除以 $m$ 很小。典型：并查集、单调栈。别把“摊还 $O(1)$”读成“每步 $O(1)$”。
+\item \textbf{对拍}：写一个笨但显然正确的程序（暴力枚举），与要提交的程序在同一批随机数据上比答案。它是“找反例”的工程化版本，本书 \texttt{validation/} 与 \texttt{code/selftest.cpp} 干的就是这件事。
+\item \textbf{阈值}：某个“从此以后行为不同”的数值。例如扩展欧拉定理里的 $\varphi(m)$：指数不到它不能乱换，超过它才能换。阈值不是“经验值”，它由证明里的不等式给出。
+\item \textbf{溢出}：$10^9\cdot10^9=10^{18}$ 还能塞进 \texttt{long long}（上限约 $9.22\times10^{18}$），$(2\cdot10^9)^2$ 就超了。本书模板用 \texttt{\_\_int128} 做中间量、用 \texttt{mul\_mod} 收口；\texttt{unsigned} 溢出是回绕而非未定义行为，别把两者混为一谈。
+\item \textbf{取模的正确姿势}：减法后可能为负，要 \texttt{norm}；除法不是“分子分母各自取模”，而是“乘分母的逆元”，且分母必须先确认与模数互质。
+\end{itemize}
+
+\section{高中叫法 $\leftrightarrow$ 本书叫法}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}p{0.46\textwidth}}
+\toprule
+高中课本 / 常见叫法 & 本书叫法 & 差别与注意\\\midrule
+因数 & 约数 & 同义；本书的“约数”含 $1$ 与自身，且只在正整数范围讨论。\\
+辗转相除法 & 欧几里得算法 / gcd & 同一种算法；本书强调复杂度来自“每两轮规模至少减半”。\\
+$(a,b)=1$ & $\gcd(a,b)=1$、互质 & 本书偶尔也用 $(a,b)$ 表 gcd，出现时会说明。\\
+分解质因数 & 素因数分解 & 同义；本书还会写“拆素因子”“按素数幂拆开”。\\
+“$a$ 除以 $m$ 余 $r$” & $a\bmod m=r$、$a\equiv r\pmod m$ & 前者是运算、后者是关系；负数时本书规定余数落在 $[0,m)$。\\
+排列、组合 $\mathrm{C}_n^k$ & $\dbinom{n}{k}$ & 同义；本书用分式形式，便于讨论“分母能否取逆”。\\
+二项式定理 & $(1+X)^n$ 的系数 & 同一件事；第 6 章用“模 $p$ 后只剩两项”推出 Lucas 定理。\\
+数学归纳法 & 归纳 / 最小反例 & “取最小反例”与归纳等价，本书两种都说。\\
+等差数列 & 环上的固定步长 & 在 $0,1,\ldots,n-1$ 上“每次加 $k$”就是绕圈走的等差数列。\\
+等比数列 & 几何数列 / 幂序列 & 第 12 章的“指数向量”研究它的周期。\\
+充分必要条件 & 当且仅当、$\iff$ & 双向都要证，见 0.2 节的 tip。\\
+集合、$\in$、$\subseteq$、$\varnothing$ & 同高中 & 本书默认 $\N$ 含 $0$。\\
+对数 $\log$ & $\log$、$\log\log$ & 无特别说明时本书大 $O$ 里的 $\log$ 底数不影响结论；$\log\log$ 增长极慢。\\
+绝对值 $|x|$ & 同 & 赋值符号 $\nu_p$ 与绝对值无关，别混淆。\\
+函数 & 数论函数（一张表） & 见 0.6 节。\\
+“显然” & 偶尔用于省略一层代数 & 你若验算不出来，就当它是作业。\\
+\bottomrule
+\end{longtable}
+
+\section{证明的三种句式，以及“不跳步”长什么样}
+\subsection{双向证明}
+要证“$P$ 当且仅当 $Q$”，写两个方向、各起一段，并给每段一个开头词（“必要性.”“充分性.”）。若只证了一边，就把结论降格为“$P$ 推出 $Q$”。
+
+\subsection{反证与最小反例}
+要证“所有 $n$ 都满足 $P(n)$”，可设存在反例，取\textbf{最小的}那个 $n_0$，然后由 $n_0$ 造出更小的反例 $n'<n_0$，矛盾。这就是“最小反例法”，它与数学归纳法等价。本书第 1 章证明“欧几里得算法正确”、第 15 章的韦达跳跃都用它，因为它们都需要“$n_0$ 的最小性”这一件武器。
+
+\subsection{归纳}
+写清三件事：命题 $P(n)$ 是什么；$P(1)$（或 $P(0)$）成立；“若对所有 $k<n$ 成立则 $P(n)$ 成立”。需要“所有更小的”而不是只有 $n-1$ 时，叫第二归纳法，本书会说“强归纳”。
+
+\subsection{示范：把一段跳步的证明补全}
+正文第 1 章的裴蜀定理原文只写了两句“必要性来自……充分性来自……”。下面是它应有的样子——请把它当模板，而不是当额外负担：
+
+\paragraph{示范命题.}设 $a,b$ 为整数，不全为零，$d=\gcd(a,b)>0$，$c$ 为整数。则 $ax+by=c$ 有整数解 $\iff$ $d\mid c$。
+
+\begin{tip}[怎么判断自己“真的读懂了一个证明”]
+拿一张白纸，只看定理陈述，自己把证明重建一遍。卡住的地方就是你不懂的地方。第二遍再看书，只读你卡住的那两行。这样读十页，比顺着看五十页有效。
+\end{tip}
+
+\section{自查小测}
+每题答案不超过两行。做错的题，回到对应小节。
+
+\begin{enumerate}
+\item $\floor{-7/2}$ 与 C++ 里 \texttt{-7/2} 的值各是多少？
+\item 写出“$\forall x\exists y\,P(x,y)$”的否定。
+\item $\tau(72)$、$\mu(72)$、$\nu_2(72)$ 分别是多少？（$72=2^3\cdot3^2$）
+\item $-1\bmod 7$ 是多少？$2$ 在模 $8$ 下有逆元吗？在模 $7$ 下呢？
+\item $17^{3^{2}}$ 与 $(17^3)^2$ 相等吗？
+\item 为什么说“$0!=1$”不任性，而是为了递推 $\binom{n}{0}=1$ 与空积约定一致？
+\item 验证“$2$ 在模 $8$ 下没有逆元”，并说出用的是哪一条判别条件。
+\item “$f$ 是积性函数”与“$f$ 是完全积性函数”，哪个更强？用 $\tau$ 说明。
+\item 一句话说清“预处理”和“查询”的区别，并给一个本书的例子。
+\item “取最小反例”与哪种证明方法等价？
+\end{enumerate}
+
+\begin{tip}[参考答案]
+1) 都是 $-4$ 与 $-3$。2) $\exists x\forall y\,\lnot P(x,y)$。3) $12,0,3$。4) $6$；没有（$\gcd(2,8)=2$）；有，$2^{-1}\equiv4\pmod 7$。5) 不相等，$17^{9}\ne17^{6}$——幂塔右结合。6) 若 $0!=x$，由 $1!=1\cdot0!$ 得 $x=1$。7) 逐个检查 $2x\bmod 8$（$x=0,\ldots,7$）得 $0,2,4,6,0,2,4,6$，从不等于 $1$，故无逆元；依据是“可逆 $\iff$ 与模数互质”，而 $\gcd(2,8)=2$。8) 完全积性更强；$\tau(2\cdot2)=3\ne4$。9) 预处理是开始前建表、查询是每次读表，如第 2 章 $O(m^{2/3})$ 预处理 + $O(1)$ 查询。10) 数学归纳法。
+\end{tip}
 
 
 \chapter{整除、最大公约数与线性不定方程}
+\begin{chapterintro}[章节导读]
+上一章我们先把本书会反复出现的数学语言统一了；这一章开始真正进入数论。我们先从“一个数能不能整除另一个数”出发，用最大公约数整理这种关系，再进一步把它变成可以求解的线性不定方程。
+\end{chapterintro}
+
 \section{从质因数分解理解整除}
 对正整数 $n=\prod_p p^{\alpha_p}$，只有有限个 $\alpha_p$ 非零。若 $a=\prod p^{u_p},b=\prod p^{v_p}$，则
 \[
@@ -126,7 +433,17 @@ D：专题 & 二维积性函数、图上的同余、已知特殊信息分解、�
  \gcd(a,b)=\prod_p p^{\min(u_p,v_p)},\quad
  \lcm(a,b)=\prod_p p^{\max(u_p,v_p)}.
 \]
+
+\begin{tip}[把整数看成「指数向量」]
+唯一分解让你把 $n$ 记成一串指数：$72\leftrightarrow(3,2,0,0,\ldots)$ 对应素数 $2,3,5,7,\ldots$。于是「$a\mid b$」变成「每一位都不超过」，「$\gcd$」变成逐位取小，「$\lcm$」变成逐位取大。整章的许多结论都能这样「逐位」证明——看到 $\prod p^{u_p}$ 就先想这个画面。
+\end{tip}
+
 因此 $\gcd(a,b)\lcm(a,b)=ab$。实际计算最小公倍数时先除后乘：$a/\gcd(a,b)\cdot b$，仍要检查乘法是否溢出。
+
+
+\begin{tip}[为什么：先除后乘]
+「先除后乘」是为了不溢出：$a/\gcd(a,b)\cdot b$ 与 $a\cdot b/\gcd(a,b)$ 数学上相同，但后者的中间值 $ab$ 可能超过 $9.22\times10^{18}$。写成代码时，两个 $10^9$ 级整数相乘就已经贴着上限。
+\end{tip}
 
 
 
@@ -134,24 +451,35 @@ D：专题 & 二维积性函数、图上的同余、已知特殊信息分解、�
 \begin{theorem}
 若 $b>0$，则 $\gcd(a,b)=\gcd(b,a\bmod b)$；终止条件为 $\gcd(a,0)=a$（$a\ge0$）。
 \end{theorem}
-\begin{proof}
-写 $a=qb+r$。同时整除 $a,b$ 的整数也整除 $r=a-qb$；同时整除 $b,r$ 的整数也整除 $a=qb+r$，故两者的公约数集合相同。
-\end{proof}
 若 $a\ge b>0$，则 $a\bmod b<a/2$：当 $b\le a/2$ 时余数小于 $b$；否则商为 $1$，余数为 $a-b<a/2$。所以每两轮规模至少减半，复杂度为 $O(1+\log\min(a,b))$。更细地，令 $d=\gcd(a,b)$，可写成
 \[
  O\!\left(1+\log\min\left(\frac ad,\frac bd\right)\right).
 \]
 
+\begin{tip}[口径：「每两轮规模至少减半」]
+「每两轮规模至少减半」是把两行不等式合起来说的：一轮里 $a$ 变成 $b$（$b$ 可能只比 $a$ 小一点点，比如 $a=b+1$），但下一轮的余数一定小于 $b/2$。所以「规模」指两个数中的较大者，它每两轮才保证减半。
+\end{tip}
+
+
+
+\paragraph{手算例.} 对 $(252,198)$ 依次得到
+\[
+252=198+54,\quad198=3\cdot54+36,\quad54=36+18,\quad36=2\cdot18.
+\]
+故 gcd 为 $18$。这里不是每一轮两个数都减半，而是隔两轮观察同一位置上的数；此区别是讲解复杂度时的常见含糊点。
+\paragraph{追问.} 连续斐波那契数为什么让欧几里得算法递归较深？因为每一步商多为 $1$，规模缩减相对缓慢。可以让学生实际记录 $(89,55)$ 的调用链。
 
 
 \section{裴蜀定理与扩展欧几里得}
 \begin{theorem}[裴蜀定理]
 设整数 $a,b$ 不全为零，$d=\gcd(a,b)>0$。方程 $ax+by=c$ 有整数解，当且仅当 $d\mid c$。更一般地，$\sum_i a_ix_i=c$ 有解当且仅当 $\gcd(a_1,\ldots,a_n)\mid c$。
 \end{theorem}
-\begin{proof}
-必要性来自 $d$ 整除每个整数线性组合。充分性可由欧几里得算法倒推得到 $au+bv=d$，再乘 $c/d$。多元情形逐次合并 gcd 即可。
-\end{proof}
-\textbf{这里的“张成”指整数线性组合构成的加法子群，不是实向量空间。}
+\begin{tip}[为什么：相邻斐波那契数最慢]
+直觉：商越大，减得越多。斐波那契数相邻两项的商永远是 $1$，等于每步只做了一次减法，所以最慢。这也解释了为什么竞赛里说「$\gcd$ 的最坏输入是相邻斐波那契数」。
+\end{tip}
+
+这里只用到一个初等事实：把 $au+bv$ 全体（$u,v$ 取遍整数）排成一列，其中最小的正数就是 $\gcd(a,b)$。
+不必引入「张成」「子群」「向量空间」这些词——它们说的是同一件事，但本书只需要把上面这句话吃透。
 
 令 $a=qb+r$。若递归已求得 $bu+rv=d$，则
 \[
@@ -160,28 +488,105 @@ D：专题 & 二维积性函数、图上的同余、已知特殊信息分解、�
 因此 exgcd 只需在 gcd 的递归返回时维护两个系数。
 
 
+对上例回代：
+\[
+18=54-36=4\cdot54-198=4\cdot252-5\cdot198.
+\]
+所以 $252x+198y=36$ 的一个解是 $(8,-10)$。
+“求 $ax+by=d$”与“求 $ax+by=c$”应分开：前者是算法接口，后者是检查 $d\mid c$ 后进行缩放。原稿把这两步中的比值写反了。
+\begin{lstlisting}
+using i128 = __int128_t;
+i128 exgcd(i128 a, i128 b, i128 &x, i128 &y) {
+    // Contract: a,b >= 0, not both zero.
+    if (b == 0) { x = 1; y = 0; return a; }
+    i128 u, v;
+    i128 d = exgcd(b, a % b, u, v);
+    x = v;
+    y = u - (a / b) * v;
+    return d;
+}
+\end{lstlisting}
+允许负系数时，先对 $|a|,|b|$ 求解，再恢复对应系数的符号。不要对最小负整数直接在原类型里取绝对值，应先转更宽类型。
+
 
 \section{从一个解得到全部解}
 当 $a,b>0$ 且 $d\mid c$，已知特解 $(x_0,y_0)$，则全部整数解为
 \[
  x=x_0+\frac bd t,\qquad y=y_0-\frac ad t,\qquad t\in\Z.
 \]
-\begin{proof}
-两组解作差得 $(a/d)\Delta x=-(b/d)\Delta y$。因为 $a/d$ 与 $b/d$ 互质，$b/d\mid\Delta x$，从而存在整数 $t$ 使 $\Delta x=(b/d)t$，代回即得 $\Delta y=-(a/d)t$。
-\end{proof}
+
+\begin{tip}[小心：对 \texttt{INT64\_MIN} 取相反数]
+因为 $\texttt{INT64\_MIN}=-2^{63}$ 的绝对值不在 \texttt{long long} 里（$2^{63}>9.22\times10^{18}$），直接取相反数是未定义行为。正确顺序：先转成 \texttt{\_\_int128} 或无符号类型，再取绝对值。
+\end{tip}
+
 若限制 $L_x\le x\le R_x$、$L_y\le y\le R_y$，就将四个不等式转为 $t$ 的上下界，取交集。解的计数问题变成一维整数区间计数。
 
-\begin{problem}{P5656：二元一次不定方程（exgcd）}
-给定正整数 $a,b,c$，求 $ax+by=c$ 的正整数解个数以及 $x,y$ 的最小值、最大值。若没有正整数解但有整数解，原题还要求分别报告能在整数解中取得的最小正 $x$、最小正 $y$；这两个值不必来自同一组解。
-\end{problem}
 \hint 先判定 $d\mid c$，再用通解把正整数约束转为参数区间。
+
+令 $A=a/d,B=b/d$。正整数要求给出
+\[
+ t\ge t_L=\ceil{\frac{1-x_0}{B}},\qquad
+ t\le t_R=\floor{\frac{y_0-1}{A}}.
+\]
+
+\begin{tip}[把「不等式」变成「一个参数的区间」]
+以 $x=x_0+bt\le R_x$ 为例：移项得 $t\le(R_x-x_0)/b$，取整为 $t\le\floor{(R_x-x_0)/b}$；$x\ge L_x$ 给 $t\ge\ceil{(L_x-x_0)/b}$。四个不等式给 $t$ 一个区间 $[t_{\min},t_{\max}]$，解的个数就是 $\max(0,t_{\max}-t_{\min}+1)$。空区间表示「无正整数解」，但不表示「无整数解」——这两件事在 P5656 里是不同的输出分支。
+\end{tip}
+
+若 $t_L\le t_R$，则解数为 $t_R-t_L+1$，并且
+\[
+\begin{array}{ll}
+x_{\min}=x_0+Bt_L,&x_{\max}=x_0+Bt_R,\\
+y_{\min}=y_0-At_R,&y_{\max}=y_0-At_L.
+\end{array}
+\]
+若区间为空，只说明不能同时为正，并不说明无整数解。单独的最小正 $x$ 是 $x_0\bmod B$ 的正代表元（余数 $0$ 改为 $B$）；$y$ 同理取模 $A$。
+
+\paragraph{完整算例.} $6x+9y=60$ 化为 $2x+3y=20$，取 $(x_0,y_0)=(10,0)$，通解 $x=10+3t,y=-2t$。正整数约束为 $-3\le t\le-1$，三组解是
+\[
+ (1,6),\ (4,4),\ (7,2).
+\]
+
+\begin{tip}[词义：正代表元]
+「正代表元」= 把同余类里的那个类写成 $1,\ldots,B$ 之间的数。余数为 $0$ 时不能留 $0$（题目要正整数），所以换成 $B$。这类「$0$ 换成模数」的小心，在取模计数题里非常常见。
+\end{tip}
+
+故答案依次为解数 $3$，$x_{\min}=1,y_{\min}=2,x_{\max}=7,y_{\max}=6$。
+
+\begin{pitfall}[负数整除不等于向下取整]
+C++ 的整数除法向零截断。对 $b>0$，设 $q_0$ 为 C++ 中 \texttt{a/b} 的结果、$r_0$ 为 \texttt{a\%b} 的结果；注意 $r_0$ 不一定是本书数学定义中的非负模余数。可以实现
+\[
+\operatorname{floorDiv}(a,b)=q_0-\iva{r_0<0},\qquad
+\operatorname{ceilDiv}(a,b)=q_0+\iva{r_0>0}.
+\]
+这样还避免了对最小负整数直接求 $-a$。测试 $a=-5,b=3$ 时，应得到 floor 为 $-2$、ceil 为 $-1$。
+\end{pitfall}
+\cost 每组 $O(\log\min(a,b))$，额外空间为递归深度。$c/d$ 的缩放、区间端点的乘法应使用足够宽的整数。
 
 \src{https://www.luogu.com.cn/problem/P5656}
 
-\begin{problem}{P8255：数学游戏}
-给定 $x,z>0$，求满足 $z=xy\gcd(x,y)$ 的最小正整数 $y$，无解则报告无解。原数据规模：$t\le5\times10^5$，$x\le10^9$，$z<2^{63}$。
-\end{problem}
 \hint 若 $x\nmid z$ 则无解。令 $w=z/x$，考察 $\gcd(w,x^2)$ 是否为完全平方数。
+
+令 $d=\gcd(x,y)$，$x=da,y=db$，其中 $\gcd(a,b)=1$。则
+\[
+ w=\frac zx=bd^2,\qquad x^2=a^2d^2,
+\]
+所以
+\[
+ \gcd(w,x^2)=d^2\gcd(b,a^2)=d^2.
+\]
+注意这里必须是 $x^2$，不是原稿写的 $a^2$。
+
+反过来，若 $g=\gcd(w,x^2)=d^2$ 是完全平方数，则 $d\mid x$、$d^2\mid w$。令 $a=x/d$、$b=w/d^2$，有 $\gcd(a^2,b)=1$，故 $\gcd(a,b)=1$。构造
+\[
+ y=\frac wd
+\]
+即满足全部条件。这还证明了\textbf{解若存在就是唯一的}，“最小”不需要额外搜索。
+
+\paragraph{算例与反例.} $x=12,z=864$ 时 $w=72$，$g=\gcd(72,144)=72$ 不是平方，无解。
+$x=12,z=1296$ 时 $w=108$，$g=36$，$d=6$，$y=18$，验证 $12\cdot18\cdot6=1296$。
+
+\cost 每组一次 gcd 与整数平方根。可用浮点平方根给出候选，再用整数乘法向两侧校正；不要直接判断浮点数是否为整数。用 $128$ 位验证 $d^2=g$ 和最终乘积。
 
 \src{https://www.luogu.com.cn/problem/P8255}
 
@@ -189,40 +594,65 @@ D：专题 & 二维积性函数、图上的同余、已知特殊信息分解、�
 \begin{theorem}
 编号 $0,\ldots,n-1$ 的环，每步加 $k$ 并取模 $n$。设 $d=\gcd(n,k)$，则形成 $d$ 个循环，每个循环长度为 $n/d$，恰对应一个模 $d$ 的同余类。
 \end{theorem}
-\begin{proof}
-回到出发点需要最小正整数 $t$ 满足 $n\mid kt$，即 $n/d\mid t$。每一步不改变编号模 $d$ 的值，同一类恰有 $n/d$ 个点，故结论成立。$k=0$ 时每点自成一环。
-\end{proof}
+
+\begin{tip}[图景：围成一圈走 $k$ 步]
+把 $n$ 个编号想象成围成一圈的小朋友，每次往右走 $k$ 步。「形成 $d$ 个循环」就是「分成 $d$ 个小圈子，圈子之间走不到」。$\gcd(n,k)$ 决定了圈子数，这是「互质才能走遍全部」的几何版。
+\end{tip}
+
+\paragraph{课堂小练习.} $n=12,k=8$ 时 $d=4$，四个环分别为
+\[
+ (0,8,4),\ (1,9,5),\ (2,10,6),\ (3,11,7).
+\]
+请学生说明：这里的“子环”是置换的循环，不一定是抽象代数里的子环。后文 CF516E 要用这一分组，但“在同一环里”不意味着“距离起点相同”。
 
 
 
 \chapter{同余、逆元与指数降幂}
+\begin{chapterintro}[章节导读]
+上一章，我们用 gcd 和 exgcd 处理整数之间的线性关系；但很多竞赛问题真正关心的不是整数等式，而是除以某个模数以后留下什么。这一章把这种“只看余数”的语言建立起来，并继续讨论逆元、快速幂以及如何把过大的指数压缩下来。
+\end{chapterintro}
+
 \section{同余是整数等式的压缩}
 对 $m>0$，$a\bmod m$ 是 $[0,m)$ 中与 $a$ 同余的唯一整数；
 \[
  a\equiv b\pmod m\iff m\mid a-b.
 \]
-$\{0,1,\ldots,m-1\}$ 是完全剩余系；其中与 $m$ 互质的元素组成简化剩余系，其大小记为 $\varphi(m)$。
+
+\begin{tip}[“最小非负代表元”这一句在管什么]
+同一堆余数里有无穷多个整数：$-1$、$6$、$13$ 在模 $7$ 下都算「同一类」。写「$a\bmod m$ 是 $[0,m)$ 中唯一的整数」就是为了选定一个写法，此后所有比较都只比这个写法。C++ 的 \% 对负数给出负余数，所以本书模板一律用 \texttt{norm(a,m)}。
+\end{tip}
+
+$\{0,1,\ldots,m-1\}$ 把可能的余数排成一张表，称为模 $m$ 的\textbf{完全剩余系}；表中与 $m$ 互质的那些元素组成\textbf{简化剩余系}，它的个数记作 $\varphi(m)$，读「$m$ 的欧拉函数值」。
 加、减、乘可以在每一步后取模，交换律、结合律、分配律均保持成立。例如
 \[
  (a+b)c\equiv ac+bc\pmod m.
 \]
 
+\begin{tip}[剩余系 = 一张余数表]
+完全剩余系 = 每个余数出现一次的表；简化剩余系 = 表里只留「能与模数互质」的那些行。$\varphi(m)$ 就是留下的行数。之后凡是「在剩余系上乘一个数」「重排这张表」，都在这里理解。
+\end{tip}
+
+
 \section{乘法逆元与正确约分}
 \begin{theorem}
 $m\ge2$ 时，$a$ 的模 $m$ 逆元存在当且仅当 $\gcd(a,m)=1$；若存在，则在模 $m$ 意义下唯一。
 \end{theorem}
-\begin{proof}
-$ax\equiv1\pmod m$ 等价于 $ax+my=1$，存在性由裴蜀定理得到。若 $ax\equiv ax'\equiv1$，由 $\gcd(a,m)=1$ 得 $m\mid x-x'$。
-\end{proof}
+
+\begin{tip}[把「除法」翻译成「解方程」]
+所谓 $a^{-1}$，就是找 $x$ 使 $ax\equiv1\pmod m$，也就是找整数对 $(x,y)$ 使 $ax+my=1$。于是「逆元存不存在」立刻变成「这个二元一次方程有没有整数解」，答案是「有当且仅当 $\gcd(a,m)=1$」（第 1 章裴蜀定理）。模 $m=1$ 时同余式恒成立，本书统一约定结果为 $0$。
+\end{tip}
+
 \begin{theorem}[约分后模数的变化]
 \[
  ax\equiv bx\pmod m
  \iff a\equiv b\pmod{m/\gcd(x,m)}.
 \]
 \end{theorem}
-\begin{proof}
-令 $d=\gcd(x,m)$，写 $x=dx',m=dm'$，则 $m\mid x(a-b)$ 等价于 $m'\mid x'(a-b)$。因为 $\gcd(x',m')=1$，进一步等价于 $m'\mid a-b$。
-\end{proof}
+\begin{pitfall}[把整数除法直接搬到同余式中会出错]
+$2\cdot1\equiv2\cdot4\pmod6$，但 $1\not\equiv4\pmod6$。正确结论是 $1\equiv4\pmod3$。
+一般若 $d\mid a,b,m$，则 $a\equiv b\pmod m$ 等价于 $a/d\equiv b/d\pmod{m/d}$。对等式 $a=km+b$ 同除 $d$ 得到的是 $a/d=k(m/d)+b/d$，不需要 $d\mid k$。
+\end{pitfall}
+\paragraph{算例.} $12x\equiv18\pmod{30}$，先除 gcd $6$ 得 $2x\equiv3\pmod5$，于是 $x\equiv4\pmod5$。若在模 $30$ 下列出全部解，则是 $4,9,14,19,24,29$；新模数为 $5$ 并不意味着在模 $30$ 下只有一个解。
 
 
 \section{费马小定理与欧拉定理}
@@ -233,13 +663,13 @@ $\varphi(n)=\sum_{1\le i\le n}\iva{\gcd(i,n)=1}$，其中 $\varphi(1)=1$。当 $
 若 $m\ge2$ 且 $\gcd(a,m)=1$，则 $a^{\varphi(m)}\equiv1\pmod m$。
 特别地，素数 $p\nmid a$ 时 $a^{p-1}\equiv1\pmod p$。
 \end{theorem}
-\begin{proof}
-设 $R$ 是简化剩余系。乘以 $a$ 是 $R$ 上的双射：保持互质性，且能用 $a^{-1}$ 消去。因此
-\[
- \prod_{r\in R}(ar)\equiv\prod_{r\in R}r\pmod m.
-\]
-右边的乘积与 $m$ 互质，可以约去，便得到结论。
-\end{proof}
+\begin{tip}[词义：双射（这里为何只验一半）]
+「双射」= 一一对应：既不碰撞（单射）也不遗漏（满射）。有限集合上「不碰撞」自动推出「不遗漏」（抽屉原理），所以下面的证明只验证了不碰撞这一半。
+\end{tip}
+
+\begin{tip}[小心：约去必须互质]
+「约去」是全文最容易被误用的一步：只有当被约掉的数与模数互质时才合法。反例：模 $8$ 下 $2\cdot1\equiv2\cdot5$（都等于 $2$），但 $1\not\equiv5\pmod 8$。
+\end{tip}
 
 
 \section{扩展欧拉定理：为什么要保留“大于阈值”的信息}
@@ -255,37 +685,170 @@ $\varphi(n)=\sum_{1\le i\le n}\iva{\gcd(i,n)=1}$，其中 $\varphi(1)=1$。当 $
 后两行也可不区分互质性使用。核心是：只有在原指数已经达到阈值时，才可以采用“取余再加 $\varphi(m)$”。
 
 
+\begin{tip}[阈值这个词]
+阈值 = 「从此以后行为改变」的分界数。这里分界是 $\varphi(m)$：指数 $k$ 小于它时不能改，大于等于它时可以改成 $k\bmod\varphi(m)+\varphi(m)$。之所以要「加回 $\varphi(m)$」，是为了保住「$k$ 已经够大」这一信息——非互质底数时，这个信息决定结果是不是 $0$。
+\end{tip}
+
+
+\paragraph{反例应先于模板.} 取 $a=2,m=8,k=4$。只取 $k\bmod\varphi(8)=0$ 会算成 $1$，正确值是 $0$；加回 $4$ 后正确。反过来，$k=1<4$ 时不能强行改为 $5$：$2^1\equiv2$，$2^5\equiv0\pmod8$。
+
+\paragraph{指数塔的接口.} 对巨大指数 $E$，递归函数不能只返回 $E\bmod q$，还要返回真假值 $E\ge q$。两个指数 $0$ 与 $q$ 具有相同余数，但在非互质底数下作用不同。
+可以维护二元组
+\[
+ (\operatorname{rem},\operatorname{large})=(E\bmod q,\iva{E\ge q}).
+\]
+
+\begin{tip}[怎么做：接口口诀「余数 + 一位真假」]
+记住这个接口口诀：「余数 + 一位真假」。返回 $(E\bmod q,\ \iva{E\ge q})$，上层用 $\operatorname{rem}+q\cdot\operatorname{large}$ 还原一个「行为等价的指数」。判断 $E\ge q$ 用截断计算 $\min(E,q)$：一旦超过就停下，绝不构造大数。
+\end{tip}
+
+计算上层幂时使用 $\operatorname{rem}+q\operatorname{large}$。
+判定大小使用截断计算 $\min(E,q)$，而不是通过取模后的数值猜测。
+
+\paragraph{截断幂与截断塔.} 定义 $\operatorname{powcap}(a,e,C)=\min(a^e,C)$，每次乘法超过 $C$ 就截断。对 $a\ge2$ 的塔 $T_0=1,T_h=a^{T_{h-1}}$，若 $C>1$，先求最小 $r$ 使 $a^r\ge C$，再计算 $\min(T_{h-1},r)$。若结果达到 $r$，直接返回 $C$，否则算出小幂。阈值迅速下降，避免构造天文数字。$a=1$ 与 $C=1$ 单独处理。
+
 
 \section{五类逆元问题}
-\begin{problem}{统一练习：如何选择求逆元的方法？}
-\begin{enumerate}[label=(\alph*)]
-\item 素数模数，单次求 $a^{-1}$，$m\le10^{18}$。
-\item 一般模数，单次求 $a^{-1}$，或报告不存在。
-\item 素数模数，求 $1,2,\ldots,n$ 的逆元，$n<m$。
-\item 一般模数，离线求很多与 $m$ 互质的数的逆元。
-\item 固定素数模数 $m\le10^9$，强制在线处理多达 $10^8$ 次询问。
-\end{enumerate}
-\end{problem}
+\begin{tip}[在线/离线]
+在线：来一问答一问，不许偷看后面的问题。离线：先把所有问题读完，可以排序、分组、分块。第 (d)(e) 两种做法只在离线/强制在线意义下有区别——题目一旦说「强制在线」，分块预处理就不许用了。
+\end{tip}
+
 \hint 单次用快速幂或 exgcd；连续区间用线性递推；批量互质数用前缀积。固定模数的大量在线询问可以进一步预处理。
 
+
+\subsection{前四类：应掌握的基础方法}
+(a) 由 $a^{m-1}\equiv1$ 得 $a^{-1}\equiv a^{m-2}\pmod m$，快速幂 $O(\log m)$。
+(b) 求 $ax+my=1$；gcd 不为 $1$ 则不存在，反之将 $x$ 规范到 $[0,m)$。
+(c) 令 $m=qi+r$，对 $2\le i<m$，有 $r\ne0$ 且
+\[
+ \operatorname{inv}[1]=1,\qquad
+ \operatorname{inv}[i]\equiv-q\operatorname{inv}[r]\pmod m.
+\]
+
+\begin{tip}[为什么要分五类]
+差别只在三个开关上：模数是素数吗（决定能不能用费马小定理）、是单次还是批量（决定要不要前缀积）、是否强制在线（决定能不能分块预处理）。做逆元题时先把这三个开关写下来，方法基本就唯一了。
+\end{tip}
+
+\begin{tip}[前提：$m$ 是素数且 $a\not\equiv0$]
+这一步用了「$m$ 是素数且 $a\not\equiv0$」：此时 $a^{m-1}\equiv1$（费马小定理），于是 $a\cdot a^{m-2}\equiv1$。$m$ 是合数时 $a^{\varphi(m)}\equiv1$ 才成立，且要先确认互质——直接套 $m-2$ 会算错。
+\end{tip}
+
+$r<i$ 保证可以从小到大递推，时间 $O(n)$。
+(d) 令 $P_0=1,P_i=P_{i-1}a_i\bmod m$。求一次 $P_n^{-1}$，逆序处理
+\[
+ a_i^{-1}=P_{i-1}P_i^{-1},\qquad P_{i-1}^{-1}=a_iP_i^{-1}.
+\]
+
+\begin{tip}[线性递推逆元公式是怎么来的]
+写 $m=qi+r$、$0<r<i$，则 $qi+r\equiv0\pmod m$，即 $r\equiv-qi$。两边同乘 $i^{-1}r^{-1}$（两者都需可逆）得 $i^{-1}\equiv-q\,r^{-1}\pmod m$。因为 $r<i$，$r^{-1}$ 已经算过，所以能一遍扫过去。注意它要求模数是素数（保证每个 $r<i<m$ 可逆），合数时会断，见下面的易错框。
+\end{tip}
+
+时间 $O(n+\log m)$，空间 $O(n)$。所有 $a_i$ 可逆才保证总乘积可逆；并不要求模数是素数。
+
+\paragraph{小例.} 模 $17$ 求 $3,5,7$ 的逆元。前缀积为 $1,3,15,3$；$3^{-1}=6$，逆推得到 $7^{-1}=5$、$5^{-1}=7$、$3^{-1}=6$。
+
+\begin{pitfall}
+线性公式在合数模数下不能照抄，即使当前 $i$ 可逆也未必有 $r$ 可逆。例如模 $8$、$i=3$ 时余数 $r=2$ 不可逆，但 $3^{-1}=3$ 确实存在。
+\end{pitfall}
+
+\subsection{在线方案一：每步至少减半}
+设 $m=ua+v$，$0<v<a$。除了 $a^{-1}\equiv-u v^{-1}$，还有
+\[
+ (u+1)a\equiv a-v\pmod m,
+ \qquad a^{-1}\equiv(u+1)(a-v)^{-1}\pmod m.
+\]
+
+\begin{tip}[前缀积批量求逆元的想法]
+只花一次「昂贵的求逆」，其余全是乘法和查表：先算前缀积 $P_i=a_1\cdots a_i$，求 $P_n^{-1}$ 一次；然后 $a_i^{-1}=P_{i-1}\cdot P_i^{-1}$ 从后往前推，因为 $P_i^{-1}=a_i^{-1}P_{i-1}^{-1}$。这就是「用一次 $O(\log m)$ 换 $n$ 次 $O(1)$」。
+\end{tip}
+
+\begin{tip}[这个恒等式从哪来]
+$m=ua+v$ 意味着 $ua\equiv-v$，两边再加 $a$ 得 $(u+1)a\equiv a-v$。为什么规模减半：新的递归对象是 $\min(v,a-v)$，它不超过 $a/2$。所谓「每步至少减半」就是把「取余数」与「取补数」中较小者递下去，至多 $\log_2 m$ 步进入预处理表。
+\end{tip}
+
+在 $v$ 与 $a-v$ 中选较小者，递归规模至少减半。预处理 $[1,L]$ 的逆元后，单次询问最多进行 $O(1+\log(m/L))$ 次递归。取 $L=2\times10^7,m\le10^9$，规模在至多 $6$ 次减半后落入表内；若 $L\ge m$，只预处理到 $m-1$。
+这不是一般意义上的渐近 $O(1)$，而是数据范围内步数很小。
+
+\subsection{在线方案二：\texorpdfstring{$O(m^{2/3})$}{O(m2/3)} 预处理与常数次查询运算}
+这是选修内容。令 $B=U=\ceil{m^{1/3}}$、$L=\ceil{m/U}$。将 $a$ 写为 $qB+r$，$0\le r<B$。对每个块 $q$ 寻找
+\[
+1\le u_q\le U,\qquad c_q=qBu_q-k_qm,\qquad |c_q|\le L.
+\]
+为什么存在？把 $0,qB,\ldots,UqB$ 的模 $m$ 余数放入 $U$ 个长度不超过 $L$ 的区间，有两者落在同一区间，相减即可。
+于是
+\[
+ a u_q\equiv c_q+ru_q=t,\qquad |t|\le L+BU=O(m^{2/3}),
+\]
+
+\begin{tip}[抽屉原理一句话]
+$U+1$ 个数放进 $U$ 个盒子，必有两个同盒。这里把 $0,qB,\ldots,UqB$ 这 $U+1$ 个余数放进 $[-L,L]$ 划出的 $U$ 段，取同段两者相减，就造出一个「小的 $qBu-km$」。看到「存在性证明里出现 $+1$」，基本都是抽屉原理。
+\end{tip}
+
+并且 $t\not\equiv0\pmod m$。预处理这一小范围的正负逆元，即得
+\[
+ a^{-1}\equiv u_q\,t^{-1}\pmod m.
+\]
+查询只需除法、查表、乘法。对很小的 $m$ 直接预处理全部非零余数。
+
+\paragraph{如何在正确复杂度内找到全部块的系数？}
+枚举 $u=1,\ldots,U$，再枚举 $k=0,\ldots,u+1$。满足条件的 $q$ 组成整数区间
+\[
+ \ceil{\frac{km-L}{uB}}\le q\le\floor{\frac{km+L}{uB}},
+\]
+
+\begin{tip}[口径：这里的「常数次数」指哪几步]
+这一步的查表范围是 $[-L,L]$，所以正负都要有逆元：$(-t)^{-1}\equiv-(t^{-1})$，不必另算。"常数次数"指的是：一次整数除法、两次乘法、两次查表——不是 $O(\log m)$。
+\end{tip}
+
+与合法块编号范围相交。每个 $u$ 的区间个数为 $O(u)$，包含的候选总数为 $O(u+L/B)=O(U)$；总预处理 $O(U^2)=O(m^{2/3})$。已找到系数的块不必覆盖。
+
+\paragraph{算例.} 模 $101$，$B=U=5,L=21$。对 $a=73=14\cdot5+3$，选 $u=3$，$c=14\cdot5\cdot3-2\cdot101=8$，于是 $t=8+3\cdot3=17$。查表 $17^{-1}=6$，得到 $73^{-1}=3\cdot6=18$。
+\cost 这是字长模型中的 $O(m^{2/3})$ 时间、空间预处理与 $O(1)$ 查询；必须把内存规模纳入选择，而不是一看到“大量询问”就使用最复杂方案。
 
 
 
 \chapter{中国剩余定理与同余约束的合并}
+\begin{chapterintro}[章节导读]
+上一章我们已经能够在单个模数下处理同余、逆元和幂；当问题同时给出多个模数的限制时，新的困难就变成“这些限制能不能合在一起”。这一章利用中国剩余定理，把多个局部条件重新拼成一个整体，并处理模数不互质时需要额外检查的情况。
+\end{chapterintro}
+
 \section{互质模数：构造局部为一、其余为零的系数}
 考虑 $x\equiv a_i\pmod{m_i}$，其中 $m_i\ge2$ 两两互质。令
 \[
  M=\prod_i m_i,\qquad M_i=M/m_i,\qquad t_i\equiv M_i^{-1}\pmod{m_i}.
 \]
+
+\begin{tip}[为什么：把内存规模一起算进选择]
+$O(m^{2/3})$ 在 $m=10^9$ 时约 $10^6$，表很小；但 $m=10^{18}$ 时约 $10^{12}$，直接内存爆炸。所以「更高级的做法」可能反而不可用，选方法要同时看时间与内存。
+\end{tip}
+
 \begin{theorem}[中国剩余定理]
 上述方程组在模 $M$ 意义下有唯一解：
 \[
  x\equiv\sum_i a_iM_it_i\pmod M.
 \]
 \end{theorem}
-\begin{proof}
-$M_it_i$ 模 $m_i$ 为 $1$，模其余 $m_j$ 为 $0$，故代回每个同余式均成立。若 $x,y$ 都满足方程组，则所有 $m_i$ 都整除 $x-y$，互质性保证 $M\mid x-y$，这证明了唯一性。
-\end{proof}
+
+\begin{tip}[「构造局部为一、其余为零」是什么意思]
+要造一个数，模 $m_1$ 余 $1$、模 $m_2$ 余 $0$、模 $m_3$ 余 $0$：先取 $M_1=m_2m_3$（它已经是 $0$ 模 $m_2,m_3$），再乘一个系数把它模 $m_1$ 调成 $1$。三个这样的数分别配上 $a_1,a_2,a_3$ 相加即可。这类「分块满足、相加合成」的技巧在插值与快速莫比乌斯变换里也会出现。
+\end{tip}
+
+\begin{tip}[「局部为一、其余为零」在造什么]
+要造一个数：模 $m_1$ 余 $1$、模 $m_2,m_3$ 余 $0$。先取 $M_1=m_2m_3$（它对 $m_2,m_3$ 已经是 $0$），再乘一个系数把它模 $m_1$ 调成 $1$。三个这样的「开关多项式」分别乘上 $a_1,a_2,a_3$ 再相加即可。这种「分块满足、相加合成」的思路在插值与快速变换里反复出现。
+\end{tip}
+
+\paragraph{板书例.} 解
+\[
+ x\equiv2\pmod3,\quad x\equiv3\pmod5,\quad x\equiv2\pmod7.
+\]
+$M=105$，$M_i=35,21,15$，相应逆元为 $2,1,1$，所以
+\[
+ x\equiv2\cdot35\cdot2+3\cdot21+2\cdot15=233\equiv23\pmod{105}.
+\]
+讲解时应让学生先验算 $70$ 模三个模数的余数为 $(1,0,0)$，再展示整式。
+\begin{pitfall}
+$M_i$ 不是 $m_i$。$t_i$ 的逆元模数必须写明为 $m_i$。所谓“唯一解”是唯一的同余类，不是唯一整数。
+\end{pitfall}
 
 
 \section{不互质模数：合并两个等差数列}
@@ -302,16 +865,102 @@ $M_it_i$ 模 $m_i$ 为 $1$，模其余 $m_j$ 为 $0$，故代回每个同余式�
 重复合并即可得到扩展 CRT。模数为 $1$ 的约束不限制整数，可跳过。
 
 
+\paragraph{为什么没有漏解？}
+关于 $t$ 的所有解相差 $n/d$，所以对应 $x$ 相差 $mn/d$。反过来，每个满足两式的 $x$ 都有 $t=(x-a)/m$，因此每一个合法 $x$ 都被表示到了。
+\paragraph{可解与不可解的对照.}
+\[
+ x\equiv2\pmod6,\quad x\equiv5\pmod9
+ \Longrightarrow 6t\equiv3\pmod9
+ \Longrightarrow t\equiv2\pmod3,
+\]
 
-\begin{problem}{P4774：屠龙勇士}
-依次攻击每条龙。面对生命值 $a_i$，从当前剑的多重集合中选攻击力不高于 $a_i$ 的最大剑；若不存在，则选最小剑。设选出的攻击力为 $c_i$。攻击固定的 $x$ 次后，龙可以不断恢复 $p_i$ 生命值；要求恰好恢复到 $0$。击败后所用剑被消耗，并得到奖励剑。求可通关的最小 $x$。
-\end{problem}
+\begin{tip}[词义：扩展 CRT 的「扩展」]
+「扩展」只是指模数不必两两互质。做法：每次只合并两个式子，把结果当成一个新式子再和下一个合并。合并一次可能无解（相容性 $d\mid b-a$），也可能把模数变成 $\lcm$。顺序不影响最终解集，但影响中间数值大小。
+\end{tip}
+
+故 $x\equiv14\pmod{18}$。把第二个余数改为 $4$，则 $3\nmid(4-2)$，无解。
+
+\begin{lstlisting}
+// Contracts: m,n > 0; all intermediate products fit i128.
+i128 norm(i128 a, i128 m) { a %= m; return a < 0 ? a + m : a; }
+bool merge_crt(i128 a, i128 m, i128 b, i128 n,
+               i128 &r, i128 &mod) {
+    a = norm(a,m); b = norm(b,n);
+    i128 u,v, d = exgcd(m,n,u,v);
+    if ((b-a) % d != 0) return false;
+    i128 q = n/d;
+    i128 t = norm(((b-a)/d) * u, q);
+    mod = m*q;
+    r = norm(a+m*t, mod);
+    return true;
+}
+\end{lstlisting}
+若输入规模使乘积超出 $128$ 位，此段代码不再适用，应改用大整数或安全模乘。exCRT 并不会自动解决整数溢出。
+
+\paragraph{附带一个下界.} 若最终解为 $x\equiv r\pmod M$，$0\le r<M$，还要求 $x\ge L$，则最小解是
+\[
+ r+M\max\!\left(0,\ceil{\frac{L-r}{M}}\right).
+\]
+
+\begin{tip}[词义：大整数（要换掉的不止乘法）]
+「大整数」= 用数组或 \texttt{boost::multiprecision::cpp\_int} 存任意长度。竞赛里能不用就不用（慢一个量级）；实在躲不掉时，要连带把 gcd、取模、快速幂都换成高精度版本，不能只换乘法。
+\end{tip}
+
+\begin{tip}[下界公式是怎么推出来的]
+解集是 $r,r+M,r+2M,\ldots$。要挑第一个不小于 $L$ 的，就是求最小 $t\ge0$ 使 $r+tM\ge L$，即 $t\ge(L-r)/M$，故 $t=\max(0,\ceil{(L-r)/M})$。写成代码时注意 $L\le r$ 时不能让 $\ceil{\text{负数}}$ 把 $t$ 压成负数，所以外面套 $\max(0,\cdot)$。
+\end{tip}
+
+同余约束解决的是周期，大小约束决定选周期中的哪一项。
+
+
 \hint 有序多重集合确定每次武器；每条龙给出 $c_ix\equiv a_i\pmod{p_i}$ 和 $c_ix\ge a_i$，不能只保留同余式。
 
+分四步完成。
+\paragraph{第一步：武器序列独立于攻击次数.}
+选剑只与当前集合、$a_i$ 和奖励剑有关。用 \texttt{multiset} 的 \texttt{upper\_bound(a[i])} 寻找第一个大于 $a_i$ 的元素，若它不是 begin，则退一步；否则选择 begin。删除时只删除这一个迭代器，不能删除所有相等攻击力的剑。
+
+\paragraph{第二步：准确翻译死亡条件.}
+攻击后生命值 $a_i-c_ix$，只能增加 $p_i$，不能减少。因此存在整数 $k_i\ge0$ 满足
+\[
+ a_i-c_ix+k_ip_i=0
+\]
+
+\begin{tip}[两个容器术语]
+\texttt{upper\_bound(x)} 返回「第一个严格大于 $x$ 的元素」的位置（迭代器），不是位置编号；所以「不高于 $a_i$ 的最大值」= 先找第一个大于的，再往回退一步，退不了（已是 begin）就取 begin。\texttt{erase(迭代器)} 只删这一个，\texttt{erase(值)} 会把所有相等的都删掉——本题恰好在有重复剑时出错。
+\end{tip}
+
+等价于
+\[
+ c_ix\equiv a_i\pmod{p_i},\qquad x\ge\ceil{a_i/c_i}.
+\]
+若没有第二条，可能输出一个攻击伤害还不够的“同余解”。
+
+\paragraph{第三步：把带系数同余化为标准式.}
+令 $d_i=\gcd(c_i,p_i)$。若 $d_i\nmid a_i$，立即无解；否则除去 $d_i$ 后求逆元，得到
+\[
+ x\equiv \frac{a_i}{d_i}\left(\frac{c_i}{d_i}\right)^{-1}
+ \pmod{p_i/d_i}.
+\]
+将这些式子逐个 exCRT 合并，并记录 $L=\max_i\ceil{a_i/c_i}$。
+\paragraph{第四步：选择不小于下界的第一项.}
+用前面的等差数列公式即可。原题保证所有 $p_i$ 的最小公倍数不超过 $10^{12}$，但中间乘法仍可能溢出 $64$ 位。
+
+\paragraph{把官方说明中的 $59$ 推出来.}
+初始剑 $\{1,9,1000\}$，生命值依次为 $3,5,7$，恢复量为 $4,6,10$，前两次奖励剑为 $7,3$。选出的剑是 $1,7,3$，得到
+\[
+ x\equiv3\pmod4,\quad7x\equiv5\pmod6,\quad3x\equiv7\pmod{10}.
+\]
+即 $x\equiv3\pmod4,x\equiv5\pmod6,x\equiv9\pmod{10}$，先合并前两式得 $x\equiv11\pmod{12}$，再合并第三式得 $x\equiv59\pmod{60}$。下界为 $3$，故答案 $59$。
+
+\cost 选剑 $O(n\log m)$，合并 $O(n\log V)$；集合大小始终为 $m$。当 $p_i=1$ 时同余式没有约束，但伤害下界仍不能丢。
 \src{https://www.luogu.com.cn/problem/P4774}
 
 
 \chapter{乘法阶、原根与离散对数}
+\begin{chapterintro}[章节导读]
+上一章解决的是多个同余约束如何合并；这一章换一个方向，研究一个数不断乘下去会形成怎样的周期。乘法阶告诉我们周期有多长，原根刻画整个单位群，而离散对数则反过来要求我们从结果找回指数。
+\end{chapterintro}
+
 \section{周期与乘法阶}
 \begin{definition}
 若 $m\ge2$ 且 $\gcd(a,m)=1$，满足 $a^r\equiv1\pmod m$ 的最小正整数 $r$ 称为阶，记作 $\ord_m(a)$。
@@ -323,47 +972,104 @@ $\ord_m(a)$ 存在当且仅当 $\gcd(a,m)=1$。设其为 $r$，则
 \]
 若 $a^x\equiv b\pmod m$ 有解 $x_0$，则其非负整数解为 $x\equiv x_0\pmod r$ 中非负的那些整数。
 \end{theorem}
-\begin{proof}
-存在幂等于 $1$ 就说明 $a$ 可逆，反向由欧拉定理保证。把 $k$ 除以 $r$ 写成 $qr+s$，若 $a^k\equiv1$ 则 $a^s\equiv1$，最小性迫使 $s=0$。令 $k=\varphi(m)$ 得到整除关系。最后对两组离散对数用逆元消去。
-\end{proof}
+\begin{tip}[为什么：求阶前先查 $\gcd(a,m)=1$]
+$a^r\equiv1$ 与「$a$ 可逆」是一件事的两面：能回到 $1$ 就自动有逆元 $a^{r-1}$；可逆才有欧拉定理给出周期。所以任何「求阶」的代码，第一行都该是检查 $\gcd(a,m)=1$，检查不过就报「不存在」，而不是返回一个错误的最小值。
+\end{tip}
+
+
+\paragraph{具体周期.} 模 $7$ 的 $2^x$ 依次为 $1,2,4,1,\ldots$，阶为 $3$；不是每个非零余数都能表示成 $2$ 的幂，例如 $3$ 不行。模 $8$ 的 $2^x$ 是 $1,2,4,0,0,\ldots$，只有最终周期，不存在乘法阶。
+\paragraph{求阶.} 已知 $\varphi(m)$ 的质因数分解，令 $r=\varphi(m)$。对每个素因子 $q$，只要 $q\mid r$ 且 $a^{r/q}\equiv1$，就令 $r\gets r/q$，直至不能继续。循环结束时 $r$ 正好是阶：若仍大于真阶，商中必有某个素因子可以再除。
+预处理含求 $\varphi(m)$ 及其分解；每次求阶通常用 $O(\log^2m)$ 次字长运算作粗上界。不能把分解的成本藏在一次 $O(\log^2m)$ 查询里。
 
 
 \section{有限域上的根数与原根}
 \begin{theorem}[多项式根数界，亦称此处的拉格朗日定理]
 在 $\mathbb F_p$ 上，首项系数非零的 $d$ 次多项式至多有 $d$ 个不同根。
 \end{theorem}
-\begin{proof}
-若有根 $r$，因式定理给出 $f(X)=(X-r)g(X)$。其余根与 $r$ 的差非零、在域中可逆，因而都是 $g$ 的根。对次数归纳即可。
-\end{proof}
+\begin{tip}[图景：$0$ 是黑洞]
+$0$ 是「黑洞」：一旦乘出 $0$ 就再也回不到 $1$。所以模 $8$ 的 $2$ 只有「最终周期」（尾巴进 $0$），没有乘法阶——阶要求 $a^r\equiv1$。这正是求阶之前必须查互质的原因。
+\end{tip}
+
+
+\begin{tip}[提醒：两个「拉格朗日定理」不是一回事]
+这条定理的名字容易撞车：群论里还有一条「子群的阶整除群的阶」也叫拉格朗日定理，与这里无关。本书尽量用「多项式根数界」这种描述性名字，避免靠人名记忆。
+\end{tip}
+
+
+\begin{tip}[怎么做：从 $\varphi(m)$ 往下除出最小周期]
+把做法翻译成人话就是：先猜一个周期 $r=\varphi(m)$，再逐个素因子试着往下除，「除了之后还是一」、且还能继续除，就除掉。最后剩下的一定是最小正周期。前提是你已经知道 $\varphi(m)$ 和它的分解——这两项成本要单独计入预处理。
+\end{tip}
+
+
+\begin{pitfall}
+这不是任意合数模数下都成立的性质。例如 $X^2-1\equiv0\pmod8$ 有 $1,3,5,7$ 四个根。“次数为二”只有在相应域或整环条件下才能限制根数。本节的名称也不要与群论中“子群阶整除群阶”的拉格朗日定理混淆。
+\end{pitfall}
 
 
 \begin{definition}
 满足 $\ord_m(g)=\varphi(m)$ 的元素 $g$ 称为模 $m$ 的原根。
 \end{definition}
+
+\begin{tip}[原根一句话]
+原根就是「一个数不断自乘，能走遍所有与 $m$ 互质的余数」。模 $7$ 下 $3$ 的幂给出 $3,2,6,4,5,1$——六个互质余数一个不落，所以 $3$ 是原根。这样的数存在与否完全由 $m$ 的形状决定（$2,4,p^\alpha,2p^\alpha$）。
+\end{tip}
+
 \begin{theorem}
 对 $m\ge2$，原根存在当且仅当
 \[
  m=2,4,p^\alpha,2p^\alpha\quad(p\text{ 为奇素数},\ \alpha\ge1).
 \]
 若 $\gcd(g,m)=1$，则 $g$ 是原根当且仅当对每个\textbf{不同素因子} $q\mid\varphi(m)$ 都有 $g^{\varphi(m)/q}\not\equiv1\pmod m$。
+（注意枚举的对象是 $\varphi(m)$ 的素因子，不是它的约数；$\gcd(g,m)=1$ 这条前提也不能省，否则逆元不存在，测试无从谈起。）
 \end{theorem}
 原根存在时，简化剩余系为 $1,g,\ldots,g^{\varphi(m)-1}$，原根个数为 $\varphi(\varphi(m))$；且
 \[
  \ord_m(g^t)=\frac{\varphi(m)}{\gcd(t,\varphi(m))}.
 \]
 
+\paragraph{判定式为什么只查素因子？}
+若真阶 $r<\varphi(m)$，则整数 $\varphi(m)/r>1$ 有某个素因子 $q$，于是 $r\mid\varphi(m)/q$，记 $\varphi(m)/q=rt$，得 $g^{\varphi(m)/q}=(g^r)^t\equiv1$，会被检测到。反向：若存在素因子 $q$ 使 $g^{\varphi(m)/q}\equiv1$，则阶整除 $\varphi(m)/q<\varphi(m)$，$g$ 不是原根。
+原根存在性分类的完整证明需要初等数论之外的工具（对 $2^\alpha$ 与奇素数幂分别构造，再由中国剩余定理合并），篇幅超过一节；基础课把它当作已知定理使用，判定式、原根计数与阶公式则应当课堂证明。
+\paragraph{模 $7$ 的例子.} $\varphi(7)=6$，只需测指数 $3,2$。$3^3\equiv6$，$3^2\equiv2$，故 $3$ 为原根。与 $6$ 互质的指数为 $1,5$，所以原根是 $3^1=3$ 与 $3^5\equiv5$。
+\paragraph{随机找原根的边界.} 若原根存在，已知 $\varphi(t)/t=\Omega(1/\log\log t)$，可得到在 $[1,m)$ 随机抽样找到原根的期望次数为 $O((\log\log m)^2)$。每次还要做若干快速幂，不能把抽样次数当成总时间；小模数单独处理。
+
 
 \section{BSGS：用平方根空间换时间}
-\begin{problem}{离散对数}
-求 $a^x\equiv b\pmod m$ 的最小非负整数解，或报告无解。
-\end{problem}
 当 $\gcd(a,m)=1$ 时，若有解，则存在 $0\le x<\varphi(m)\le m$ 的解。这由欧拉定理得到，不需要误用“合数模数下的费马小定理”。
 设 $B=\ceil{\sqrt m}$，写 $x=iB+j$，$0\le j<B$，则
 \[
  a^j\equiv b(a^{-B})^i\pmod m.
 \]
+
+\begin{tip}[口径：「抽几次」不等于「跑多久」]
+「期望抽几次」和「总共跑多久」是两件事：每次抽样后要做 $\omega(\varphi(m))$ 次快速幂，还要有 $\varphi(m)$ 的分解。小模数直接枚举反而快；把渐近式当成实现建议是常见的坑。
+\end{tip}
+
 预处理 baby steps $a^j$，再枚举 giant steps 的右边并查表，时间、空间均为 $O(\sqrt m)$（哈希期望）。
 
+
+\paragraph{保证最小解的细节.}
+哈希表的同一个余数只保留最小 $j$。按照 $i=0,1,\ldots$ 的顺序查询，那么各块的指数区间互不重叠且递增，首次命中的 $iB+j$ 即为最小解。即使枚举区间略超过 $m$，首次命中仍然不会错；无解需完整检查足够覆盖 $[0,m)$ 的块数。
+若 $b$ 与 $m$ 不互质而 $a$ 与 $m$ 互质，则立即无解，因为任何 $a^x$ 都是单位。
+
+\paragraph{手算例.} 解 $2^x\equiv5\pmod{13}$。取 $B=4$，baby 表为
+\[
+1\mapsto0,\quad2\mapsto1,\quad4\mapsto2,\quad8\mapsto3.
+\]
+
+\begin{tip}[BSGS 的核心一次代换]
+把未知的指数按块拆开：$x=iB+j$，$0\le j<B$。等式 $a^{iB+j}\equiv b$ 两边同乘 $a^{-iB}$，变成「只有 $j$ 在左、只有 $i$ 在右」：$a^j\equiv b(a^{-B})^i$。左边全部预先算好放进表，右边一个个枚举去查表。这就是「用空间换时间」的标准形状，$\sqrt m$ 来自 $B\cdot B\approx m$。
+\end{tip}
+
+\begin{tip}[为什么：表里只留最小的 $j$]
+查表法求「最小解」时，插入策略和枚举顺序共同决定正确性：表里保留最小的 $j$，外层 $i$ 从小到大，于是第一次命中就是字典序最小的 $(i,j)$，也就是最小 $x$。若表被后来的大 $j$ 覆盖，答案可能偏大。
+\end{tip}
+
+$2^4\equiv3$，逆元为 $9$；giant 依次为 $5,6,2$，在 $i=2$ 时命中 $j=1$，得 $x=9$。
+
+\paragraph{多次询问如何分块？}
+若\textbf{底数 $a$ 与模数 $m$ 都固定}，可以预处理 $a^{iB}$ 的表，每问枚举 $ba^j$，将 $x=iB-j$ 还原。预处理 $O(m/B)$，$Q$ 次查询总计 $O(QB)$，平衡时 $B\approx\sqrt{m/Q}$；若该值小于 $1$，取 $B=1$。总时间应写成 $O(\sqrt{Qm}+Q)$ 的相应界，并说明取整与内存限制。
+如果只有模数固定、底数改变，原表一般不能复用。求最小解时，对同一 $j$ 找到最小可行 giant 指数，再对所有 $j$ 的候选取最小值，不能随意用哈希表覆盖重复值。
 
 
 \section{exBSGS：剥离非互质部分}
@@ -371,55 +1077,149 @@ $\ord_m(a)$ 存在当且仅当 $\gcd(a,m)=1$。设其为 $r$，则
 \[
  \frac ad a^{x-1}\equiv\frac bd\pmod{m/d}.
 \]
+
+\begin{tip}[exBSGS 在剥什么]
+$a$ 与 $m$ 不互质时 $a$ 不可逆，$a^{-1}$ 无从谈起。技巧是「约掉一个公因子再降一层」：$a^x\equiv b\pmod m$ 且 $d=\gcd(a,m)\mid b$ 时，可化为 $\frac ad a^{x-1}\equiv\frac b d\pmod{m/d}$。每剥一层模数变小、指数减一；剥到互质为止，再交给 BSGS。
+\end{tip}
+
+\begin{tip}[「平衡」两个成本的做法]
+总时间形如 $T(B)=m/B+QB$（预处理一项、查询一项）。两项一个随 $B$ 减、一个随 $B$ 增，令相等 $m/B=QB$ 得 $B=\sqrt{m/Q}$，此时 $T=O(\sqrt{Qm})$。也可以用求导验证；再检查取整、内存上限、以及 $B<1$ 时要夹回 $1$。
+\end{tip}
+
 由于 $\gcd(a/d,m/d)=1$，该系数可逆，可以递归到更小的模数。递归前每层都要检查零指数解。最终底数与新模数互质时使用 BSGS。
 
 
+更适合实现的形式是维护已剥离次数 $c$ 与系数 $k$，循环不变量为
+\[
+ k a^{x-c}\equiv b\pmod m,\qquad\gcd(k,m)=1.
+\]
 
-\begin{problem}{P5605：小 A 与两位神仙}
-$m=p^q$，$p$ 为奇素数。多次询问单位 $x,y$，判断是否存在 $a\ge0$ 使 $x^a\equiv y\pmod m$。$m\le10^{18}$，询问数不超过 $2\times10^4$，允许使用快速因数分解工具。
-\end{problem}
+\begin{tip}[什么叫「循环不变量」]
+每次循环开头都必须成立的一句话，例如「剥掉 $c$ 层后，余下的式子是 $ka^{x-c}\equiv b$，且 $k$ 可逆」。写代码前先写不变量，循环结束时的不变量加退出条件就自动是答案；调试时也照这句话打表检查。
+\end{tip}
+
+初始 $c=0,k=1$。每次先判断 $b=k$，若成立则 $x=c$ 就是最小解；再令 $d=\gcd(a,m)$。
+若 $d=1$，解 $a^{x-c}\equiv bk^{-1}\pmod m$；若 $d>1$ 且 $d\nmid b$ 则无解。否则
+\[
+ m\gets m/d,\quad b\gets b/d,\quad
+ k\gets k(a/d)\bmod m,\quad c\gets c+1.
+\]
+这里 $a/d$ 使用本轮的 $d$；底数 $a$ 保持不变。$m$ 至少减半，剥离最多 $O(\log m)$ 轮。
+
+\paragraph{算例.} $4^x\equiv8\pmod{14}$。先检查 $x=0$ 不满足。剥离 $d=2$ 后 $m=7,b=4,k=2,c=1$，于是需解 $4^{x-1}\equiv2\pmod7$，最小 $x-1=2$，答案 $3$。验证 $4^3=64\equiv8\pmod{14}$。
+\begin{pitfall}
+离散对数的零指数是合法候选；$a\equiv0$ 时，$x=0$ 给 $1$，$x\ge1$ 给 $0$。非互质情形的解集可能带有限前缀，不能一开始就写成 $x_0+k\ord_m(a)$。
+\end{pitfall}
+
+
+\begin{tip}[「快速因数分解工具」指什么]
+指 Miller--Rabin 判素 + Pollard--Rho 分解（附录模板里的 \texttt{is\_prime} 与 \texttt{factor}）。它们在 $64$ 位范围内实践上很快，但 Rho 的速度依赖随机函数的「表现」，没有严格多项式界；而分解只是把 $m$ 拆成素数幂的工具，拆完之后每一步都是确定的整数运算。
+\end{tip}
+
 \hint 单位群是循环群，条件恰为 $\ord_m(y)\mid\ord_m(x)$；无需真正求离散对数。
+
+取原根 $g$，令 $x=g^u,y=g^v$，则需解
+\[
+ au\equiv v\pmod{\varphi(m)}.
+\]
+
+\begin{tip}[这条提示里的每个词]
+「单位」= 与 $m$ 互质的余数（可逆）；「单位群是循环群」= 存在一个 $g$，使得每个单位都写成 $g^t$；「阶」$\ord_m(x)$ = 使 $x^r\equiv1$ 的最小正指数。把 $x=g^s$、$y=g^t$ 代入 $x^a\equiv y$，得 $sa\equiv t$，这类方程有解的条件正是 $\ord_m(y)\mid\ord_m(x)$——所以根本不必真的求出离散对数。
+\end{tip}
+
+裴蜀定理给出 $\gcd(u,\varphi(m))\mid v$。等价地，它整除 $\gcd(v,\varphi(m))$；使用阶公式便得到所述整除关系。
+也可以从循环群子群唯一性理解：$\langle x\rangle$ 是阶为 $\ord_m(x)$ 的唯一子群。
+
+\paragraph{为什么条件不能推广到任意模数？}
+模 $8$，$3$ 与 $5$ 的阶都为 $2$，但 $3$ 的幂只能取 $1,3$，不能得到 $5$。单位群不是循环群，“阶整除”仅必要而不充分。
+\cost 分解 $m$、计算并分解 $\varphi(m)$ 后，每问两次求阶。因数分解的 $O(m^{1/4})$ 应理解为后文 Pollard--Rho 的常用启发式估计，不是无条件最坏界。
 
 \src{https://www.luogu.com.cn/problem/P5605}
 
-\begin{problem}{P6736：白泽教育——高阶运算取模}
-定义 $a\uparrow^1 b=a^b$，且 $a\uparrow^n0=1$；$n>1,b>0$ 时
-\[
- a\uparrow^n b=a\uparrow^{n-1}(a\uparrow^n(b-1)).
-\]
-给定 $1\le a\le10^9,1\le n\le3,0\le b<m\le10^9$，求最小非负 $x$ 使 $a\uparrow^n x\equiv b\pmod m$。
-\end{problem}
 \hint $n=1$ 用 exBSGS；$n=2$ 利用欧拉链计算有限高度的塔并证明稳定；$n=3$ 利用高度增长极快而不是构造大整数。先特判 $x=0$、$m=1$、$a=1$。
+
+给出一条以正确性易于讲清为优先的算法路线。令 $T_0=1,T_h=a^{T_{h-1}}$，它是 $a\uparrow^2h$。例如底数 $2$ 的前几项为
+\[
+1,\ 2,\ 4,\ 16,\ 65536,\ 2^{65536},\ldots.
+\]
+
+\begin{tip}[为什么这三个特判不能省]
+$x=0$：任何 $a^0=1$，若 $b\equiv1$ 答案就是 $0$，而按「指数为正」的循环会漏掉；$m=1$：所有余数都是 $0$，答案恒为 $0$，但 $\varphi(1)$、逆元之类的记号在此都退化；$a=1$：$1$ 的幂永远是 $1$，要么立刻命中要么永远不命中，递归降幂会打转。边界情形不特判，正确的算法也会给出错误答案，这是竞赛里最常见的失分方式之一。
+\end{tip}
+
+\paragraph{有限枚举的依据：稳定上界.}
+设欧拉链 $m_0=m,m_{i+1}=\varphi(m_i)$，到 $m_L=1$。取
+\[
+ R=\ceil{\log_2 m},\qquad H=R+L+1.
+\]
+对 $a\ge2$，$T_h\ge2^h$。当 $h\ge R$，在链上所有模数处，“是否达到阈值”的标记都为真。底层模 $1$ 的余数恒定，再向上逐层归纳：每向上一层多需要一层塔高；因此 $T_h\bmod m$ 在 $h\ge H$ 时稳定。
+于是得到一个安全的 $O(\log m)$ 高度上界，不追求最紧的常数。
+
+$n=2$ 时从 $h=0$ 到 $H$ 枚举，使用扩展欧拉递归与截断塔计算 $T_h\bmod m$，第一次命中就是答案；都不命中则永远不命中。\textbf{不能仅凭两次顶层余数相同就提前宣布稳定}，应使用上述证明或完整状态的稳定判据。
+
+\paragraph{$n=3$ 为什么只需极少候选？}
+记 $P_x=a\uparrow^3x$，则 $P_0=1,P_{x+1}=T_{P_x}$。当 $a\ge3$，
+\[
+ P_1=a,\quad P_2=T_a\ge3^{27}>H.
+\]
+故 $P_3=T_{P_2}$ 已使用稳定的塔高，此后结果相同，只需检查 $x=0,1,2,3$。
+当 $a=2$，$P_1=2,P_2=4,P_3=T_4=65536>H$，故还需检查 $x=4$。在本题 $m\le10^9$ 时，上述 $H$ 小于 $100$，比较非常安全。
+
+计算 $P_2$ 或 $P_3$ 的“高度”时，只保留截断到 $H$ 的结果；高度达到 $H$ 即可使用稳定值。原稿中 $3\uparrow^33=3^{3^{27}}$ 的等式不正确：前者是高度 $3^{27}$ 的 $3$ 的幂塔，而右边仅是高度 $4$ 的塔。
+
+\cost 每问预处理欧拉链，缓存重复模数的 $\varphi$，再做有限次快速幂。上述教学实现应按“枚举高度数 $\times$ 欧拉链深度 $\times$ 快速幂成本”计时；不是一句“答案很小”就能省略全部复杂度。大量测试下可复用链、预筛试除质数，并改为自底向上批量计算。$n=1$ 的瓶颈仍可能是平方根级 BSGS。
 
 \src{https://www.luogu.com.cn/problem/P6736}
 
 
 \chapter{升幂引理：把巨大幂变成指数的加法}
+\begin{chapterintro}[章节导读]
+上一章我们研究了模意义下的周期和指数；现在继续追问一个更细的问题：两个非常大的幂相减，究竟含有多少个素因子 p？p 进赋值把“乘法中的指数”变成可加的量，升幂引理则把这个观念直接用于幂的差值。
+\end{chapterintro}
+
 \section{\texorpdfstring{$p$}{p}-进赋值与使用前的检查}
 对非零整数 $x$，$\nu_p(x)=\max\{e\ge0:p^e\mid x\}$。基本性质为
 \[
  \nu_p(xy)=\nu_p(x)+\nu_p(y),\qquad
  \nu_p(x+y)\ge\min(\nu_p(x),\nu_p(y)),
 \]
+
+\begin{tip}[幂塔与高度]
+$a\uparrow\uparrow h$ 表示 $h$ 层的塔 $a^{a^{\cdot^{\cdot^a}}}$，「高度」就是层数。塔的计算顺序是从最上层往下（右结合），所以「高度 $5$ 的 $2$ 的塔」是 $2^{2^{2^{2^2}}}=2^{65536}$，而不是 $((2^2)^2)^2$。
+\end{tip}
+
+\begin{tip}[箭号记号的两条约定]
+$a\uparrow^1 b=a^b$，$a\uparrow^{k}1=a$，$a\uparrow^{k}b=a\uparrow^{k-1}(a\uparrow^{k}b)$ 的塔式展开：$3\uparrow^2 3=3^{3^3}$ 高度为 $3$；再升一级 $\uparrow^3$ 就是「高度的高度」。凡是这种记号，先代最小的数值（高度 $1,2,3$）确认自己算的和定义一致，再往下看结论。
+\end{tip}
+
 若 $\nu_p(x)\ne\nu_p(y)$，后一式取等。
 下文统一设 $p$ 为素数，$p\nmid xy$，$n$ 为正整数。涉及差为 $0$ 的情况时可用 $\nu_p(0)=+\infty$，实际算题通常先排除零。
 
 
-
+\paragraph{直观解释.} $\nu_p$ 是“能连续除以 $p$ 多少次”。乘法变加法；加法却可能发生抵消，所以不能写 $\nu_p(x+y)=\nu_p(x)+\nu_p(y)$。例如 $\nu_2(6)=1,\nu_2(10)=1$，但 $\nu_2(16)=4$。
 \section{与素数互质的指数}
 \begin{theorem}
 若 $p\mid x-y$ 且 $p\nmid n$，则
 \[
  \nu_p(x^n-y^n)=\nu_p(x-y).
 \]
+
+
+
 若 $p\mid x+y$、$n$ 为奇数且 $p\nmid n$，则
 \[
  \nu_p(x^n+y^n)=\nu_p(x+y).
 \]
 \end{theorem}
-\begin{proof}
-因式分解 $x^n-y^n=(x-y)\sum_{i=0}^{n-1}x^{n-1-i}y^i$。因为 $x\equiv y\pmod p$，和式模 $p$ 为 $nx^{n-1}\not\equiv0$，所以它不再贡献 $p$。和的情况将 $y$ 换成 $-y$，利用 $n$ 为奇数。
-\end{proof}
+
+\begin{tip}[口径：为什么规定 $\nu_p(0)=+\infty$]
+规定 $\nu_p(0)=+\infty$ 是为了让「$p^e\mid x$ 对任意 $e$ 成立」这句话有地方安放，从而 $\nu_p(xy)=\nu_p(x)+\nu_p(y)$ 在 $y=0$ 时不用另写情形。做题时代入具体数字前先检查 $x=y$，否则会得到「$\nu_p(0)$ 等于某个有限值」的错误等式。
+\end{tip}
+
+
+\begin{tip}[前提：$p\nmid xy$ 为什么不能少]
+「$p\nmid xy$」是三条结论共同的前提，它等价于 $p\nmid x$ 且 $p\nmid y$。少了它，$x,y$ 都能被 $p$ 整除时左边右边同时虚增，公式就不成立了：例如 $p=3$、$x=3,y=6,n=2$，左边 $\nu_3(9-36)=2$，右边 $\nu_3(-3)+\nu_3(2)=1$。
+\end{tip}
 
 \section{奇素数的完整形式}
 \begin{theorem}[LTE，奇素数]
@@ -433,6 +1233,8 @@ $m=p^q$，$p$ 为奇素数。多次询问单位 $x,y$，判断是否存在 $a\ge
 \]
 \end{theorem}
 
+\paragraph{教学重点.} 原稿的二重求和证明可以成立，但容易让学生看不见真正原因。用“唯一最低赋值项”说明为什么不抵消，之后只需归纳，结构更清楚。
+
 
 \section{素数二的特殊形式}
 \begin{theorem}[LTE，$p=2$]
@@ -441,6 +1243,8 @@ $m=p^q$，$p$ 为奇素数。多次询问单位 $x,y$，判断是否存在 $a\ge
  \nu_2(x^n-y^n)=\nu_2(x-y),\qquad
  \nu_2(x^n+y^n)=\nu_2(x+y).
 \]
+
+
 若 $n$ 为偶数，则
 \[
  \nu_2(x^n-y^n)=\nu_2(x-y)+\nu_2(x+y)+\nu_2(n)-1.
@@ -451,36 +1255,79 @@ $m=p^q$，$p$ 为奇素数。多次询问单位 $x,y$，判断是否存在 $a\ge
 \]
 \end{theorem}
 
+\begin{tip}[方法：唯一最低赋值项]
+「唯一最低赋值项」是一种很常用的论证格式：把一项写成若干项之和，证明其中某一项所含 $p$ 比其它任何一项都少，那么这个「少」无法被抵消，整个和的赋值就等于它。用这个格式，二重求和可以省掉。
+\end{tip}
+
+
+\paragraph{另一个边界.} 若 $x,y$ 为奇数且 $n$ 偶，则 $x^n+y^n\equiv2\pmod4$，因此赋值为 $1$。不要把“幂的和的 LTE”用于偶数指数。
+
 
 \section{分层例题与解析}
-\begin{problem}{例 1：原稿中的两个练习}
-求 $\nu_7(10^7-3^7)$ 与 $\nu_2(7^{10}-3^{10})$。
-\end{problem}
 \hint 第一个是奇素数差的形式；第二个必须用 $p=2$ 的偶指数形式。
 
+因为 $7\mid10-3$ 且 $7\nmid30$，
+\[
+ \nu_7(10^7-3^7)=\nu_7(7)+\nu_7(7)=2.
+\]
 
-\begin{problem}{例 2：先分组再使用 LTE}
-求 $\nu_3(2^{2025}+1)$ 与 $\nu_5(3^{100}-1)$。
-\end{problem}
+\begin{tip}[怎么用一节里的例题]
+每题先只读题面，写下「用哪条定理、条件是否满足」，再看解析的第一句是否与你猜的一致。对不上时不要往下读，先找出是自己漏了条件还是解析换了方法。
+\end{tip}
+
+第二题中 $7,3$ 均为奇数，指数 $10$ 为偶数，故
+\[
+ \nu_2(7^{10}-3^{10})=\nu_2(4)+\nu_2(10)+\nu_2(10)-1=2+1+1-1=3.
+\]
+注意两个 $\nu_2(10)$ 来自不同对象：一个是底数之和，一个是指数。
+
+
 \hint 第一题为奇指数幂的和；第二题先把 $3^{100}$ 看成 $81^{25}$。
 
+$2025=3^4\cdot25$，所以
+\[
+\nu_3(2^{2025}+1)=\nu_3(2+1)+\nu_3(2025)=1+4=5.
+\]
+$5\nmid3-1$，不能直接对底数 $3,1$ 使用差的 LTE。但 $3^4-1=80$ 可被 $5$ 整除，因此
+\[
+\nu_5(3^{100}-1)=\nu_5(81^{25}-1)=\nu_5(80)+\nu_5(25)=1+2=3.
+\]
+此例展示“先用阶找到能被 $p$ 整除的基本差，再用 LTE 提升”。
 
-\begin{problem}{例 3：最小指数与素数幂模数下的阶}
-求最小正整数 $n$ 使 $5^4\mid3^n-1$。
-\end{problem}
+
 \hint 先由模 $5$ 的阶得到 $4\mid n$，再比较赋值。
+
+模 $5$ 下 $3$ 的阶为 $4$，设 $n=4t$。LTE 给出
+\[
+ \nu_5(3^{4t}-1)=\nu_5(3^4-1)+\nu_5(t)=1+\nu_5(t).
+\]
+要至少为 $4$，最小 $t=5^3=125$，故答案 $n=500$。
+一般对奇素数 $p$、$d=\ord_p(a)$，若 $s=\nu_p(a^d-1)$，则
+\[
+ \ord_{p^k}(a)=d\,p^{\max(0,k-s)}.
+\]
+证明正是上面的两步。它把阶和升幂引理连接起来；$p=2$ 需另行分类。
 
 
 
 \chapter{阶乘、素数幂与组合数取模}
+\begin{chapterintro}[章节导读]
+上一章的赋值方法能告诉我们一个数里含多少个 p；这一章把它应用到阶乘。因为阶乘本身会迅速变得巨大，我们要把“p 的指数”和“去掉 p 后留下的单位部分”拆开，最终得到素数幂模数下组合数的计算方法。
+\end{chapterintro}
+
 \section{Wilson 定理及单位群乘积}
 \begin{theorem}[Wilson 定理]
 整数 $n>1$ 为素数，当且仅当 $(n-1)!\equiv-1\pmod n$。
 \end{theorem}
-\begin{proof}
-$n=p$ 为奇素数时，在 $1,\ldots,p-1$ 中将互为逆元且不相同的元素配对，乘积均为 $1$；剩下的自逆元素由 $x^2\equiv1$ 可知只有 $1,-1$，乘积为 $-1$。$p=2$ 直接检查。
-反向，若 $n$ 为合数，取 $1<d<n$ 且 $d\mid n$，则 $d\mid(n-1)!$，不可能同时整除 $(n-1)!+1$，矛盾。
-\end{proof}
+\begin{tip}[一节里其实在算什么乘积]
+所有「把一堆余数乘起来」的问题（$(p-1)!$、单位群全体、约数之积）都用同一套：把元素按互为逆元配对，配对项乘积为 $1$，剩下自逆元单独数。所以真正要算的总是「解 $x^2\equiv1$ 有几个解」。
+\end{tip}
+
+
+\begin{tip}[「单位群乘积」在算什么]
+模 $m$ 下所有可逆余数的乘积。做法永远是同一套：把元素按「与自己互为逆元」配对，乘积为 $1$，剩下的只有自逆元（解 $x^2\equiv1$）。所以真正要算的是「自逆元有几个」，这由 $m$ 的形状决定；模素数时恰有 $\pm1$。
+\end{tip}
+
 对一般 $m>1$，所有单位的乘积模 $m$ 为 $-1$ 或 $1$。取 $-1$ 的模数类型是 $2,4,p^\alpha,2p^\alpha$（$p$ 奇素数），其他取 $1$；模 $2$ 下 $1=-1$，数值上重合。
 特别地，令 $Q=p^\alpha$，则
 \[
@@ -488,6 +1335,14 @@ $n=p$ 为奇素数时，在 $1,\ldots,p-1$ 中将互为逆元且不相同的元�
  \begin{cases}1,&p=2,\alpha\ge3,\\-1,&\text{其他}\end{cases}\pmod Q.
 \]
 
+
+\paragraph{推广形式的理由.}
+在任意有限阿贝尔群中，将非自逆元素成对消去，剩下的是满足 $u^2=1$ 的元素。它们构成若干个二阶循环群的直积：若只有一个非单位自逆元素，乘积是该元素；若有至少两个独立的二阶方向，每个坐标取 $1$ 的次数为偶数，乘积是单位元。
+模奇素数幂的 $x^2=1$ 只有 $\pm1$：$p$ 不可能同时整除 $x-1,x+1$，故一个因子吸收全部 $p^\alpha$。模 $2^\alpha$（$\alpha\ge3$）则有四个自逆元素。再用 CRT 组合，就得到分类。
+\begin{pitfall}
+$C_Q$ 是\textbf{删去 $p$ 的倍数后}的单位乘积，而 $(Q!)_p$ 是对每个整数\textbf{除尽自身包含的 $p$ 因子}后再相乘，两者不相同。
+例如 $p=2,Q=8$：$C_8=1\cdot3\cdot5\cdot7=105$，而 $(8!)_2=315$。
+\end{pitfall}
 
 
 \section{Legendre 公式：阶乘中的素数指数}
@@ -497,17 +1352,17 @@ $n=p$ 为奇素数时，在 $1,\ldots,p-1$ 中将互为逆元且不相同的元�
  \nu_p(n!)=\sum_{j\ge1}\floor{n/p^j}
  =\frac{n-s_p(n)}{p-1},
 \]
+
+
 其中 $s_p(n)$ 是 $p$ 进制各位数字之和。$\nu_p(0!)=0$。
 \end{theorem}
-\begin{proof}
-每个 $p$ 的倍数贡献至少一个 $p$，每个 $p^2$ 的倍数还要多贡献一个，依此类推。若 $n=\sum_i a_ip^i$，则
-\[
-\sum_{j\ge1}\floor{n/p^j}
-=\sum_i a_i(1+p+\cdots+p^{i-1})
-=\sum_i a_i\frac{p^i-1}{p-1}.
-\]
-整理得到数位和形式。
-\end{proof}
+
+\begin{tip}[一句话版]
+$\nu_p(n!)=\sum_{j\ge1}\floor{n/p^j}$：先数 $p$ 的倍数，再数 $p^2$ 的倍数（它们多贡献一个），一路数到超过 $n$ 为止。记不住公式时，用「$10!$ 里有几个 $2$」现场推一遍只要十秒。
+\end{tip}
+
+\paragraph{算例.} $\nu_2(10!)=5+2+1=8$；二进制 $10=(1010)_2$，数位和为 $2$，也得到 $10-2=8$。$\nu_5(100!)=20+4=24$，所以 $100!$ 的十进制末尾零数为 $\min(\nu_2,\nu_5)=24$。
+实现时反复令 $n\gets\floor{n/p}$ 并累加，而不是不断计算 $p^j$；后者可能溢出。
 
 
 \section{Kummer 定理：进位就是损失的数位和}
@@ -516,10 +1371,17 @@ $n=p$ 为奇素数时，在 $1,\ldots,p-1$ 中将互为逆元且不相同的元�
 \[
 \nu_p\binom nk=\frac{s_p(k)+s_p(n-k)-s_p(n)}{p-1}.
 \]
+
+
 它等于在 $p$ 进制下把 $k$ 与 $n-k$ 相加时的进位次数，也等于从 $n$ 减 $k$ 的借位次数（逐位、包含连续借位）。
 \end{theorem}
 
+\begin{tip}[它的用法是「判零」而不是「算值」]
+实战里几乎不用它算出 $\nu_p$ 的具体值，只用它的一句话推论：$p\nmid\binom nk\iff$ 竖式 $k+(n-k)$ 在 $p$ 进制下不进位。Lucas 定理就是这个推论的另一面。
+\end{tip}
 
+
+\paragraph{手算例.} $\binom{10}{4}=210$。二进制 $4=(0100)_2$，$6=(0110)_2$，相加得到 $(1010)_2$，在 $2^2$ 位发生一次进位，因此 $\nu_2(210)=1$。三进制 $4=(11)_3$、$6=(20)_3$ 相加为 $(101)_3$，也有一次进位，所以 $\nu_3(210)=1$。
 \section{Lucas 定理：逐位计算组合数}
 约定 $\binom nk=0$（$k<0$ 或 $k>n$）。
 \begin{theorem}[Lucas]
@@ -527,6 +1389,8 @@ $p$ 为素数，$n=\sum_i n_ip^i,k=\sum_i k_ip^i$，则
 \[
  \binom nk\equiv\prod_i\binom{n_i}{k_i}\pmod p.
 \]
+
+
 等价的递归形式为
 \[
  \binom nk\equiv\binom{\floor{n/p}}{\floor{k/p}}
@@ -534,12 +1398,30 @@ $p$ 为素数，$n=\sum_i n_ip^i,k=\sum_i k_ip^i$，则
 \]
 \end{theorem}
 
+\begin{tip}[ Lucas 只在素数模数下成立]
+证明依赖 $(1+X)^p\equiv1+X^p\pmod p$，这一步要求 $p$ 为素数（保证 $\binom pi$ 被 $p$ 整除）。模 $4$ 时它直接失效：$\binom42=6\equiv2\pmod4$，按「逐位相乘」却会得 $\binom{10}{10}$ 型的 $1$。合数模数要走「素数幂 + CRT」那条路。
+\end{tip}
+
+
+\begin{tip}[「生成函数」在这里其实就是多项式]
+$\sum_k\binom nk X^k=(1+X)^n$：把「选法条数」当成一个多项式的系数。于是「模 $p$ 的 $\binom nk$」变成「多项式在 $\pmod p$ 下的某个系数」。用多项式的好处是可以相乘、可以只看某一项，而不用讨论组合意义。
+\end{tip}
+
+\paragraph{完整算例.} 模 $3$ 求 $\binom{10}{3}$。$10=(101)_3$、$3=(010)_3$，中间位出现 $1>0$，故余数为 $0$。模 $7$ 求 $\binom{10}{3}$，$10=(13)_7,3=(03)_7$，得到 $\binom10\binom33=1$，与 $120\bmod7=1$ 一致。
+\paragraph{二进制结论.} $\binom nk$ 为奇数当且仅当 $k$ 的所有二进制 $1$ 位都包含于 $n$，可测试 $(k\mathbin{\&}n)=k$。
+\cost 当 $p$ 足够小，可预处理 $0,\ldots,p-1$ 的阶乘与逆阶乘，单问 $O(\log_p n)$。若 $p$ 本身非常大，$O(p)$ 预处理不现实，需利用小 $k$ 等附加条件；Lucas 本身不是所有素数模数下的“常数时间组合数”。
+
 
 \section{去掉素因子后的阶乘递推}
 定义 $U_p(n)=(n!)_p$，即
 \[
  n!=p^{\nu_p(n!)}U_p(n),\qquad\gcd(U_p(n),p)=1.
 \]
+
+\begin{tip}[$(n!)_p$ 与 $U_p(n)$ 的区别]
+两个都很像、但不同：$(n!)_p$ 是把 $n!$ 里的 $p$ 因子全部除尽；而「去因子阶乘」$U_p(n)$ 是对 $1$ 到 $n$ 每个数先除尽 $p$ 因子，再相乘。数值上 $U_p(n)\equiv(n!)_p$，但递归推导时必须用后者的定义，才能把 $p$ 的倍数那部分单独提出来。
+\end{tip}
+
 固定 $Q=p^\alpha$，预处理
 \[
  F_Q(t)=\prod_{\substack{1\le i\le t\\p\nmid i}}i\pmod Q,\quad0\le t\le Q,\qquad F_Q(0)=1.
@@ -555,12 +1437,25 @@ $p$ 为素数，$n=\sum_i n_ip^i,k=\sum_i k_ip^i$，则
  U_p(\floor{n/p})\pmod p.
 \]
 
+\paragraph{验算.} $p=2,Q=8,n=10$。$C_8=1$，$F_8(2)=1$；递归的 $n$ 为 $10,5,2,1$，得到
+\[
+ U_2(10)\equiv F_8(2)F_8(5)F_8(2)F_8(1)
+ \equiv1\cdot7\cdot1\cdot1=7\pmod8.
+\]
+实际 $10!/2^8=14175$，余数也为 $7$。
+\cost 预处理 $O(Q)$ 时间、空间。由于 $C_Q\in\{1,-1\}$，其幂只看奇偶；一次 $U_p(n)$ 仅 $O(\log_p(n+1))$ 次模乘。若每层仍用普通快速幂计算整块贡献，代码会额外产生一个对数因子，复杂度表必须与实现一致。
+
 
 \section{扩展 Lucas：先计算素数幂，再 CRT}
 对 $M=\prod_i p_i^{\alpha_i}$，分别计算模 $Q_i=p_i^{\alpha_i}$ 的答案。令
 \[
  e=\nu_p(n!)-\nu_p(k!)-\nu_p((n-k)!),
 \]
+
+\begin{tip}[三步流程]
+$Q=p^\alpha$：第一步用 Legendre 算指数 $e=\nu_p$，若 $e\ge\alpha$ 答案就是 $0$；第二步用「去因子阶乘」递归算单位部分，分母用逆元（单位一定可逆）；第三步对各个 $Q$ 的结果做 exCRT。每一步都要单独检查模数，不能合并成「一次求阶乘逆元」。
+\end{tip}
+
 则
 \[
 \binom nk\equiv
@@ -572,35 +1467,97 @@ p^eU_p(n)U_p(k)^{-1}U_p(n-k)^{-1},&e<\alpha
 分母的两个单位部分一定可逆，使用 exgcd 求逆即可。最后按互质素数幂进行 CRT。
 
 
+\paragraph{从头算 $\binom{10}{4}\bmod12$.}
+模 $4$：$e=8-3-4=1$，$U_2(10)\equiv3,U_2(4)\equiv3,U_2(6)\equiv1$，所以
+\[
+ \binom{10}{4}\equiv2\cdot3\cdot3^{-1}\cdot1^{-1}\equiv2\pmod4.
+\]
+模 $3$：$e=4-1-2=1\ge1$，余数为 $0$。解 $x\equiv2\pmod4,x\equiv0\pmod3$ 得 $x\equiv6\pmod{12}$，与 $210\bmod12=6$ 一致。
+
+\paragraph{实现流程.}
+\begin{enumerate}
+\item 若 $M=1$，返回 $0$；若 $k<0$ 或 $k>n$，按约定返回 $0$。
+\item 分解 $M$，对每个素数幂建立 $F_Q$。
+\item 用 Legendre 求 $e$，先做零值判定，避免无用计算。
+\item 求三个 $U$，只对单位求逆，再乘 $p^e$。
+\item CRT 合并；禁止在模 $M$ 下先求 $k!$ 的逆元。
+\end{enumerate}
+\cost 不计模数分解，预处理 $O(\sum_iQ_i)$。使用单位块符号优化后，一次询问的主要成本为
+\[
+O\!\left(\sum_i\bigl(\log_{p_i}(n+1)+\log Q_i\bigr)\right)
+\]
+以及 CRT 合并成本。原稿将查询复杂度只写成模数的函数，漏掉了 $n$ 的递归层数。
+
 
 \section{原稿例题的完整建模}
-\begin{problem}{HDU 2973：YAPTCHA}
-对 $n\le10^6$，多次求
-\[
-\sum_{k=1}^n\floor{\frac{(3k+6)!+1}{3k+7}-\floor{\frac{(3k+6)!}{3k+7}}}.
-\]
-\end{problem}
+\begin{tip}[怎么做：把嵌套取整化成判定式]
+看到「嵌套取整」+「素数判定」的组合（例如把 $\floor{\text{某式}}$ 当成示性函数），第一反应应该是：能否化成 Wilson 型判定，或者 $\gcd$ 型计数。这类题很少真的需要枚举。
+\end{tip}
+
 \hint 单项恰为 $[3k+7\text{ 为素数}]$，筛法加前缀和。
+
+设 $N=3k+7$，$(N-1)!=qN+r$，$0\le r<N$。括号内等于 $(r+1)/N$，取整为 $1$ 当且仅当 $r=N-1$。由 Wilson 的充要条件，这恰等价于 $N$ 为素数。
+只需筛到 $3n_{\max}+7$，令 $A_k=A_{k-1}+[3k+7\in\Pp]$。例如 $n=5$ 时考察 $10,13,16,19,22$，答案为 $2$。
+\cost 埃氏筛 $O(N\log\log N)$ 或线性筛 $O(N)$，每问 $O(1)$。本题绝不计算阶乘；超大表达式常常是在提示一个判定定理。
 
 \src{https://acm.hdu.edu.cn/showproblem.php?pid=2973}
 
-\begin{problem}{P2183：礼物}
-$n$ 件互不相同的礼物送给 $m$ 个有编号的人，第 $i$ 人收到 $a_i$ 件，允许剩余。求方案数模 $M$；若不可能则按原题输出 \texttt{Impossible}。
-$n\le10^9,m\le5$，模数的每个素数幂因子不超过 $10^5$。
-\end{problem}
 \hint $\sum_i a_i>n$ 时无解；否则是一个多项式系数，可写为一串组合数的乘积。
+
+令 $s_0=0,s_i=\sum_{j=1}^i a_j$，则
+\[
+\mathrm{Ans}=\prod_{i=1}^m\binom{n-s_{i-1}}{a_i}
+=\frac{n!}{(n-s_m)!\prod_i a_i!}.
+\]
+
+\begin{tip}[提醒：$O(N)$ 不等于省内存]
+$O(N)$ 不等于省内存。$N=10^8$ 时，多个 \texttt{int} 数组就是 $400$\,MB 级别。只判素数用位压缩的埃氏筛；要 $\varphi,\mu,lp$ 再上线性筛，并先算内存再写代码。
+\end{tip}
+
+逐人选礼物：第一人从 $n$ 件中选，第二人从剩余中选，依此类推。每个完整分配恰计一次，不需要再除 $m!$，因为人有编号。
+可以调用 $m$ 次扩展 Lucas，或者直接在每个素数幂上对多项式系数统计单位部分与指数。
+
+\paragraph{算例.} $n=4,m=2,(a_1,a_2)=(1,2)$，答案 $\binom41\binom32=12$。模 $6$ 后为 $0$，但\textbf{这是有方案而余数为零}，不能输出 Impossible。只有数量约束失败才输出 Impossible。
 
 \src{https://www.luogu.com.cn/problem/P2183}
 
-\begin{problem}{P7488：黑色毛衣}
-选 $m$ 个整数边长的等腰三角形，腰长 $a\in[1,n]$、底长 $b\in[1,2a-1]$，要求所有腰长互不相同、所有底长也互不相同，忽略三角形的排列顺序。求组数模一般模数 $M$。$m\le n\le10^{18},M\le10^5$。
-\end{problem}
 \hint 答案是 $\binom nm\,n^{\underline m}=\binom nm^2m!$，先证明计数，再处理不可逆阶乘。
+
+把腰长 $a$ 看成棋盘的第 $a$ 行，该行可选列为 $1,\ldots,2a-1$。选三角形等价于在行、列都不能重复的阶梯棋盘上放 $m$ 个车。
+记方案数为 $R(n,m)$。不使用最后一行的方案数为 $R(n-1,m)$。使用最后一行时，前面已经放了 $m-1$ 个车，占用 $m-1$ 个不同列；这些列全部在最后一行的范围内，所以还有
+\[
+ (2n-1)-(m-1)=2n-m
+\]
+个位置。因此
+\[
+ R(n,m)=R(n-1,m)+(2n-m)R(n-1,m-1),\quad R(n,0)=1.
+\]
+将 $\binom nm^2m!$ 代入即可验证递推（先提出公共因子，或使用 Pascal 恒等式），初值也相同，所以由归纳法成立。
+
+\paragraph{小规模核对.} $n=3,m=1$ 时为 $1+3+5=9$；$n=3,m=2$ 时，所选两行分别为 $(1,2),(1,3),(2,3)$，方案数为 $2,4,12$，总计 $18=\binom32^2\cdot2!$。
+
+\paragraph{合数模数下如何算？}
+使用
+\[
+ R(n,m)=\frac{(n!)^2}{m!((n-m)!)^2}.
+\]
+对每个 $p^\alpha\mid M$，总指数为
+\[
+ e=2\nu_p(n!)-\nu_p(m!)-2\nu_p((n-m)!),
+\]
+单位部分相同地相乘求逆，再 CRT。不能先算 $m!\bmod M$，再据此决定整个分式是否为零。
+\begin{pitfall}
+题意不是要求全部 $2m$ 个“腰长数值与底长数值”两两不同。一个三角形可以是等边三角形，某只的底长也可以等于另一只的腰长。若误删 $b=a$，计数公式就变了。
+\end{pitfall}
 
 \src{https://www.luogu.com.cn/problem/P7488}
 
 
 \chapter{数论函数、狄利克雷卷积与筛法}
+\begin{chapterintro}[章节导读]
+前面几章主要研究单个整数的结构；这一章开始把视野扩大到定义在所有正整数上的函数。先区分积性与完全积性，再用狄利克雷卷积把约数求和重新组织起来，最后把这些公式转化成可以在线性或近线性时间运行的筛法。
+\end{chapterintro}
+
 \section{先分清积性与完全积性}
 \begin{definition}
 数论函数是定义在正整数上的函数，通常取值于复数或某个模数环。
@@ -622,6 +1579,27 @@ $\id_t$ & $\id_t(n)=n^t$ & $p^{kt}$\\
 \bottomrule
 \end{longtable}
 
+\paragraph{最小反例.} $\varphi$ 积性但不完全积性：$\varphi(4)=2\ne\varphi(2)^2=1$。$\mu(4)=0\ne\mu(2)^2=1$。将积性函数当成完全积性，是后文洲阁筛中最危险的错误之一。
+\paragraph{为什么 $\mu$ 长这样？}
+对 $n=\prod_{i=1}^r p_i^{e_i}>1$，只有平方自由约数贡献非零项，因此
+\[
+ \sum_{d\mid n}\mu(d)=\sum_{S\subseteq\{1,\ldots,r\}}(-1)^{|S|}=(1-1)^r=0.
+\]
+
+\begin{tip}[词义：积性 / 完全积性]
+一句话记法：积性 = 「互质才能拆」，完全积性 = 「随便拆」。检查函数属于哪一种，只要代 $a=b=2$ 试一次；$\tau(4)=3\ne4$ 就说明 $\tau$ 只是积性。后面洲阁筛里把 $x^t$（完全积性）与积性函数混用会直接算错。
+\end{tip}
+
+\begin{tip}[词义：把 $\mu(d)$ 当开关]
+「只有……贡献非零项」的意思是：把 $\mu(d)$ 当成开关，非平方自由的 $d$ 一律 $\mu(d)=0$，求和时自动跳过。所以 $\sum_{d\mid n}\mu(d)$ 只取决于 $n$ 有几个不同素因子：$2^r$ 个平方自由约数，一半带 $+$、一半带 $-$，除非 $n=1$。
+\end{tip}
+
+\begin{tip}[「由素数幂确定」有多省]
+例：$72=2^3\cdot3^2$，只要知道 $\varphi(8)=4$、$\varphi(9)=6$，就有 $\varphi(72)=24$，不必枚举 $72$ 个数。做题时的动作是：先把 $n$ 分解，再逐素数幂查公式，最后相乘；写成代码就是「$\log n$ 的因子数」次查表。
+\end{tip}
+
+$n=1$ 时只有约数 $1$，结果为 $1$。它本质上是对不同素因子的容斥。
+
 
 \section{欧拉函数的公式与恒等式}
 容斥或 CRT 可得
@@ -632,6 +1610,8 @@ $\id_t$ & $\id_t(n)=n^t$ & $p^{kt}$\\
 \[
  \varphi(ab)\varphi(d)=\varphi(a)\varphi(b)d.
 \]
+
+对 $n=12$，公式为 $12(1-1/2)(1-1/3)=4$，对应 $1,5,7,11$。实现时用 $ans=ans/p\cdot(p-1)$，避免浮点误差。
 
 
 \section{狄利克雷卷积与逆元}
@@ -646,8 +1626,24 @@ $\id_t$ & $\id_t(n)=n^t$ & $p^{kt}$\\
  h(1)=\frac{f(1)}{g(1)},\qquad
  h(n)=\frac{f(n)-\sum_{\substack{d\mid n\\d>1}}g(d)h(n/d)}{g(1)}.
 \]
+
+\begin{tip}[自己验证一次只要两行]
+交换律：把 $(f*g)(n)=\sum_{d\mid n}f(d)g(n/d)$ 里的 $d$ 换成 $n/d$（这是约数集合上的对合，一一自对应），求和就变成 $\sum_{d\mid n}f(n/d)g(d)=(g*f)(n)$。结合律：两边都等于 $\sum_{abc=n}f(a)g(b)h(c)$。凡是「显然满足」的说法，都能这样两行落地。
+\end{tip}
+
 两个积性函数的卷积仍积性；积性函数的卷积逆及积性函数之间的卷积商仍积性。
 
+
+\paragraph{局部生成函数.}
+固定一个素数 $p$，令 $F_p(z)=\sum_{k\ge0}f(p^k)z^k$。那么卷积对应形式幂级数乘法
+\[
+ H_p(z)=F_p(z)G_p(z).
+\]
+这里说的是形式幂级数，不要求它真的收敛。$\one$ 的局部级数为 $(1-z)^{-1}$，$\mu$ 为 $1-z$，所以 $\one*\mu=\eps$。
+\begin{pitfall}
+写 $\varphi=\id*\mu$ 是卷积恒等式，不是 $\varphi(n)=n\mu(n)$。
+同样，“两个积性函数相加”未必积性，例如 $\one+\one$ 在 $1$ 处为 $2$，已不满足归一化定义。
+\end{pitfall}
 
 
 \section{线性筛：唯一的最小素因子分解}
@@ -661,8 +1657,41 @@ $\id_t$ & $\id_t(n)=n^t$ & $p^{kt}$\\
 \mu(ip)&0&-\mu(i)
 \end{array}
 \]
+
+\begin{tip}[为什么：每个合数只被最小素因子筛一次]
+$O(N)$ 的关键是「每个合数只被它的最小素因子筛掉一次」：循环遇到 $i\bmod p==0$ 就 break，保证不会用更大的素因子去生成同一个数。$\varphi$、$\mu$ 能同步线性求出，也是靠这条唯一分解。
+\end{tip}
+
+\begin{tip}[「形式」两个字的含义]
+只看系数、不问 $z$ 取什么值：$\sum a_kz^k$ 就是一张系数表，乘法是「系数的卷积」。所以 $(1-z)^{-1}=1+z+z^2+\cdots$ 在这里是「定义」而不是「收敛计算」——你要验证的是两边系数相乘后 $z^k$ 的系数为 $1$，而不是级数是否收敛。
+\end{tip}
+
 并设置 $\varphi(1)=\mu(1)=1$。
 
+
+\paragraph{为何要在整除时退出？}
+若 $p\mid i$，那么 $p$ 已是 $i$ 的最小素因子；继续枚举更大的 $q$，$iq$ 的最小素因子仍是 $p$，它会在唯一的分解 $p\cdot(iq/p)$ 中被处理。继续做只会重复，并破坏线性复杂度的计数依据。
+\begin{lstlisting}
+vector<int> primes, lp(N+1), phi(N+1), mu(N+1);
+phi[1]=mu[1]=1;
+for (int i=2;i<=N;++i) {
+    if (!lp[i]) {
+        lp[i]=i; primes.push_back(i);
+        phi[i]=i-1; mu[i]=-1;
+    }
+    for (int p:primes) {
+        if (p>N/i) break;
+        int v=i*p; lp[v]=p;
+        if (i%p==0) {
+            phi[v]=phi[i]*p; mu[v]=0;
+            break;
+        }
+        phi[v]=phi[i]*(p-1); mu[v]=-mu[i];
+    }
+}
+\end{lstlisting}
+\paragraph{扩展到一般积性函数.} 当 $p\nmid i$ 时 $f(ip)=f(i)f(p)$；当 $p\mid i$ 时应把 $i=p^e u$ 分离出来，维护最小素因子的指数和对应幂，算 $f(p^{e+1})f(u)$。不能假定任意积性函数都存在“除以 $f(p^e)$”的安全转移：该值可能为零或不可逆。
+\cost 时间 $O(N)$，常规数组空间 $O(N)$。$N=10^8$ 时四个 int 数组已约 $1.6$ GB，应按需要只保留必要数据；若只筛素数，位图埃氏筛可能更合适。
 
 
 \section{整除分块：相同商的最大区间}
@@ -670,7 +1699,29 @@ $\id_t$ & $\id_t(n)=n^t$ & $p^{kt}$\\
 \[
  r=\floor{n/q}.
 \]
+
+\begin{tip}[$r=\floor{n/q}$ 是怎么想到的]
+固定 $l$、$q=\floor{n/l}$，要找最大的 $r$ 使 $\floor{n/x}=q$ 对整段成立。条件等价于 $q\le n/x<q+1$，左半边给出 $x\le n/q$，所以 $r=\floor{n/q}$（右半边给出 $x\ge\floor{n/(q+1)}+1$，由 $l$ 已经满足）。代码里 $l=r+1$ 跳到下一块，块数 $O(\sqrt n)$ 来自「小 $l$ 至多 $\sqrt n$ 个，大的商也不超过 $\sqrt n$」。
+\end{tip}
+
 这是因为 $\floor{n/x}\ge q\iff x\le\floor{n/q}$。所有不同商只有 $O(\sqrt n)$ 个：$x\le\sqrt n$ 的位置不超过 $\sqrt n$，其余位置的商也不超过 $\sqrt n$。
+
+\paragraph{例子.} $n=10$ 的商块为
+\[
+[1,1]\mapsto10,\ [2,2]\mapsto5,\ [3,3]\mapsto3,\ [4,5]\mapsto2,\ [6,10]\mapsto1.
+\]
+若同时含 $\floor{n/i},\floor{m/i}$，共同右端点应取
+\[
+ r=\min\left(\floor{n/\floor{n/l}},\floor{m/\floor{m/l}}\right),
+\]
+并仅枚举到 $\min(n,m)$。不能用其中一个商的区间跨过另一个商的变化点。
+\begin{lstlisting}
+for (long long l=1,r;l<=n;l=r+1) {
+    long long q=n/l;
+    r=n/q;
+    // sum over [l,r] = (prefix[r]-prefix[l-1]) * F(q)
+}
+\end{lstlisting}
 
 
 \section{狄利克雷前缀和、后缀和与差分}
@@ -679,17 +1730,52 @@ $\id_t$ & $\id_t(n)=n^t$ & $p^{kt}$\\
  Z_f(n)=\sum_{d\mid n}f(d)=(f*\one)(n),\qquad
  U_f(n)=\sum_{\substack{k\le N\\n\mid k}}f(k).
 \]
+
+\begin{tip}[这三个词在说什么]
+把 $f\mapsto g$，$g(n)=\sum_{d\mid n}f(d)$（每个位置吸收它的约数）叫狄利克雷\textbf{前缀和}；$g(n)=\sum_{n\mid d}f(d)$（每个位置吸收它的倍数）叫\textbf{后缀和}；它们的逆运算统称\textbf{差分}。实现就是枚举 $d$ 或枚举倍数，复杂度 $O(N\log N)$，本质是调和级数。
+\end{tip}
+
 利用素数逐层传播，可在 $O(N\log\log N)$ 完成这些变换；反向操作给出差分。
 
+
+\begin{lstlisting}
+// a[1..N] initially stores f. primes contains all primes <=N.
+// Divisor zeta: a[n] <- sum_{d|n} f[d]
+for (int p:primes)
+    for (int i=1;i<=N/p;++i) a[i*p]+=a[i];
+
+// Its inverse (run on the transformed array):
+for (auto it=primes.rbegin();it!=primes.rend();++it)
+    for (int i=N/(*it);i>=1;--i) a[i*(*it)]-=a[i];
+
+// Multiple zeta: a[n] <- sum_{n|k, k<=N} f[k]
+for (int p:primes)
+    for (int i=N/p;i>=1;--i) a[i]+=a[i*p];
+\end{lstlisting}
+\paragraph{为何前缀递增、后缀递减？}
+前缀时希望 $p^2$ 能收到已经汇总到 $p$ 的贡献，故从小到大；后缀时希望 $1$ 能收到已经汇总到 $p$ 的贡献，故从大到小。
+固定 $p$，整数按“不含 $p$ 的部分”分成链 $u,up,up^2,\ldots$，上述循环恰在每条链上做普通前缀和或后缀和。不同素数维度依次处理，正好枚举每个约数一次。
+
+\paragraph{推广：任意函数卷一个积性函数.}
+已知积性 $g$ 的素数幂点值，逐个素数在上述幂链上做一维卷积即可。长度为 $\ell+1$ 的链即使朴素 $O(\ell^2)$，固定 $p$ 的非平凡链总成本仍为 $O(N/p)$；因此总计 $O(N\log\log N)$。这里默认素数幂点值可常数时间读取，且只枚举起点 $u\le N/p,p\nmid u$，不能每个素数都扫完整个 $[1,N]$。
 
 
 
 \chapter{莫比乌斯反演与 gcd 型求和}
+\begin{chapterintro}[章节导读]
+上一章我们学会了用卷积组织“对所有约数求和”的关系；有了这套语言，就可以反过来把被混在一起的贡献拆开。莫比乌斯反演正是这种“消掉约数层层贡献”的工具，它会进一步把许多看似复杂的 gcd 求和变成可以交换顺序、直接计算的形式。
+\end{chapterintro}
+
 \section{两种基础“拆贡献”恒等式}
 \[
 \sum_{d\mid n}\mu(d)=[n=1],\qquad
 \sum_{d\mid n}\varphi(d)=n.
 \]
+
+\begin{tip}[词义：拆贡献]
+「拆贡献」= 不直接按 $i$ 算，而是按「谁对答案造成多少」重新分组。两种写法：按约数拆 $\sum_{d\mid n}$、按倍数拆 $\sum_{d\mid k}$。选哪一种，取决于化简后哪个和式容易算——通常先各自试两行，再决定。
+\end{tip}
+
 卷积写法为 $\mu*\one=\eps$、$\varphi*\one=\id$，从而 $\varphi=\id*\mu$。
 \begin{theorem}[莫比乌斯反演]
 \[
@@ -703,51 +1789,149 @@ $\id_t$ & $\id_t(n)=n^t$ & $p^{kt}$\\
 \]
 \end{theorem}
 
-
+\paragraph{欧拉恒等式的组合证明.}
+把 $1,\ldots,n$ 按 $\gcd(i,n)=g$ 分类。写 $i=gj$，该类恰有 $\varphi(n/g)$ 个数；各类总数为 $n$，换元 $d=n/g$ 得到公式。
 \section{先处理单变量与互质计数}
 \[
  \sum_{i=1}^n\gcd(i,n)
  =\sum_{d\mid n}\varphi(d)\floor{n/d}
  =\sum_{d\mid n}d\varphi(n/d).
 \]
+
+\begin{tip}[「拆贡献」的三步套路]
+第一步把要求的东西写成 $\sum_{i}f(\gcd(\cdots))$ 之类；第二步用 $f(n)=\sum_{d\mid n}c(d)$ 把 $f$ 换掉，于是 $f(\gcd)$ 变成「$d$ 整除各变量」的 $\iva{}$ 条件；第三步交换求和顺序，内层只剩「倍数个数」。整套动作没有灵感要求，练十道题就会背下来。
+\end{tip}
+
 以及
 \[
  \#\{(i,j):1\le i\le n,1\le j\le m,\gcd(i,j)=1\}
  =\sum_{d=1}^{\min(n,m)}\mu(d)\floor{n/d}\floor{m/d}.
 \]
 
+\paragraph{第一式的每一步.}
+\[
+\sum_i\gcd(i,n)
+=\sum_i\sum_{d\mid i,d\mid n}\varphi(d)
+=\sum_{d\mid n}\varphi(d)\sum_i[d\mid i].
+\]
+原稿在插入约数求和后仍保留 $\gcd(i,n)$，会把同一个 gcd 重复累加约数个数次；这里必须替换为 $\varphi(d)$。
+例如 $n=6$，直接求和 $1+2+3+2+1+6=15$；约数形式给出 $6\cdot1+3\cdot1+2\cdot2+1\cdot2=15$。
+\paragraph{互质计数验算.} $n=m=3$ 时 $9-1-1=7$；九个有序数对中只有 $(2,2),(3,3)$ 不互质。注意计的是有序数对，不能再额外乘二。
 
-\begin{problem}{P2398：GCD SUM}
-求 $\sum_{i=1}^n\sum_{j=1}^n\gcd(i,j)$。
-\end{problem}
+
 \hint 答案为 $\sum_{d=1}^n\varphi(d)\floor{n/d}^2$，可筛 $\varphi$ 并利用前缀和做整除分块。
+
+把 gcd 的欧拉展开代入，交换三层求和：
+\[
+\sum_{i,j}\sum_{d\mid i,d\mid j}\varphi(d)
+=\sum_d\varphi(d)\left(\sum_i[d\mid i]\right)
+\left(\sum_j[d\mid j]\right).
+\]
+两个括号都为 $\floor{n/d}$，得到公式。
+$n=3$ 时矩阵为
+\[
+\begin{pmatrix}1&1&1\\1&2&1\\1&1&3\end{pmatrix},
+\]
+总和 $12$，公式也给 $9+1+2=12$。
+\cost 线性筛预处理 $O(N)$ 后，每问分块 $O(\sqrt n)$。若只有一个不大的 $n$，直接累加 $n$ 项也是 $O(n)$，不用为了形式上“高级”而特意分块。前缀和、商的平方和最终答案都要用足够宽的整数。
 
 \src{https://www.luogu.com.cn/problem/P2398}
 
-\begin{problem}{一般加权 gcd 求和}
-给定三个长度为 $n$ 的数组 $A,B,C$，求
-\[
- \sum_{i=1}^n\sum_{j=1}^n A(i)B(j)C(\gcd(i,j)),\qquad n\le2\times10^6.
-\]
-\end{problem}
+\begin{tip}[怎么做：先做莫比乌斯差分，再数倍数]
+凡是答案形如 $\sum f(\gcd(a_i,b_j))$，机械做法都一样：把 $f$ 写成 $f=\sum_{d\mid n}c(d)$（即对 $f$ 做莫比乌斯差分），于是 $\gcd$ 变成「$d$ 同时整除两个数」的计数，后面全是倍数计数与容斥。
+\end{tip}
+
 \hint 求 $D=C*\mu$，以及 $A,B$ 的倍数后缀和，答案变成一维点积。
+
+由 $C=\one*D$，
+\[
+\begin{aligned}
+\mathrm{Ans}
+&=\sum_{i,j}A(i)B(j)\sum_{d\mid i,d\mid j}D(d)\\
+&=\sum_{d=1}^nD(d)
+ \left(\sum_{d\mid i}A(i)\right)
+ \left(\sum_{d\mid j}B(j)\right).
+\end{aligned}
+\]
+$A,B,C$ 都不要求积性。上一章的素数维度变换适用于任意数组：对 $C$ 做因数前缀的逆变换，得到 $D$；对 $A,B$ 各做倍数后缀，最后逐点相乘求和。
+\cost 时间 $O(n\log\log n)$，空间 $O(n)$。若用朴素枚举所有倍数，也能得到 $O(n\log n)$ 的更易写版本，应根据时限选择。
+\paragraph{追问.} 取 $A=B=1,C(n)=n$ 会恢复哪题？恢复 GCD SUM，因为 $D=\varphi$。取 $C(n)=[n=1]$ 则 $D=\mu$，恢复互质数对计数。
 
 
 \section{多询问与不规则预处理表}
-\begin{problem}{P4240：毒瘤之神的考验}
-多次求
-\[
- \sum_{i=1}^n\sum_{j=1}^m\varphi(ij)\pmod{998244353},
-\]
-其中 $T\le10^4$，$n,m\le N=10^5$。
-\end{problem}
+\begin{tip}[词义：不规则的预处理表]
+「不规则」指：表不能建成整齐的 $N\times N$，只能按 $\floor{n/k}$ 的取值分段存储。做法是把「大参数」（$>K$）的情况列成一张稀疏表，查询时先定位区间端点，再取前缀差。
+\end{tip}
+
 \hint 先用 $\varphi(ij)=\varphi(i)\varphi(j)\gcd(i,j)/\varphi(\gcd(i,j))$ 转成加权 gcd；再预处理倍数方向的部分和。不能每次询问都做 $O(N)$ 全扫。
 
+把函数 $A(k)=k/\varphi(k)$ 拆为 $A=\one*f$，则
+\[
+ f(k)=\sum_{d\mid k}\frac{d\mu(k/d)}{\varphi(d)}.
+\]
+套用一般加权 gcd 公式，得到
+\[
+\boxed{\mathrm{Ans}(n,m)=\sum_{k=1}^{\min(n,m)}f(k)
+G\left(k,\floor{n/k}\right)G\left(k,\floor{m/k}\right)},
+\]
+其中 $G(k,t)=\sum_{i=1}^t\varphi(ki)$。
+
+\paragraph{第一层优化：化简原稿中未继续化简的 $f$.}
+$A$ 积性，因此 $f=A*\mu$ 积性；在素数幂处
+\[
+ f(p)=\frac p{p-1}-1=\frac1{p-1},\qquad
+ f(p^e)=0\ (e\ge2).
+\]
+所以
+\[
+ f(k)=\frac{\mu(k)^2}{\varphi(k)}.
+\]
+在本题模数下所有 $\varphi(k)\le N<998244353$ 都可逆。这个形式可以线性筛或直接用 $\mu,\varphi$ 表得到。
+
+\paragraph{第二层优化：只存实际存在的 $G$ 项.}
+对于固定 $k$，只需 $0\le t\le\floor{N/k}$，递推
+\[
+ G(k,0)=0,\quad G(k,t)=G(k,t-1)+\varphi(kt).
+\]
+总项数 $\sum_k\floor{N/k}=O(N\log N)$。不要开 $N\times N$ 矩阵；使用按 $k$ 分行的变长数组或一段连续内存。
+
+\paragraph{第三层优化：小 $k$ 直接算，大 $k$ 按商分块.}
+取阈值参数 $1\le B\le N$，令 $K=\floor{N/B}$。$k\le K$ 时每问直接枚举；$k>K$ 时两个商均不超过 $B$。
+对 $1\le u,v\le B$ 预处理
+\[
+ H_{u,v}(r)=\sum_{K<k\le r}f(k)G(k,u)G(k,v),
+ \quad K\le r\le\floor{N/\max(u,v)}.
+\]
+对没有合法 $r$ 的 $(u,v)$ 不开表。若询问的共同商区间为 $[l,r]$、$u=\floor{n/l},v=\floor{m/l}$，该块贡献就是
+\[
+ H_{u,v}(r)-H_{u,v}(l-1).
+\]
+共同右端点为 $\min(n/u,m/v)$，所以索引一定处于该行合法范围。
+
+\paragraph{为什么这张三维表开得下？}
+若对所有 $(u,v,r)$ 开等长数组，需要 $O(NB^2)$，但实际 $r$ 的上界依赖 $\max(u,v)$。只开有效范围，项数不超过
+\[
+\sum_{u=1}^B\sum_{v=1}^B\floor{N/\max(u,v)}
+\le N\sum_{w=1}^B\frac{2w-1}{w}=O(NB).
+\]
+等价地，对每个 $k>K$ 枚举 $u,v\le N/k$，成本为
+$\sum_{k>K}O((N/k)^2)=O(N^2/K)=O(NB)$。
+$H_{u,v}=H_{v,u}$ 还可以再减半存储。
+
+\cost 总预处理时间、空间为 $O(N\log N+NB)$；每次询问 $O(N/B+\sqrt N)$。例如 $N=10^5,B\approx100$ 时，直接枚举约 $1000$ 项，其余使用商块；内存按真实表项计算后选择阈值。这里的界对应\textbf{变长有效表}实现，不能套在未经压缩的三维数组上。
+
+\paragraph{小例验算.} $n=2,m=3$，直接求和为
+$\varphi(1)+\varphi(2)+\varphi(3)+\varphi(2)+\varphi(4)+\varphi(6)=9$。
+公式中 $k=1$ 贡献 $2\cdot4=8$，$k=2$ 贡献 $1\cdot1\cdot1=1$，合计 $9$。
 \src{https://www.luogu.com.cn/problem/P4240}
 
 
 \chapter{积性函数求和：杜教筛与 Powerful Number}
-\section{问题规模与倍增估计}
+\begin{chapterintro}[章节导读]
+上一章的反演解决了如何拆贡献，但如果 n 本身已经大到不能逐项枚举，新的瓶颈就变成“这些函数值怎么快速求前缀和”。这一章从商集和倍增估计出发，再进入杜教筛与 Powerful Number，用结构化的递归和稀疏支撑代替完整枚举。
+\end{chapterintro}
+
+\section{先看规模，再看倍增估计}
 目标是求 $S_f(n)=\sum_{i\le n}f(i)$。当 $n$ 很大时，还经常要求所有 $v=\floor{n/k}$ 的 $S_f(v)$，本讲义称其为商集上的前缀和表（原稿称“块筛”）。不同 $v$ 只有 $O(\sqrt n)$ 个，但计算它们仍需要算法。
 
 对非负项，若区间 $[x,2x)$ 内各项同阶，可按 $[2^j,2^{j+1})$ 倍增分块估计。例如
@@ -760,6 +1944,16 @@ $\id_t$ & $\id_t(n)=n^t$ & $p^{kt}$\\
  \end{cases}
 \]
 
+\begin{tip}[「倍增估计」是什么意思]
+把求和项按「商相同」分成块：在 $[l,r]$ 内 $\floor{n/i}$ 都一样，于是整块可用「块长 $\times$ 值」估计。写成 $O$ 或 $\Theta$，不要写成逐步等号——这一步只保证同阶，不保证精确。
+\end{tip}
+
+
+\paragraph{证明应写成估计而不是等式.}
+$0\le\alpha<1$ 时，第 $j$ 块有 $\Theta(2^j)$ 项，每项为 $\Theta(2^{-\alpha j})$，故总和为 $\Theta(\sum_j2^{(1-\alpha)j})=\Theta(n^{1-\alpha})$。
+把一整块的所有函数值替换为端点，只是常数倍估计，不能像原稿一样连写精确等号。
+\paragraph{算法选择问题.} 知道 $f(p^k)$ 并不自动意味着能亚线性求和。还需要至少一种结构：容易求和的卷积关系、与另一函数在素数处相同、或者素数处的值能由可筛的完全积性函数组合。
+
 
 \section{用卷积把求和变成递归}
 若 $f=g*h$，则
@@ -767,6 +1961,11 @@ $\id_t$ & $\id_t(n)=n^t$ & $p^{kt}$\\
 S_f(n)=\sum_{ab\le n}g(a)h(b)
 =\sum_{a=1}^n g(a)S_h(\floor{n/a}).
 \]
+
+\begin{tip}[选 $g$ 的原则]
+要的是 $f*g=h$，其中 $h$ 的前缀和比 $S_f$ 好算，且 $g$ 的前缀和也好算（通常挑 $g=\one$、$g=\mu$、$g=\id_t$ 之一，或它们的组合）。选定后写出 $S_f(n)=\sum_{d}h(d)-\sum_{l\ge2}(\cdots)S_f(\floor{n/l})$，剩下的就是复杂度分析。
+\end{tip}
+
 如果能常数时间读取 $S_g,S_h$ 在商集所需位置的值，整除分块可在 $O(\sqrt n)$ 求出上式。
 反过来，若 $f*g=h$ 且 $g(1)\ne0$，则
 \[
@@ -775,17 +1974,84 @@ S_f(n)=\sum_{ab\le n}g(a)h(b)
 在模数环中需要 $g(1)$ 可逆；积性函数的 $g(1)=1$，分母可省。
 
 
+\paragraph{杜教筛的关键不是“套递归”.}
+它把未知的 $S_f(n)$ 从卷积前缀里单独抽出来，剩下的递归参数 $\floor{n/j}$ 都小于 $n$，所以可以自顶向下记忆化。每个商块 $[l,r]$ 的贡献为
+\[
+ (S_g(r)-S_g(l-1))\,S_f(\floor{n/l}).
+\]
 
-\begin{problem}{P4213：杜教筛}
-给定 $n\le10^9$，求 $S_\mu(n)$ 和 $S_\varphi(n)$。
-\end{problem}
+\begin{tip}[记忆化为什么够用]
+递归的自变量只有 $\floor{n/j}$ 这一族值，而不同的商最多 $2\sqrt n$ 个（小于 $\sqrt n$ 的商有 $\sqrt n$ 个，大于的对应 $j\le\sqrt n$ 也只有 $\sqrt n$ 个）。所以「状态数」不是猜的，是可以数出来的——这就是杜教筛复杂度分析的核心一行。
+\end{tip}
+
+其中 $S_g$、$S_h$ 必须容易计算；随便找一个卷积恒等式并不一定有用。方法本身不要求 $f$ 积性，积性只常用于构造关系和快速预处理。
+
+\paragraph{为何状态仍在原商集中？}
+\[
+\floor{\frac{\floor{n/a}}b}=\floor{\frac n{ab}}.
+\]
+对子问题的子问题继续整除，仍落在原商集中，因此记忆化不会生成所有整数 $1,\ldots,n$。
+
+\subsection{无预处理与带预处理的复杂度}
+若每个规模 $v$ 的子问题花费 $O(\sqrt v)$，则总成本可估计为
+\[
+ \sum_{v\le\sqrt n}O(\sqrt v)
+ +\sum_{i\le\sqrt n}O(\sqrt{n/i})=O(n^{3/4}).
+\]
+这不是 $O(\sqrt n)$：状态数为 $O(\sqrt n)$ 不等于总工作量。
+若线性筛预处理到 $B\ge\sqrt n$，大状态至多为 $n/i$（$i\le n/B$），所以
+\[
+ O\left(B+\sum_{i\le n/B}\sqrt{n/i}\right)
+ =O(B+n/\sqrt B).
+\]
+
+\begin{tip}[提醒：状态数 $\neq$ 工作量]
+状态数只告诉你「有多少个格子要填」，不告诉你「填一格要多久」。这里一格要 $O(\sqrt v)$，于是总时间是 $\sum_{v}O(\sqrt v)=O(n^{3/4})$。凡是递归带记忆化的复杂度，都按这个格式老老实实求和。
+\end{tip}
+
+取 $B\asymp n^{2/3}$ 得 $O(n^{2/3})$。空间是 $O(B+n/B)$，其中后者为记忆化表的量级。对 $v\le B$ 直接返回已存的 $S_f(v)$，绝不是返回 $\sqrt v$。
+
+
 利用 $\mu*\one=\eps,\varphi*\one=\id$，得到
 \[
  S_\mu(n)=1-\sum_{j=2}^n S_\mu(\floor{n/j}),
 \]
+
+\begin{tip}[$\asymp$ 与「平衡」]
+$A\asymp B$ 表示两者同阶（差常数倍，忽略对数）。做法同上：总代价 $B+n/\sqrt B$，让两项同阶解出 $B=n^{2/3}$，再代回得 $O(n^{2/3})$。这里还要额外报空间 $O(B+n/B)$，因为记忆化表是真会占内存的。
+\end{tip}
+
 \[
  S_\varphi(n)=\frac{n(n+1)}2-\sum_{j=2}^nS_\varphi(\floor{n/j}).
 \]
+
+两式中 $g(j)=1$，块系数直接为块长。先线性筛出 $\mu,\varphi$ 和普通前缀，再分别记忆化大状态即可。
+\begin{lstlisting}
+// S is either the Mertens prefix or the phi prefix.
+// H(n) is 1 for Mertens; n*(n+1)/2 for phi.
+i128 solve(long long n) {
+    if (n<=B) return prefix[n];
+    auto it=memo.find(n);
+    if (it!=memo.end()) return it->second;
+    i128 ans=H(n);
+    for (long long l=2,r;l<=n;l=r+1) {
+        long long q=n/l;
+        r=n/q;
+        ans-=(i128)(r-l+1)*solve(q);
+    }
+    return memo[n]=ans;
+}
+\end{lstlisting}
+$S_\mu$ 可能为零或负数，所以不能用 \texttt{if (memo[n])} 判断是否已计算；也不能把零当作“未访问”。
+
+\paragraph{手算 $n=10$.}
+$\varphi(1),\ldots,\varphi(10)$ 为 $1,1,2,2,4,2,6,4,6,4$，前缀为 $32$。递归式给出
+\[
+55-S_\varphi(5)-S_\varphi(3)-2S_\varphi(2)-5S_\varphi(1)
+=55-10-4-4-5=32.
+\]
+$\mu(1),\ldots,\mu(10)=1,-1,-1,0,-1,1,-1,0,0,1$，前缀为 $-1$。
+\cost 多询问可按最大 $n$ 预处理并复用表，但不能简单将单次复杂度当成所有任意询问的总复杂度；记忆化表的状态并集仍需分析。
 
 \src{https://www.luogu.com.cn/problem/P4213}
 
@@ -800,8 +2066,17 @@ S_f(n)=\sum_{ab\le n}g(a)h(b)
  \le\sum_{b\le n^{1/3}}\sqrt{n/b^3}
  =O(\sqrt n).
 \]
+
+\begin{tip}[词义：Powerful Number]
+Powerful Number = 每个素因子指数都 $\ge2$ 的数，等价于「形如 $a^2b^3$」。$\le n$ 的个数约 $\zeta(3/2)$ 级、约 $O(\sqrt n)$：因为平方部分至多 $\sqrt n$ 种，剩下每个 $a$ 的立方部分至多 $\sqrt n$ 种，相乘即 $O(\sqrt n)$。「支撑稀疏」就是靠这个数出来的。
+\end{tip}
+
 若不要求 $b$ 平方自由，则表示不唯一，但仍可以用于上界计数。
 
+
+\paragraph{哪些数属于 PN？}
+$1,4,8,9,16,25,27,32,36$ 属于 PN；$12=2^2\cdot3$、$18=2\cdot3^2$ 不属于。定义要求\textbf{每一个}出现的素因子指数都至少为二，不是“存在平方因子”。
+\paragraph{枚举而不重复.} 递归状态记录当前乘积与最后使用的素数下标，后续只加更大的素数，每个新素数指数至少为二。用 $p\le\sqrt{n/\text{cur}}$ 判断是否能扩展，不先计算可能溢出的 $\text{cur}\cdot p^2$。每个 PN 的质因数分解唯一，因此恰访问一次；递归同时携带函数值。
 
 
 \section{把差异留给 PN 支撑}
@@ -812,18 +2087,48 @@ S_f(n)=\sum_{ab\le n}g(a)h(b)
 \]
 \end{theorem}
 
+\begin{tip}[怎么做：差值为何只落在 PN 上]
+套路：构造 $g$ 使 $\hat g(p)=\hat f(p)$（素数处一致），于是 $h=f*g^{-1}$ 在每个素数处为 $0$，由积性，$h$ 在含单次素因子的数上也全为 $0$。差值只能落在「所有素因子至少二次」的数上——那里的数很少，枚举得起。
+\end{tip}
 
-\begin{problem}{LOJ 6053：异或定义的积性函数}
-积性函数满足 $f(p^k)=p\mathbin{\oplus}k$，$\oplus$ 表示按位异或。求 $S_f(n)$，$n\le10^{10}$。
-\end{problem}
+
+固定素数 $p$，局部系数由
+\[
+ h(p^e)=f(p^e)-\sum_{j=1}^e g(p^j)h(p^{e-j}),\qquad h(1)=1
+\]
+递推。这里不能把 $h(p^e)$ 写成 $f(p^e)-g(p^e)$，因为还有交叉项。
+\cost 若 $S_g$ 的商集前缀已备好、局部系数已预处理且可常数时间读取，则 PN 枚举阶段为 $O(\sqrt n)$；总时间还必须加上 $g$ 的前缀预处理与局部系数构造。不能不加前提就宣布任意这样的函数都有 $O(\sqrt n)$ 总算法。
+
+取 $g=\one$。局部级数 $(1+z)/(1-z)^{-1}=1-z^2$，所以 $h(d^2)=\mu(d)$，其他位置为零，得到
+\[
+ \sum_{i\le n}\mu(i)^2=\sum_{d\le\sqrt n}\mu(d)\floor{n/d^2}.
+\]
+筛到 $\sqrt n$ 后直接求和。$n=10$ 时 $10-2-1=7$，排除的是 $4,8,9$。
+
+
 \hint 奇素数处 $f(p)=p-1=\varphi(p)$；素数 $2$ 是唯一例外。拆成 $f=\varphi*h$ 后枚举奇数 PN 与二的幂。
+
+当 $p>2$，最低二进制位为一，所以 $p\oplus1=p-1$。因此 $h(p)=0$（奇素数）。在 $p=2$ 处 $f(2)=3$，$\varphi(2)=1$，故 $h(2)=2$，不能把 $2$ 也当成普通 PN 因子。
+$h$ 有值的位置形如 $2^e u$，其中 $u$ 为奇数 PN。它们的总数量仍不超过
+\[
+ \sum_{e\ge0}O\!\left(\sqrt{n/2^e}\right)=O(\sqrt n).
+\]
+用杜教筛求 $S_\varphi$，再按上述支撑枚举。作为局部计算示例，
+\[
+ h(3)=0,\qquad h(3^2)=f(3^2)-\varphi(3^2)-\varphi(3)h(3)=1-6=-5.
+\]
+卷积商可能出现负数，模运算中应及时规范。素数幂 $p^k$ 的点值是 $p\oplus k$，不是 $(p^k)\oplus k$。
 
 \src{https://loj.ac/p/6053}
 
 
 \chapter{洲阁筛与素数贡献的分层统计}
-\section{先说清适用条件}
-本章讨论原稿“洲阁筛”所用的两阶段思路：先在商集上筛出素数位置的函数和，再按最小素因子补入合数。它与常见 Min\_25 类筛法的若干实现共享同一核心结构；不同资料的命名、状态和具体复杂度可能不同，不能只凭名称混用模板。
+\begin{chapterintro}[章节导读]
+上一章我们处理的是一般积性函数的前缀和；进一步地，如果最重要的贡献集中在素数及其幂上，就可以把“素数部分”和“合数部分”分层处理。这一章沿着这个方向建立洲阁筛的状态，并特别说明哪些完全积性条件是这种拆分能够成立的基础。
+\end{chapterintro}
+
+\section{先把适用条件说清楚}
+本章讨论原稿“洲阁筛”所用的两阶段思路：先在商集上筛出素数位置的函数和，再按最小素因子补入合数。它与常见 Min\_25 类筛法的若干实现共享同一核心结构；不同资料的命名、状态和具体复杂度可能不同，不能光看名字就混用模板。
 
 适用于以下条件：
 \begin{enumerate}
@@ -833,9 +2138,6 @@ S_f(n)=\sum_{ab\le n}g(a)h(b)
 \end{enumerate}
 最常见的是 $f(p)$ 为关于 $p$ 的低次多项式，基函数为 $1,p,p^2,\ldots$。
 
-\begin{problem}{P5325：Min\_25 筛模板所对应的积性函数}
-$f(1)=1$，$f(p^e)=p^e(p^e-1)$，求 $\sum_{i\le n}f(i)$，$n\le10^{10}$，答案按题目要求取模。
-\end{problem}
 \hint 素数处 $f(p)=p^2-p$，先分别求素数的一次幂和与平方和。不要误认为所有 $n$ 上都有 $f(n)=n(n-1)$。
 
 \section{第一阶段：把合数从简单前缀和中筛掉}
@@ -844,6 +2146,15 @@ $f(1)=1$，$f(p^e)=p^e(p^e-1)$，求 $\sum_{i\le n}f(i)$，$n\le10^{10}$，答�
  G_t(v,j)=\sum_{2\le x\le v}
  [x\text{ 为素数或 }\operatorname{minp}(x)>p_j]x^t.
 \]
+
+\begin{tip}[前提：洲阁筛的要求与它的输出]
+洲阁筛（Min\_25）要求 $f$ 是积性函数、$f(p)$ 是关于 $p$ 的多项式（且能在素数幂上递推）。它的输出是「$\sum_{i\le n}f(i)$」，不是「$\sum_{p\le n}f(p)$」；后者只是它的中间量 $G$。
+\end{tip}
+
+\begin{tip}[两阶段各自在做什么]
+第一阶段：从「所有整数的 $\sum p^t$」出发，一点点扣掉合数贡献，得到 $G_t(v,j)=$「最小素因子 $>p_j$ 的数（含素数与 $1$）」的 $p^t$ 和。第二阶段：按最小素因子枚举，把合数一块一块补回来，此时才用到 $f$ 的真实值。第一阶段只依赖完全积性，所以能提前算。
+\end{tip}
+
 初始 $j=0$ 时没有筛掉任何 $x\ge2$，所以
 \[
 G_0(v,0)=v-1,\quad G_1(v,0)=\frac{v(v+1)}2-1,
@@ -858,6 +2169,23 @@ G_2(v,0)=\frac{v(v+1)(2v+1)}6-1.
 \]
 若 $p_j^2>v$，不需要转移。最后 $G_t(v,s)$ 只剩素数贡献。
 
+
+\paragraph{例子.} $v=10,t=1$，初始 $G_1=54$。用 $2$ 筛时扣掉 $2(2+3+4+5)=28$，剩 $26$，对应 $2,3,5,7,9$；用 $3$ 筛时再扣 $9$，剩素数和 $17$。
+
+\subsection{只保留商集与滚动数组}
+需要的 $v$ 只有 $\mathcal V=\{\floor{n/k}:k\ge1\}$，因为每次下标都变为 $\floor{v/p}$，仍在原商集中。可对小值用编号 $v$、大值用编号 $n/v$ 映射，或先离散化；不要对 $10^{10}$ 开数组。
+外层按素数递增，内层 $v$ 必须\textbf{递减}，这样源状态 $\floor{v/p}<v$ 仍是处理本素数之前的值。若递增原地更新，会读到已经扣过同一素数的状态。
+\begin{lstlisting}
+for (int j=0;j<(int)primes.size();++j) {
+    long long p=primes[j];
+    for (long long v:values_descending) {
+        if (p>v/p) break;
+        G[id(v)]-=weight(p)*(G[id(v/p)]-prime_prefix[j]);
+        // prime_prefix[j] contains primes strictly before p.
+    }
+}
+\end{lstlisting}
+初始和式除以 $2,6$ 时，如果工作模数下分母不可逆，应先在整数域精确约分，再取模；本题常见素数模数下可使用逆元，但仍要写清条件。
 
 
 \section{第二阶段：用素数幂重建一般积性函数}
@@ -877,18 +2205,50 @@ G_2(v,0)=\frac{v(v+1)(2v+1)}6-1.
 最终答案为 $1+H(n,0)$，其中 $1=f(1)$。
 
 
+\paragraph{把公式拆成三类对象.}
+每个待补合数唯一写作 $p_j^e u$，$p_j\nmid u$：
+\begin{itemize}
+\item $u=1$ 时必须 $e\ge2$，否则是已经存在的素数 $p_j$；这给出 $[e\ge2]$。
+\item $u>1$ 时要求 $\operatorname{minp}(u)>p_j$；$H$ 中仍包含所有素数，所以要减去不超过 $p_j$ 的素数贡献。
+\item $p_j^e$ 与 $u$ 互质，故普通积性足以提出 $f(p_j^e)$。这里和第一阶段使用完全积性的理由不同。
+\end{itemize}
+大于 $v$ 的素数幂不能进入求和，否则常数项 $[e\ge2]$ 会产生不存在的数。
+
+原地滚动时，素数要按递减处理，而 $v$ 仍按\textbf{递减}处理，以保证读到的是本轮之前的 $H(\floor{v/p^e},j)$。两次筛的素数顺序相反，商值顺序却都相同。
+
+\paragraph{一个覆盖所有类型的核对.}
+原题 $n=10$ 时，
+\[
+(f(1),\ldots,f(10))=(1,2,6,12,20,12,42,56,72,40),
+\]
+总和为 $263$。例如 $f(6)=f(2)f(3)=12$，而不是 $6\cdot5=30$；$f(4)=12$，而不是 $f(2)^2=4$。前者提醒“公式只给素数幂”，后者提醒“不是完全积性”。
+
+\subsection{复杂度说明与备课时的取舍}
+每个商值 $v$ 的素数转移数大致为 $\pi(\sqrt v)$。把所有商值相加，可先得到保守的 $O(n^{3/4})$ 数量级；再利用素数计数上界并精细求和，可得常见的
+\[
+ O(n^{3/4}/\log n)
+\]
+量级（默认固定次数的基函数、素数幂点值可常数时间读取、滚动表常数时间访问）。第二阶段的额外幂次枚举可按
+\[
+ \sum_{p\le\sqrt v}\floor{\log_p v}
+ =2\pi(\sqrt v)+\sum_{e\ge3}\pi(v^{1/e})
+\]
+计数，不会改变主导量级。小 $n$ 的对数表达应理解为渐近说明。
+空间为常数张 $O(\sqrt n)$ 的商集表和素数前缀表。若改成递归搜索、使用平衡树映射、每次转移重新求 $f(p^e)$，实际复杂度需要重新计入这些成本。
+
 \src{https://www.luogu.com.cn/problem/P5325}
 
 
 \chapter{二维积性函数：消去主要贡献以得到稀疏支撑}
+\begin{chapterintro}[章节导读]
+前面的筛法大多只处理一个整数；这一章把对象提升到两个坐标。二维卷积看起来更复杂，但核心仍然是“先匹配主要贡献，再让剩余部分变得稀疏”，因此我们会先消掉坐标轴，再处理对角线，最终把庞大的状态空间压缩成可枚举的支撑。
+\end{chapterintro}
+
 \section{问题、定义与二维卷积}
-\begin{problem}{UOJ 885：红场阅兵}
-已知积性函数 $S$，满足 $S(1)=1$，对素数 $p$ 与 $k\ge1$，
-\[
- S(p^k)=w_0+w_1p^k+w_2p^{2k}.
-\]
-求 $\sum_{i=1}^n\sum_{j=1}^nS(ij)\bmod998244353$，$n\le10^9$。
-\end{problem}
+\begin{tip}[词义：二维积性]
+「二维」= 自变量是数对 $(x,y)$，且固定一个变量后对另一个是积性的。处理方式与一维一样：先把「对角线/坐标轴」上的一维积性部分消掉，剩下的非零项只出现在稀疏的坐标对上。
+\end{tip}
+
 \begin{definition}
 二维函数 $f$ 满足 $f(1,1)=1$，且 $\gcd(ab,cd)=1$ 时有
 \[
@@ -904,7 +2264,6 @@ G_2(v,0)=\frac{v(v+1)(2v+1)}6-1.
 \]
 \end{definition}
 常数项为可逆元素时可以逐项求卷积逆。二维积性函数的卷积、卷积商仍为二维积性函数；固定素数后对应二元形式幂级数乘除。
-
 
 
 \section{算法一：先消去坐标轴}
@@ -923,6 +2282,45 @@ G_2(v,0)=\frac{v(v+1)(2v+1)}6-1.
 \]
 直接按共同素因子递归枚举这些位置，不必遍历 $n^2$ 个点。
 
+
+\subsection{局部系数怎样实际求？}
+固定素数 $p$，令 $s_0=1,s_k=S(p^k)$（$k\ge1$），$h_{a,b}=h(p^a,p^b)$，则
+\[
+ h_{0,0}=1,\qquad
+ h_{a,b}=s_{a+b}-\sum_{\substack{0\le i\le a,\,0\le j\le b\\i+j>0}}
+ s_i s_j h_{a-i,b-j}.
+\]
+按 $a+b$ 递增计算。例：
+\[
+ h_{1,0}=h_{0,1}=0,\qquad h_{1,1}=S(p^2)-S(p)^2.
+\]
+局部二维多项式除法的成本应单独预处理或缓存，不要在每个递归节点从头做一次。
+
+\subsection{为何只有 \texorpdfstring{$O(n)$}{O(n)} 个位置？一个更直接的证明}
+将 $x,y\le n$ 放宽为 $xy\le n^2$，不是原稿误写的 $xy\le n$。
+令 $a(t)$ 为满足 $xy=t$、$x,y$ 具有相同素因子集合的有序数对个数。它是积性的，且
+\[
+ a(p^k)=\begin{cases}0,&k=1,\\k-1,&k\ge2.\end{cases}
+\]
+$k-1$ 来自正指数拆分 $k=1+(k-1)=\cdots=(k-1)+1$。
+
+令 $T_2$ 为完全平方数的示性函数，写 $a=T_2*b$。局部生成函数相乘可得
+\[
+ b(p)=b(p^2)=0,\qquad b(p^k)=2\ (k\ge3).
+\]
+于是
+\[
+\sum_{t\le X}a(t)=\sum_{d\le X}b(d)\floor{\sqrt{X/d}}
+\le\sqrt X\sum_{d\ge1}\frac{b(d)}{\sqrt d}.
+\]
+右边的级数可分解成
+\[
+ \prod_p\left(1+2\sum_{k\ge3}p^{-k/2}\right).
+\]
+因为每个局部因子为 $1+O(p^{-3/2})$，且 $\sum_p p^{-3/2}$ 收敛，整个乘积有限。因此 $\sum_{t\le X}a(t)=O(\sqrt X)$。代入 $X=n^2$，便得到 $O(n)$ 的支撑上界。
+这个证明不需要“随便写出一个高次卷积支配函数后省略检查”。
+
+\paragraph{复杂度边界.} 算法一的枚举阶段为 $O(n)$，另加 $S_S$ 的商集前缀与局部系数的预处理。适合中等规模或作为正确性基准，$n=10^9$ 时需要进一步优化。
 
 
 \section{算法二：再消去局部对角线}
@@ -951,67 +2349,324 @@ G_2(v,0)=\frac{v(v+1)(2v+1)}6-1.
 次操作。
 
 
+\paragraph{为什么前缀预处理仍可做？}
+\[
+ D(p)=S(p^2)-S(p)^2
+ =w_0+w_1p^2+w_2p^4-(w_0+w_1p+w_2p^2)^2,
+\]
+是关于 $p$ 的四次多项式。因此 $S,D$ 的素数值均可拆成常数个幂函数，能用上一章方法求商集前缀。$D(p^k)=h(p^k,p^k)$ 由局部表计算。
+由于 $A=\floor{n/x}$，$\floor{A/d}=\floor{n/(xd)}$，所有需要的 $S_S$ 参数仍在原商集中；共同块的端点来自 $A$ 或 $B$ 的整除商，$S_D$ 也只需原商集所对应的值。
+
+\subsection{稀疏支撑数为 \texorpdfstring{$O((AB)^{1/3})$}{O((AB)1/3)}}
+令 $v(x,y)$ 表示上述“每个出现的素数指数均正且不同”的支撑，且 $v(1,1)=1$。
+定义积性 $v_1$：除 $(1,1)$ 的局部常数项外，只在局部 $(p,p^2),(p^2,p)$ 处为 $1$；定义 $v_2$ 在其他合法非零局部位置为 $1$，两处被删除的位置为 $0$，并令 $v_2(1,1)=1$。在非负系数意义下有 $v\le v_1*v_2$。
+
+$v_1$ 的位置可表示成 $(a^2b,ab^2)$。实际还对 $a,b$ 有平方自由及互质限制，去掉这些限制只会增加数量，所以
+\[
+ S_{v_1}(A,B)\le\sum_a\min\left(\frac A{a^2},\sqrt{\frac Ba}\right).
+\]
+两项在 $a_0=A^{2/3}/B^{1/3}$ 附近相等；在此处分段求和，得到 $O((AB)^{1/3})$。若分点落在合法范围外，使用 $O(A)$ 或 $O(B)$ 的更粗界也满足结论。
+
+$v_2$ 的非零局部项满足两坐标指数之和至少为 $4$，故
+\[
+ \sum_{x,y\ge1}\frac{v_2(x,y)}{(xy)^{1/3}}
+ =\prod_p\left(1+O(p^{-4/3})\right)<\infty.
+\]
+展开卷积前缀并使用上界，得到
+\[
+ S_v(A,B)\le\sum_{x,y}v_2(x,y)
+ O\!\left((AB/(xy))^{1/3}\right)=O((AB)^{1/3}).
+\]
+这说明剥掉最低总次数为二的对角项后，主要的规模指数从 $1/2$ 变成了 $1/3$。
+
+\subsection{将单次商块成本求和}
+使用不等式
+\[
+ \min(A,B,\sqrt A+\sqrt B)
+ \le\min(A,\sqrt B)+\min(B,\sqrt A).
+\]
+两部分对称，只分析第一部分。把最小值写成层数计数，有
+\[
+\begin{aligned}
+ \sum_{x,y\le n}v(x,y)\min\left(\frac nx,\sqrt{\frac ny}\right)
+ &\ll\sum_{t\le\sqrt n}S_v(\floor{n/t},\floor{n/t^2})\\
+ &\ll\sum_{t\le\sqrt n}\left(\frac{n^2}{t^3}\right)^{1/3}
+ =O(n^{2/3}\log n).
+\end{aligned}
+\]
+因此\textbf{除前缀表及局部系数预处理以外}，算法二耗时 $O(n^{2/3}\log n)$。如果前缀用洲阁筛计算，总复杂度还要加对应的预处理项，不能一笔抹去。
+
 
 \section{推广：第一个非零局部系数决定主导规模}
 设非负整数序列 $a_k$ 为常数次多项式增长，$a_0=1$，令 $r$ 是第一个满足 $a_r>0$ 的正下标。积性函数 $F$ 若满足 $F(p^k)=a_k$，则常见的上界为
 \[
  S_F(n)=O\left(n^{1/r}(\log(n+1))^{a_r-1}\right),
 \]
+
+\begin{tip}[怎么做：先代一个小例子]
+「$r$ 是第一个 $a_r>0$ 的下标」的意思是：局部生成函数 $a_0+a_1z+\cdots$ 前面连续有 $r$ 个零。这些零把每一项能出现的素因子次数抬高，于是和式的主导规模从 $n$ 变成 $n^{1/r}$。先代 $a_0=1,a_1=0,a_2=1$（$r=2$）算一个具体例子，再读一般式子。
+\end{tip}
+
 其中 $r,a_r$ 视为常数。这里给出的是在上述归一化、非负整数系数与多项式增长条件下的结论，不能无条件推广到任意系数列。
+
+\paragraph{证明思路.} 定义 $T_r(n)=[n\text{ 是完全 }r\text{ 次方}]$。从局部级数中提出 $(1-z^r)^{-a_r}$，相当于 $F=T_r^{*a_r}*H$。剩余局部级数从 $z^{r+1}$ 才开始，因此
+\[
+ \sum_{d\ge1}|H(d)|d^{-1/r}<\infty.
+\]
+而 $T_r^{*a_r}$ 的前缀和等于 $a_r$ 重约数函数在 $n^{1/r}$ 的前缀和，为 $O(n^{1/r}\log^{a_r-1}(n+1))$；卷积上界便给出结论。
+例如 $\tau(n)^2$ 的局部值为 $(k+1)^2$，$r=1,a_1=4$，得到 $O(n\log^3 n)$。若 $a_r$ 非整数或取负值，需要另行使用分析数论工具，不能直接用“做 $a_r$ 次卷积”的证明。
 
 
 \section{算法三：去掉枚举阶段的对数（研究拓展）}
 原稿最后提到可继续优化。本讲义保留这一方向，但把所需的新结论单独列出来，不将它冒充前两种算法的自然常数优化。
 如果能在合适预处理后，把 $L(A,B)$ 的一次询问做到 $O(\min(A,B)^\rho)$，其中固定 $\rho<2/3$，那么稀疏枚举阶段就能降到 $O(n^{2/3})$。
 
+\paragraph{为什么是阈值 $2/3$？}
+令 $w(t)=t^\rho-(t-1)^\rho=O(t^{\rho-1})$。总询问成本不超过常数倍
+\[
+\sum_{t\ge1}w(t)S_v(\floor{n/t},\floor{n/t})
+\ll n^{2/3}\sum_{t\ge1}t^{\rho-1-2/3}.
+\]
+只有 $\rho<2/3$ 时该级数收敛；例如取 $\rho=3/5$ 即可。
+
+\paragraph{新的难点是什么？}
+需要批量维护所有商值 $A$ 对应的加权前缀
+$\sum_{d\le t}D(d)S_S(\floor{A/d})$，而不是每个 $(A,B)$ 都独立重做分块。
+对大 $A$ 可单独预处理商块；对小 $A$ 需要利用相邻商值的 $\floor{A/i}$ 数组变化总量，维护小下标项及按商聚合项的两套前缀。这涉及额外的数据结构与摊还证明。
+本节给出目标和总复杂度归约，完整高性能实现及变化量分析参见下列延伸资料；课堂上可将证明 $\sum w(t)S_v(n/t,n/t)$ 作为专题作业。采用哪种前缀预处理也影响\textbf{完整算法}的时间界。
+
 \src{https://uoj.ac/problem/885}
 \src{https://www.cnblogs.com/zkyJuruo/p/18204106}
 
 
 \chapter{综合专题：循环、指数向量、图与期望}
+\begin{chapterintro}[章节导读]
+前面几章已经把同余、阶、函数与筛法中的工具分别建立起来；现在把这些工具放回真正复杂的综合题里。这里不再只有一个公式，而是会同时出现循环结构、指数向量、图上的状态传播以及概率计数，需要把前面学到的结构识别能力组合起来。
+\end{chapterintro}
+
 \section{CF516E：快乐传播不是只保留最小起点}
-\begin{problem}{Drazil and His Happy Friends}
-$n$ 个男生、$m$ 个女生分别编号从 $0$ 开始。第 $t$ 天男生 $t\bmod n$ 与女生 $t\bmod m$ 见面；只要有一人快乐，另一人也会变快乐，快乐不可逆。给定初始快乐的男生、女生集合，求所有人都快乐的最早日期，或报告不可能。
-$n,m\le10^9$，初始快乐人数总计不超过 $2\times10^5$，保证至少有一个人初始不快乐。
-\end{problem}
 \hint 用 $d=\gcd(n,m)$ 分成独立传播分量；在每一侧转成步长环上的\textbf{带不同初始时间的多源最短路}，利用环坐标排序与前后缀最小值求最晚到达时间。
 
+\subsection{传播时间的精确形式}
+将两侧初始快乐的编号合并为多重集合 $Z$。能发生有效传播的时刻恰是
+\[
+ t=z+vn+wm,\qquad z\in Z,\quad v,w\ge0.
+\]
+必要性沿传播链归纳：男生再次见面时间增加 $n$ 的倍数，女生增加 $m$ 的倍数。
+充分性：若 $z$ 来自男生，在 $z+vn$ 时该男生使对应女生快乐，再在 $z+vn+wm$ 时由该女生传播；若 $z$ 来自女生，交换顺序即可。
+
+对某个初始不快乐的男生，$vn$ 不改变其编号且只会推迟时间，因此最早时间可写为
+\[
+ F(i)=\min_{\substack{z\in Z,w\ge0\\z+wm\equiv i\pmod n}}(z+wm).
+\]
+女生同理交换 $n,m$。初始快乐的人无需等到第一次见面，应从“最晚变快乐”统计中排除。
+
+\subsection{修正原稿的关键反例}
+取 $n=5,m=3$，初始快乐男生为 $\{4\}$，女生为 $\{0\}$。同一个环中最小源为 $z=0$，它单独向男生 $2$ 传播需要时间 $12$；而源 $z=4$ 在时间 $7$ 就能到达男生 $2$。实际全员快乐的日期为 $7$。
+因此“同一子环上所有初始不快乐的点都由最小 $z$ 最先到达”是错误的。小编号源可能离目标更远，必须保留多源竞争。
+
+\subsection{把步长变成加一}
+对男生侧，令 $d=\gcd(n,m),L=n/d$。每个余数 $r\pmod d$ 是独立环。$L>1$ 时取
+\[
+ u=(m/d)^{-1}\pmod L.
+\]
+编号为 $i\equiv r\pmod d$ 的点映射到环坐标
+\[
+ t_i=((i-r)/d)u\bmod L.
+\]
+每走一步 $+m$，新坐标恰加一。$L=1$ 时只有坐标零，无需求逆。
+源 $z$ 的坐标用 $z\bmod n$ 或直接用上述同余式计算，初始代价仍是\textbf{整数 $z$}，而不是 $z\bmod n$。
+若某个余数类没有源，两侧对应的人都永远无法快乐。无需开 $d$ 大小数组：哈希分组后，检查出现的余数类个数是否为 $d$。
+
+\subsection{环上的带权多源扫线}
+一个环上把不同源坐标排序为 $t_1<\cdots<t_s$，同坐标只保留最小初始代价 $z_i$。设
+\[
+ c_i=z_i-mt_i.
+\]
+对于目标坐标 $t$，最早时间为
+\[
+ F(t)=mt+\min\left(
+ \min_{t_i\le t}c_i,\quad
+ mL+\min_{t_i>t}c_i\right).
+\]
+第一项表示从左侧源不绕环到达，第二项表示从右侧源先绕一整环。
+预处理 $c_i$ 的前缀最小值和后缀最小值，每个源之间的区间都能 $O(1)$ 确定常数项；区间内斜率为正数 $m$，最晚时间在其最右端。
+
+按区间 $[0,t_1-1]$、$[t_i,t_{i+1}-1]$、$[t_s,L-1]$ 检查右端点，并排除初始快乐男生。由于每个初始快乐男生本身就是源，区间内部没有需要额外跳过的初始快乐点；只有长度为一、右端点就是该初始快乐源的区间需要跳过。
+女生侧对称处理，取两侧初始不快乐者时间的最大值。
+
+\cost 令初始快乐总人数为 $K$。使用排序，确定性排序部分为 $O(K\log K)$，gcd 与逆元为 $O(\log\max(n,m))$，额外空间 $O(K)$。分组可用哈希，或者按余数排序获得不依赖哈希的实现。不沿用原稿未经成立支配结论支撑的 $O(K)$ 宣称。
 \src{https://codeforces.com/problemset/problem/516/E}
 
 \section{CF571E：把等比数列交集转到指数空间}
-\begin{problem}{Geometric Progressions}
-给定 $n$ 个等比数列 $a_i,a_ib_i,a_ib_i^2,\ldots$，求最小公共正整数，答案模 $10^9+7$；无公共项则报告无解。$n\le100,a_i,b_i\le10^9$。
-原稿还提出 $n\le10^5,a_i,b_i\le10^{18}$ 的 Bonus，作为研究拓展保留。
-\end{problem}
 \hint 分解质因数后，一个等比数列变为非负整数参数的一条指数向量射线。合并两条射线时可能无交、一个点或一条新射线；不同质因子的指数必须共享同一个参数。
+
+\subsection{为什么不能对每个素数独立 CRT？}
+设素数全集为 $p_1,\ldots,p_s$，把 $a,b$ 分别写成指数向量 $A,B$。数列为
+\[
+ A+kB,\qquad k\in\Z_{\ge0}.
+\]
+所有坐标里的 $k$ 是同一个数。若分别为每个素数求一个可行指数，却没有检查它们对应相同的 $k$，会生成并不存在于数列中的整数。
+
+\subsection{两条射线的完整分类}
+合并 $A+kB$ 与 $C+\ell D$，需要解所有坐标上的
+\[
+ B_jk-D_j\ell=C_j-A_j,\qquad k,\ell\ge0.
+\]
+\begin{enumerate}
+\item \textbf{零方向.} $B=0$ 或 $D=0$ 表示原数列公比为一，是单点。直接检查这个点是否能用另一条射线的同一个非负整数参数表示。
+\item \textbf{方向不成比例.} 找到两个坐标使对应 $2\times2$ 系数矩阵行列式非零。用精确整数消元求出唯一有理数解 $(k,\ell)$；检查分子能否被分母整除、参数是否非负，再代入\textbf{全部}坐标。全通过则交集是唯一一个点，否则为空。
+\item \textbf{方向成比例且均非零.} 选一个 $B_j,D_j>0$ 的坐标，解
+$B_jk-D_j\ell=C_j-A_j$。令 $d=\gcd(B_j,D_j)$。若无整数解则为空；否则所有解形如
+\[
+ k=k_0+(D_j/d)t,\qquad\ell=\ell_0+(B_j/d)t.
+\]
+先检查特解是否满足其余坐标，再取
+\[
+ t_{\min}=\max\left(\ceil{-k_0/(D_j/d)},\ceil{-\ell_0/(B_j/d)}\right).
+\]
+最小可行参数给出新起点 $E=A+k_{\min}B$，新方向为 $F=(D_j/d)B$，交集仍是 $E+tF$（$t\ge0$）。
+\end{enumerate}
+成比例情形中，改变 $t$ 不会破坏其余坐标等式，因为方向差为零。新方向各分量非负，因此新射线起点对应最小公共整数。
+
+\paragraph{例子.} $2\cdot4^k$ 与 $8\cdot8^\ell$ 转成 $1+2k=3+3\ell$，最小 $(k,\ell)=(1,0)$，公共数列为 $8,512,32768,\ldots$，公比 $64$。
+$2\cdot6^k$ 与 $12\cdot9^\ell$ 则在素数 $2,3$ 上分别给出 $1+k=2,k=1+2\ell$，唯一 $k=1,\ell=0$，公共项只有 $12$。
+
+\cost 反复合并直到处理所有数列。指数与射线步长可能增长很大，应使用大整数或严格证明范围；最后对素因子做快速幂相乘。原题各素因子小于 $10^9+7$，指数可模 $10^9+6$ 降幂；Bonus 中若素因子等于输出模数，必须先判断其指数是否为正，不能直接当成可逆底数。
+原范围可先筛到 $\sqrt{10^9}$ 试除分解。Bonus 不能简单把原算法换成 Pollard--Rho 就宣称通过：稀疏指数向量的合并次数、总维数和高精度运算都需要进一步优化。
 
 \src{https://codeforces.com/problemset/problem/571/E}
 
 \section{AGC031F：把巨大的状态图缩成每点六个状态}
-\begin{problem}{Walk on Graph}
-无向连通图有 $n$ 点、$m$ 边，模数 $M$ 为奇数。路径按经过次序的边权为 $w_0,\ldots,w_{k-1}$，权值为 $\sum_i2^iw_i$。多次询问是否存在从 $s$ 到 $t$、权值模 $M$ 为 $r$ 的游走，允许重复边。
-$n,m,Q\le5\times10^4,M\le10^6$。
-\end{problem}
+\begin{tip}[怎么做：压成「生成树 + 回边」]
+遇到这类「图上求权值模 $M$」的题，通常先把图压成「一棵生成树 + 若干回边」。树上两点之间的权值差由树唯一决定，回边给出可自由组合的生成元。本题还要额外处理「乘 $2$」不是可逆映射这件事——这就是六状态与奇偶性的来源。
+\end{tip}
+
 \hint 反转路径，将状态转移变成 $(u,x)\to(v,2x+w)$；证明状态可逆和同余类平移，再将乘二的指数只保留奇偶性，配合并查集。
 
+\subsection{第一步：反向读路径消去长度变量}
+从 $t$ 出发，倒序处理原路径的边，每走一条边令 $x\gets2x+w$，从 $x=0$ 得到的最终值正好是原题权值。因此询问等价于 $(t,0)$ 能否到达 $(s,r)$。
+沿同一条边连续走 $h$ 次，数值变为
+\[
+ 2^hx+(2^h-1)w.
+\]
+
+\begin{tip}[为什么要「反转路径」]
+正着走：从 $s$ 出发到达 $t$ 的权值难合并。反着走：把每条边的贡献写成「乘 $2$ 再加权值」的仿射变换，$s$、$t$ 各自到公共点的变换可以复合、比较，于是可达性等价于两个变换像的交集。这就是把「路径问题」变成「状态问题」。
+\end{tip}
+
+$M$ 为奇数，取偶数 $h=2\varphi(M)$，既回到原顶点又回到原数值。所以一次状态转移可通过继续走同一条边反向撤销，状态可达关系可作为无向连通关系处理。$M=1$ 直接回答 YES。
+
+\subsection{第二步：推出同顶点的平移等价}
+顶点 $u$ 邻接两条权为 $a,b$ 的边，来回走一次分别产生
+\[
+ x\mapsto4x+3a,\qquad x\mapsto4x+3b.
+\]
+先撤销前一个变换再执行后一个，得到平移 $x\mapsto x+3(b-a)$。沿其他路径运输这个平移，只会多乘 $2$ 的可逆幂；生成的加法子群不变。
+连通图中任意两边的权差可由相邻边权差相加得到，故在所有顶点都可进行由全部 $3(w_i-w_1)$ 生成的平移。
+令
+\[
+ g=\gcd(M,w_2-w_1,\ldots,w_m-w_1),\qquad M'=\gcd(M,3g).
+\]
+由裴蜀定理，同一个顶点上模 $M'$ 相同的状态彼此可达，所以可以无损地把模数缩为 $M'$。\textbf{这不表示同顶点状态可达当且仅当模 $M'$ 相同}，之后仍有乘四产生的等价。
+因为 $g\mid M$，$M'$ 只能是 $g$ 或 $3g$。
+
+\subsection{第三步：统一边权余数并只保留六类形式}
+令 $z=w_1\bmod g$，所有边权写为 $w_i=z+c_ig$。用新坐标 $X=x+z$，转移变成
+\[
+ X\mapsto2X+c_ig\pmod{M'}.
+\]
+来回走同一边给 $X\mapsto4X+3c_ig\equiv4X$，所以同一点的 $X$ 与 $4X$ 等价。
+从初始值 $z$ 出发，任意形式可写成
+\[
+ 2^ez+kg\pmod{M'}.
+\]
+$k$ 只需模 $3$；乘四不改变 $kg$ 的模 $M'$ 值，因此指数只需保留奇偶性。为每个顶点建立状态 $(u,\epsilon,k)$，$\epsilon\in\{0,1\},k\in\{0,1,2\}$，一共 $6n$ 个并查集点。
+每条边 $u\leftrightarrow v$、系数 $c$ 建立两种方向的合并
+\[
+ (u,\epsilon,k)\sim(v,\epsilon\oplus1,(2k+c)\bmod3).
+\]
+即使 $M'=g$ 导致某些状态数值重复，保留这六种形式并在询问时枚举也不影响正确性。
+
+\subsection{第四步：把询问数值匹配到形式}
+预处理布尔表
+\[
+ \operatorname{vis}[\epsilon][a]=[\exists e\ge0,\ e\bmod2=\epsilon,\ 2^ez\equiv a\pmod{M'}].
+\]
+迭代状态 $(e\bmod2,2^ez\bmod M')$ 直到首次重复即可，至多 $2M'$ 个状态。
+询问 $s,t,r$ 时，枚举六个 $(\epsilon,k)$。若
+\[
+\operatorname{find}(t,0,0)=\operatorname{find}(s,\epsilon,k)
+\]
+且 $\operatorname{vis}[\epsilon][(r+z-kg)\bmod M']$ 为真，就回答 YES，否则 NO。
+负余数必须规范化；原模数为 $M$ 的 $r$ 在这里自然按 $M'$ 处理。
+
+\paragraph{最小例子.} 只有两个顶点、一条边权为 $1$，$M=7$。从一侧走到另一侧必须走奇数条边，余数为 $2^h-1$（$h$ 奇）。可得到 $1,0,3$，不能得到所有余数。这个例子能检查“只看连通图就全可达”的错误直觉。
+\cost 预处理 $O(M+(n+m)\alpha(n))$，每问常数次并查集查询；空间 $O(M+n+m)$。这里 $\alpha$ 是反阿克曼函数，不是素数幂指数。
 \src{https://atcoder.jp/contests/agc031/tasks/agc031_f}
 \src{https://www.luogu.com.cn/article/hz11gwzl}
 
 \section{WC2020 猜数游戏：把期望拆成分量贡献}
-\begin{problem}{P6730：猜数游戏}
-给定互不相同的非零余数 $a_1,\ldots,a_n$，模数 $M$ 为奇素数幂。随机等概率选择一个非空子集。询问一个被选中的 $a_i$ 时，可得知子集中所有能够写成 $a_i^k\bmod M$（$k$ 为正整数）的数。题目对每个固定子集考察其最少所需询问次数，求该最小值的期望乘 $(2^n-1)$ 后模 $998244353$ 的结果。
-$n\le5000,M\le10^8$。
-\end{problem}
 \hint 建立“一个数的正整数幂能到另一个数”的传递关系；将强连通分量视为一组，统计它被选中且所有严格祖先都未选中的概率。单位部分用阶，非单位部分直接枚举短幂链。
+
+\subsection{先分清题目中的最优含义}
+这里求的是每个子集的\textbf{最小覆盖询问数}的平均值，不是在未知答案下设计一个自适应策略、使平均猜测次数最小。原题样例中子集只含 $1$ 时最少次数为一，正体现了这一口径。把它误建成在线决策问题会得到不同答案。
+
+建边 $i\to j$ 当 $a_i^k\equiv a_j\pmod M$ 对某个 $k\ge1$ 成立。幂再取幂仍为幂，所以该关系传递。缩点后是一个传递 DAG。
+对一个固定选中子集，只有“被选中且没有任何被选中的严格祖先”的分量必须各询问一次；其他选中分量都由某个上方的选中分量覆盖。同一强连通分量中只需选一个被选中的点询问。
+
+\subsection{期望线性性给出封闭计数式}
+对分量 $C$，设其大小为 $c_C$，能够到达它但不属于它的原图点数为 $u_C$。它贡献一次询问，当且仅当自己至少选一个点、全部严格祖先都不选，其余任意选。
+满足该事件的子集数是
+\[
+ (2^{c_C}-1)2^{n-c_C-u_C}.
+\]
+
+\begin{tip}[口径：两个「平均询问数」不是一回事]
+「对所有子集，求最小询问数的平均」与「设计一个策略，使平均询问数最小」是两个不同的量。前者是固定对象的平均，可以直接换序计数；后者要证明策略最优。读题时先把这句话写完，再决定用哪种概率语言。
+\end{tip}
+
+\begin{tip}[为什么不需要「独立」]
+期望线性性：$\mathbb E[\sum_iX_i]=\sum_i\mathbb E[X_i]$，对任意随机变量都成立，不要求独立。这也正是它能化简「互相牵连的覆盖关系」的原因：把每个强连通分量当成一个指示变量，只需算「它被计入」的概率，不必管分量之间是否相关。
+\end{tip}
+
+这些子集一定非空，因此把所有分量贡献相加就是题目要求的已乘分母结果：
+\[
+ \boxed{\sum_C(2^{c_C}-1)2^{n-c_C-u_C}\pmod{998244353}}.
+\]
+这里不用再求 $(2^n-1)^{-1}$。
+
+\subsection{不用真的建出平方规模的图}
+单位的幂仍是单位；非单位在素数幂模数下的正整数幂始终为非单位，故两部分之间没有边。
+\begin{itemize}
+\item 单位部分：$M$ 有原根，所以 $i\to j$ 等价于 $\ord_M(a_j)\mid\ord_M(a_i)$。阶相同的元素构成一个分量，按阶计数后，$u_C$ 等于所有出现的\textbf{严格倍数阶}的元素总数。直接两两检查阶的整除关系也只有 $O(n^2)$。
+\item 非单位部分：写 $M=p^\alpha$，$\nu_p(a_i)=v>0$。$a_i^k$ 的赋值在变为零之前为 $kv$，严格递增，因此不同非单位不可能相互可达，每个点自成分量。从每个 $a_i$ 枚举 $k=1,\ldots,\ceil{\alpha/v}-1$ 的非零幂，用值到下标的哈希表查找；命中其他点就给其祖先数加一。$k=1$ 的自己不计入严格祖先。
+\end{itemize}
+
+\paragraph{样例一完整核对.}
+$M=7$，数为 $1,3,4,6$，阶分别为 $1,6,3,2$。对应祖先数为 $3,0,1,1$，分量都为单点，贡献为 $1,8,4,4$，总计 $17$。
+\paragraph{样例二核对.}
+$M=9$，数为 $1,\ldots,8$。单位的阶 $6,3,2,1$ 的组大小为 $2,2,1,1$，贡献分别为 $192,48,32,4$；非单位 $3,6$ 各贡献 $128$，总计 $532$。
+\cost 分解并求阶后，关系计数 $O(n^2+n\alpha)$，额外空间可做到 $O(n+\alpha)$，无需存全部边。若显式建图再缩点，虽然概念清楚，也应把 $O(n^2)$ 存储写出来。
 
 \src{https://www.luogu.com.cn/problem/P6730}
 
 
 \chapter{素性判定与因数分解}
+\begin{chapterintro}[章节导读]
+上一章的综合题告诉我们，很多数论问题最后都绕不开“这个数的结构到底是什么”。这一章把问题直接拉回素数与因数分解：先从试除和费马测试开始，再进入 Miller--Rabin 与 Pollard--Rho，建立从“判断是不是素数”到“真正拆出因子”的完整工具链。
+\end{chapterintro}
+
 \section{试除、费马测试与 Carmichael 数}
 试除只需检查到 $\sqrt n$：若 $n$ 合数，至少有一个非平凡因子不超过 $\sqrt n$。对单个 $64$ 位整数，试除通常太慢；对一批不太大的数，预先筛素数仍然有效。
 费马小定理给出必要条件：素数 $n$、$\gcd(a,n)=1$ 时 $a^{n-1}\equiv1\pmod n$。但其逆命题不成立。
 Carmichael 数是对所有\textbf{与 $n$ 互质}的 $a$ 都通过费马测试的合数。这里不能把条件改成 $n\nmid a$。
+
+
+\paragraph{例：$561$.} $561=3\cdot11\cdot17$，$2,10,16$ 都整除 $560$。对所有与 $561$ 互质的 $a$，费马小定理分别给出 $a^{560}\equiv1$ 模 $3,11,17$，CRT 得到模 $561$ 也为 $1$。所以随机重复费马测试无法可靠识别这一类合数。
+\begin{tip}[词义：非平凡平方根]
+$x^2\equiv1\pmod n$ 的解里，$x\not\equiv\pm1$ 的那个叫非平凡平方根。它的价值在于：$n\mid(x-1)(x+1)$ 但 $n$ 不整除任何一个因子，于是 $\gcd(x-1,n)$ 必是真因子——一句话把「求平方根」变成「求 gcd」。
+\end{tip}
 
 
 
@@ -1029,6 +2684,14 @@ Carmichael 数是对所有\textbf{与 $n$ 互质}的 $a$ 都通过费马测试�
 不通过就能确定 $n$ 为合数；通过只说明该底数未发现合数证据。
 
 
+\paragraph{完整示例：底数二检测 $561$.}
+$560=2^4\cdot35$，连续平方链为
+\[
+ 2^{35}\equiv263,\quad263^2\equiv166,\quad166^2\equiv67,\quad67^2\equiv1\pmod{561}.
+\]
+没有出现 $-1\equiv560$，起点也不是一，所以发现合数。$67$ 是非平凡平方根，$\gcd(67-1,561)=33$，还能顺便得到因子。
+\cost 一轮只做一次快速幂和至多 $s-1$ 次平方，为 $O(\log n)$ 次模乘，不要为每个指数重新快速幂而变成 $O(\log^2n)$。
+
 
 \section{随机误差与确定性底数}
 经典强伪素数计数定理给出：对固定奇合数 $n$，均匀随机底数的一轮误判概率不超过 $1/4$。独立测试 $k$ 轮，误判概率不超过 $4^{-k}$。这是对每个固定输入、每轮重新独立抽样的概率结论。
@@ -1036,8 +2699,30 @@ Carmichael 数是对所有\textbf{与 $n$ 互质}的 $a$ 都通过费马测试�
 \[
  2,325,9375,28178,450775,9780504,1795265022
 \]
+
+\begin{tip}[口径：随机的是底数还是模数]
+「对固定 $n$、随机底数」和「对固定底数、随机 $n$」是两个不同的陈述，不能混用。固定底数（如 $2$）时存在反例，所以本书模板用一组固定的小素数当底数，在 $2^{64}$ 范围内是\textbf{确定}正确的判定，而不是概率判定。
+\end{tip}
+
+\begin{tip}[读一条测试链的方法]
+先算 $a^d$，再一路平方到 $a^{d2^s}=a^{n-1}$。判定规则是：起点是 $1$（通过），或首次到达 $1$ 的前一项是 $-1$（通过）；否则 $n$ 是合数，而且那个前一项就是非平凡平方根，顺手 $\gcd$ 出因子。$561$ 是最小的反例（Carmichael 数），所以费马测试单独用不安全。
+\end{tip}
+
 得到确定性判定。每个底数先对 $n$ 取模，余数为零时跳过该轮；该有限范围保证不能外推到任意大整数。
 
+
+\subsection{课堂可证明的较弱上界：\texorpdfstring{$1/2$}{1/2}}
+为了理解误差来源，下面证明一个后文也会用到的引理；$1/4$ 的更紧界作为经典结论使用。
+\begin{lemma}[已知群指数倍数时的平方根分裂]
+设奇数 $n$ 至少含两个不同素因子，$T=2^s d$ 为 $\varphi(n)$ 的倍数，$d$ 为奇数。在模 $n$ 单位中均匀选择 $a$，序列 $a^d,a^{2d},\ldots,a^{2^sd}=1$ 中，最后一个非一元素存在且不为 $-1$ 的概率至少为 $1/2$。
+\end{lemma}
+若 $n=q^e$ 为奇素数的真幂，费马测试通过的单位比例仅 $1/q^{e-1}\le1/3$。
+若 $n$ 至少有两个不同素因子，取 $T=(n-1)\varphi(n)$。通过 Miller--Rabin 的底数，其各局部二幂阶同步；把奇数部分再乘 $\varphi(n)$ 的奇数部分不会改变这些二幂阶，所以也属于上面引理中“不分裂”的集合。于是得到不超过 $1/2$ 的较弱误判上界。
+原稿的长证明中模数 $q_i$ 与 $q_i^{e_i}$、二进制指数与奇数部分多次混淆，这里统一用局部循环群的分布表示。
+
+\begin{pitfall}[随机结论与安全工程]
+随机底数不能固定为随意挑出的几个小素数后仍声称对任意大整数有 $4^{-k}$ 的误差界。$64$ 位的固定底数集是另一种有适用范围的结论。竞赛用随机数发生器也不是密码学随机源；本讲义模板不直接用作安全协议实现。
+\end{pitfall}
 
 \src{https://cp-algorithms.com/algebra/primality_tests.html}
 
@@ -1051,223 +2736,264 @@ Carmichael 数是对所有\textbf{与 $n$ 互质}的 $a$ 都通过费马测试�
 模 $p$ 的投影也遵循同样的迭代。用 Floyd 快慢指针或 Brent 判环，在不知道 $p$ 的情况下通过 gcd 检查是否发生局部碰撞。
 
 
+\subsection{生日悖论如何给出规模估计}
+若抽取近似均匀的模 $p$ 状态，$r$ 个状态没有碰撞的概率近似
+\[
+ \prod_{j=0}^{r-1}(1-j/p)\approx\exp(-r(r-1)/(2p)).
+\]
+所以 $r$ 达到 $\sqrt p$ 量级便有常数碰撞概率。但若把全部数对都检查，需要 $O(r^2)=O(p)$ 次 gcd；原稿把这一朴素两两比较的成本写小了。
+Floyd 每轮更新慢指针一次、快指针两次，检查两者差的 gcd。只要投影迭代进入循环，两指针在一个环长内相遇，因此用线性于序列长度的检查数代替了全部数对。
+
+\paragraph{为什么有时会得到 $n$？}
+如果两个状态模 $n$ 也相同，gcd 就是 $n$，并没有得到真因子。应换常数 $c$、初始值后重试，不能把 $n$ 原样递归下去，否则无限递归。
+
+\subsection{批量 gcd 与故障回退}
+累积一批差值的乘积
+\[
+ P=\prod_i|x_i-y_i|\pmod n,
+\]
+再求一次 $\gcd(P,n)$。结果为 $1$ 说明整批没有发现因子；在 $(1,n)$ 之间就成功；等于 $n$ 则回退到该批起点逐项求 gcd，或重新启动。
+如果两项分别含不同素因子，乘起来也可能让 gcd 变成 $n$，所以“乘积 gcd 为 $n$”不等于这一批没有可用因子。
+设批长为 $B$，常见估计为
+\[
+ O\left(\sqrt p+\frac{\sqrt p}{B}\log n+B\log n\right).
+\]
+取 $B\asymp\log n$ 后应先写成 $O(\sqrt p+\log^2n)$，恢复成本不能不加说明就消失。实际实现常用固定批长减少常数。
+
+\subsection{应怎样表述复杂度}
+在把多项式迭代视作足够随机的启发式假设下，常见的寻找因子规模为 $\widetilde O(\sqrt p)$，因 $p\le\sqrt n$，通常用约 $n^{1/4}$ 的经验／启发式量级描述。
+这不是已证明对每个输入和每个随机参数成立的最坏界。每个递归子问题变小也不单独证明总成本由第一轮支配，需要结合因子的大小与各层成本分析。
 
 \section{位数模型与大整数题的边界}
 输入一个整数 $n$ 需要 $\Theta(\log n)$ 位。通常意义下的多项式时间是关于位数的多项式，而不是关于数值 $n$ 的多项式。
 对一般整数分解，目前没有已知的经典多项式时间算法；量子计算模型下存在 Shor 算法，这与竞赛环境中的经典算法不同。素性判定则已有确定性多项式算法，不能把“判素难”和“分解难”混为一谈。
 
+\paragraph{大整数实现提醒.} $64$ 位模乘可用无符号 $128$ 位中间值；$150$ 位输入不能套用该实现。模乘、快速幂、开整数根、gcd 都要换成高精度版本，并把它们的位复杂度计算进去。下一章有额外信息的分解题可获得随机多项式算法，关键在于已知一个与真实因子群阶相关的倍数，而不是 Pollard--Rho 的直接加速。
+
 
 
 \chapter{特殊信息如何把分解变成随机多项式问题}
+\begin{chapterintro}[章节导读]
+上一章我们讨论的是在信息有限时怎样主动寻找因子；如果题目额外告诉我们 φ(n) 等信息，问题的结构就会发生变化。利用这些额外信息，可以先恢复与因子有关的代数关系，再把分解转化成随机选择参数、寻找非平凡平方根的过程。
+\end{chapterintro}
+
 \section{QOJ 4920：已知 \texorpdfstring{$n$}{n} 与 \texorpdfstring{$\varphi(n)$}{phi(n)}}
-\begin{problem}{给定整数与欧拉函数值，分解质因数}
-已知 $N$ 和 $\varphi(N)$，$N\le2^{150}$。不要求使用固定宽度整数实现，设计关于输入位数的随机多项式时间分解算法。
-\end{problem}
+\begin{tip}[这一节为什么「特殊信息」是关键]
+$N\le2^{150}$ 不可能用 $O(\sqrt N)$ 枚举。但已知 $\varphi(N)$ 时，$T=(N-1)\varphi(N)$ 是单位群阶的倍数，于是「求平方根再 $\gcd$」的每一步都在 $\operatorname{poly}(\log N)$ 时间内完成。缺了这个倍数，就退回 Pollard--Rho 的启发式，不能宣称多项式时间。
+\end{tip}
+
 \hint 已知 $T=\varphi(N)$，因此对每个递归因子 $n\mid N$ 的单位 $a$ 都有 $a^T\equiv1\pmod n$。通过连续平方找非平凡平方根，再用 gcd 分裂。
 
+
+\subsection{先理解一个二素数例子}
+若已知 $N=pq$、$p,q$ 为不同素数，则 $\varphi(N)=N-p-q+1$，所以
+\[
+ p+q=N-\varphi(N)+1,\qquad pq=N.
+\]
+直接解一元二次方程即可。例如 $N=77,\varphi(N)=60$，和为 $18$、积为 $77$，两根为 $7,11$。一般 $N$ 可能含很多素因子，不能再把它当成二次方程，但“已知群阶的倍数”依然可以使用。
+
+\subsection{保持原始的群阶倍数}
+在所有递归中固定 $T=\varphi(N)$。若 $n\mid N$，则 $\varphi(n)\mid\varphi(N)$：按素数幂公式比较，删除素因子或降低指数后，欧拉函数都是原值的约数。因此 $T$ 仍适用于每个子问题。
+先处理 $n=1$、素数、二的幂因子；若 $n=b^e$ 是完全幂，则递归分解 $b$ 并将结果指数乘 $e$。整数开根可枚举 $e\le\log_2n$，用二分或整数根算法验证，不使用浮点近似作最终判定。
+剩余 $n$ 为奇合数且至少有两个不同素因子。
+
+\subsection{一次随机尝试}
+\begin{enumerate}
+\item 随机 $1\le a<n$，若 $1<\gcd(a,n)<n$，已经得到因子。
+\item 否则 $a$ 为单位，写 $T=2^sd$、$d$ 奇，计算 $a^d,a^{2d},\ldots,a^{2^sd}=1$。
+\item 若在链中发现 $V\not\equiv\pm1$ 且 $V^2\equiv1\pmod n$，取 $g=\gcd(V-1,n)$。
+\end{enumerate}
+由于 $n\mid(V-1)(V+1)$ 而 $n$ 不整除两因子中的任何一个，$g$ 是非平凡因子。上一章的平方根分裂引理保证，在单位上一次尝试成功概率至少为 $1/2$。
+
+\paragraph{数值示范.} $n=77,T=60=4\cdot15$，取 $a=2$，$2^{15}\equiv43\pmod{77}$，$43^2\equiv1$，且 $43\ne1,76$。于是 $\gcd(42,77)=7$，得到另一个因子 $11$。
+\cost 每次尝试的模幂、平方、gcd 都是关于 $\log N$ 的多项式操作，每个有效分裂严格减小子问题，递归树规模为 $O(\log N)$。可使用确定性多项式判素保证理论正确性；实践中常使用高精度 Miller--Rabin，并对整体误差预算单独分配。截断重试时，用联合界控制全树失败概率。
 
 \src{https://qoj.ac/problem/4920}
 
 \section{QOJ 1860：由 \texorpdfstring{$M=N\varphi(N)$}{M=Nphi(N)} 还原 \texorpdfstring{$N$}{N}}
-\begin{problem}{构造满足 $M=N\varphi(N)$ 的整数}
-给定正整数 $M\le10^{36}$，保证存在正整数 $N$ 使 $M=N\varphi(N)$，求这个 $N$。有多组数据。
-\end{problem}
 \hint 先证明 $N$ 唯一，再选择性地寻找 $N$ 所含素因子。未知 $N$ 时仍知道 $M$ 是 $\varphi(N)$ 的倍数，但它不一定是递归整数 $m$ 的欧拉函数的倍数。
 
+
+\subsection{第一步：解确实唯一}
+若 $N=\prod q_i^{e_i}$，则
+\[
+ M=\prod_i(q_i-1)q_i^{2e_i-1}.
+\]
+
+\begin{tip}[为什么要先证唯一性]
+构造类题目（「求满足条件的 $N$」）如果解不唯一，输出格式就必须规定取哪一个；题面只让输出一个数，等于在提示你「解唯一」。先证唯一（这里靠最大素因子的指数 $2e-1$ 被唯一确定），算法就能按「从大到小逐个恢复」写，不必回溯搜索。
+\end{tip}
+
+设 $q$ 为 $N$ 的最大素因子。因为 $q_i-1<q_i\le q$，它们不会引入比 $q$ 更大的素因子，也不会额外贡献 $q$；所以 $q$ 同时是 $M$ 的最大素因子，并且
+\[
+ \nu_q(M)=2e_q-1.
+\]
+$q$ 的指数唯一确定。除去 $(q-1)q^{2e_q-1}$ 后，又得到剩余部分的同型问题，依次从大到小恢复即可。$M=1$ 时 $N=1$。
+
+\paragraph{示例.} $M=48$，最大素因子 $3$ 的指数为一，故 $N$ 中有一个 $3$；除去 $3(3-1)=6$ 后剩 $8$。$2$ 的指数为三，所以 $N$ 中有两个 $2$；最终 $N=3\cdot4=12$。
+
+\subsection{第二步：不必完全分解原数}
+$M$ 中可能含仅来自 $q_i-1$、却不整除 $N$ 的素因子。例如 $N=15$ 时 $M=120$，其中 $2\nmid15$。
+算法只需要收集到 $N$ 的所有不同素因子，允许额外收集少量不需要的素数。递归处理当前整数 $m\mid M$，始终固定指数 $T=M$。
+
+用于证明的量 $d_0=\gcd(m,N)$ 是未知的，\textbf{算法不能计算它}。不过 $\varphi(d_0)\mid\varphi(N)\mid T$，因此对所有与 $m$ 互质的 $a$，
+\[
+ a^T\equiv1\pmod{d_0}.
+\]
+这就是能够安全剪枝的原因。
+
+\subsection{一次递归怎样处理？}
+\begin{enumerate}
+\item $m=1$ 返回；$m$ 为素数就记录；提出因子 $2$ 并记录它。若 $m=b^e$ 为完全幂，只需递归 $b$ 以收集不同素因子。
+\item 对剩余奇合数随机 $a\in[1,m)$。若 gcd 已为非平凡因子，直接分裂并递归。
+\item 否则计算 $D=\gcd(a^T-1,m)$。因为 $d_0\mid D$：
+\begin{itemize}
+\item $D=1$：说明 $\gcd(m,N)=1$，整个 $m$ 中没有需要的素因子，可以安全丢弃；
+\item $1<D<m$：得到非平凡分裂，递归 $D,m/D$；
+\item $D=m$：说明本次 $a^T\equiv1\pmod m$，进入连续平方链寻找非平凡平方根。
+\end{itemize}
+\item 在第三种情况中，写 $T=2^sd$、$d$ 奇，从 $a^d$ 不断平方。若得到 $V^2\equiv1$、$V\not\equiv\pm1$，使用 $\gcd(V-1,m)$ 分裂；若未得到，重新随机。
+\end{enumerate}
+\begin{pitfall}[原稿中一个使算法直接失效的符号错误]
+当 $V\equiv-1\pmod m$ 时，$\gcd(V+1,m)=m$，并非非平凡因子。必须要求 $V$ 是既非 $1$ 也非 $-1$ 的平方根，才用 $V\pm1$ 分裂。
+\end{pitfall}
+
+\subsection{第三步：为什么仍有常数成功概率？}
+这里不能直接说 $\varphi(m)\mid T$，因为它未必成立。正确做法是对通过 $a^T=1$ 的底数集合进行条件分析。
+模 $m$ 的单位群中，满足 $a^T=1$ 的元素构成子群。按每个奇素数幂分量来看，这个子群的大小为 $\gcd(T,\varphi(q^e))$。当 $M>1$ 时 $T=M$ 为偶数，因此每个局部子群的二幂部分至少有两个元素。
+条件于 $a^T=1$ 后，CRT 仍使不同局部分量独立均匀；平方链首次变为一的层数分布与上一章引理相同，每项概率至多 $1/2$。至少有两个不同素因子时，找到非平凡平方根的条件成功率至少 $1/2$。
+若不满足 $a^T=1$，前面的 $D<m$ 已经使算法安全剪枝或分裂。因此每次尝试无法推进的概率至多为 $1/2$，不需要错误地假设 $T$ 是整个 $m$ 的群阶倍数。
+
+\subsection{最后按降序恢复答案}
+将收集到的不同素数从大到小排序，令剩余值 $R=M$、答案 $A=1$。遇到 $q\nmid R$ 就跳过；若 $q\mid R$，则当前最大的尚未处理相关素数一定是剩余 $N$ 的最大素因子。计算 $e=\nu_q(R)$，应为奇数，令 $k=(e+1)/2$，更新
+\[
+ A\gets A q^k,\qquad R\gets\frac{R}{(q-1)q^e}.
+\]
+直到 $R=1$。最终用收集到的质因数分解计算 $\varphi(A)$，验证 $A\varphi(A)=M$。
+剪枝不会遗漏 $N$ 的素因子；额外收集的素数要么已随更大的 $q-1$ 被消去，要么最终不整除 $R$，因此不会造成错误恢复。
+
+\cost 这是关于 $\log M$ 的随机多项式路线，依赖高精度运算、整数完全幂检测与可靠判素。理论上可以采用确定性多项式判素并无限重试形成期望多项式算法；实践中若用概率判素和有限重试，应声明错误预算并验证输出。它不是直接对 $10^{36}$ 运行 $64$ 位 Pollard--Rho。
 
 \src{https://qoj.ac/problem/1860}
 
 
 \chapter{韦达跳跃与构造不定方程的解}
+\begin{chapterintro}[章节导读]
+前面的分解算法依赖“把一个整体拆成因子”；这一章换成另一类离散结构：从一个已经存在的整数解出发，如何构造出另一个更小的解。韦达跳跃把二次方程的两个根联系起来，再结合正性与最小性建立递降，从而把许多看似只能试答案的构造题变成系统的证明。
+\end{chapterintro}
+
 \section{把一个变量看成二次方程的根}
 若 $at^2+bt+c=0$ 的两个根为 $t_1,t_2$，则
 \[
  t_1+t_2=-b/a,\qquad t_1t_2=c/a.
 \]
+
+\begin{tip}[韦达跳跃到底「跳」什么]
+把方程看成关于某个变量（比如 $z$）的一元二次方程：$z^2-k(x+y)z+(x^2+y^2-1)=0$。已知一个根 $z$，用韦达定理 $z+z'=k(x+y)$ 直接写出另一个根 $z'=k(x+y)-z$——它就是解，且通常更小（降）或更大（升）。构造题里我们反向用它「从小解生成无穷多个不同解」。
+\end{tip}
+
 当方程各系数为整数、首项系数为一且已知一根为整数时，另一根也为整数。这种“固定其余变量、替换一根”的操作称为韦达跳跃。
 若新根比旧根小且仍满足约束，可用于无穷递降；反过来可从基本解生成更多解。
 
-\begin{problem}{P1400：Easy Equation}
-给定 $2\le k\le1000$、$1\le n\le1000$，输出 $n$ 组正整数解
-\[
- x^2+y^2+z^2=k(xy+yz+zx)+1.
-\]
-全部 $3n$ 个输出整数必须互不相同，每个数最多 $100$ 位，即小于 $10^{100}$。
-\end{problem}
 \hint 固定两变量，第三变量可替换为 $k$ 倍的另外两数之和减去自身；从基本解建立递降树，反向广度优先生成并检查全局重复值。
 
+
+\subsection{推导跳跃公式而不是记变换}
+固定 $x,y$，将方程改写为
+\[
+ z^2-k(x+y)z+x^2+y^2-kxy-1=0.
+\]
+如果 $z$ 为一根，另一根为
+\[
+ z'=k(x+y)-z.
+\]
+因此 $(x,y,z')$ 仍满足原方程。该操作是对合：再替换一次就回到 $z$。但另一根可能为零或负数，不能无条件说它仍是正整数解。
+
+\subsection{严格递降与停止条件}
+设 $1\le x\le y\le z$，定义上面的二次多项式 $F(t)$。有
+\[
+ F(y)=(2-k)y^2+x^2-2kxy-1<0.
+\]
+首项系数为正，故两根分别在 $y$ 两侧；$z$ 是较大根，另一个根满足 $z'<y<z$。
+若 $z'>0$，则排序后得到和更小的正整数解；反复操作不可能无限下降。若 $z'\le0$，在正整数解空间中停止。这定义了以边界解为根的递降森林。
+
+\begin{pitfall}
+“不停得到更小整数”只有同时保证仍处于研究对象的集合里，才能组成无限递降矛盾。整数性、正性和严格变小是三个独立检查。对本题我们把越过正数边界的点视为基本解，而不是强行继续下降。
+\end{pitfall}
+
+\subsection{从基本解向上生成：两个孩子}
+从 $1\le x<y<z$ 的解出发，替换两个较小的变量，排序后的两个孩子为
+\[
+ (y,z,k(y+z)-x),\qquad (x,z,k(x+z)-y).
+\]
+由于 $k\ge2$，两个新产生的数都严格大于 $z$，所以仍是严格递增的正整数三元组。孩子再替换最大数就回到父亲；父亲由此唯一，所以这棵树不会出现同一三元组从不同父亲重复生成的情况。
+然而\textbf{三元组不重复不意味着其中的整数不重复}：父子自然共享两个数，因此输出时还要维护一个全局已使用整数集合。
+
+\subsection{一个适用于所有合法 \texorpdfstring{$k$}{k} 的种子}
+非负整数解 $(0,0,1)$ 通过两次跳跃可得到
+\[
+ (0,1,k)\longrightarrow(1,k,k(k+1)).
+\]
+
+\begin{tip}[为什么需要「统一种子」]
+BFS 从一个固定的最小三元组出发，能保证不会漏掉某个 $k$；同时要用「全局去重」（同一数不能出现在两组解里）来筛掉重复。少了任一条，程序要么少解要么重解，而对拍很难发现——因为它在小数据上经常是对的。
+\end{tip}
+
+最后一组是严格递增的正整数解，可作为统一的搜索起点。这样无需先枚举几千万对基本解。
+
+\begin{center}
+\begin{tikzpicture}[every node/.style={draw=ink!50,rounded corners,fill=soft,font=\small,inner sep=5pt},>=Stealth]
+\node (a) at (0,0) {$(0,0,1)$};
+\node (b) at (0,-1.1) {$(0,1,3)$};
+\node (c) at (0,-2.2) {$(1,3,12)$};
+\node (d) at (-2.7,-3.5) {$(3,12,44)$};
+\node (e) at (2.7,-3.5) {$(1,12,36)$};
+\draw[->] (a)--(b);\draw[->] (b)--(c);\draw[->] (c)--(d);\draw[->] (c)--(e);
+\end{tikzpicture}
+\end{center}
+图为 $k=3$ 的局部生成关系，由 TikZ 内嵌绘制，无需原稿缺失的 \texttt{tree\_k3.png}。
+
+\subsection{BFS 与全局去重的可实现策略}
+\begin{enumerate}
+\item 队列初始放入 $(1,k,k(k+1))$，已使用集合为空。
+\item 取出一个三元组。若其三个值均未出现在已使用集合，就输出它并登记三个值。
+\item \textbf{无论该三元组是否被输出}，都将两个孩子入队；否则会错误截断可用分支。
+\item 获得所需组数后停止。
+\end{enumerate}
+采用大整数，例如 Python 整数或 C++ 的 \texttt{boost::multiprecision::cpp\_int}。计算判定等式时需要平方，不能因为坐标本身似乎较小就假定中间值也适合 $128$ 位。
+
+\subsection{正确性证明与规模证据分开陈述}
+前面的代数推导严格保证：每个生成三元组满足方程、三个数为正且不同、父子关系无重复；全局集合保证输出的 $3n$ 个值两两不同。
+仍需说明在位数限制内能否找到足够多组，不能用“树是无限的”代替定量保证。
+
+本次整理对本题\textbf{全部 $999$ 个合法参数 $k=2,\ldots,1000$}运行统一种子的 BFS，均生成了 $1000$ 组，并逐组用大整数验算方程与全局去重条件。有限检查结果为：最多访问 $7132$ 个节点，最深输出层为 $12$，输出整数最大为 $43$ 位。任意更小的 $n$ 直接取相应前缀，因此覆盖原题全部参数组合。
+验证脚本及逐 $k$ 记录附于资料包。这是可复现的\textbf{有限范围计算验证}，不是关于任意 $k,n$ 的渐近定理；教师应明确区别。可让提高层学生尝试补充适用于无界参数的定量树分析。
+
+\paragraph{一个独立的位数上界核对.}
+每次孩子的最大数小于原最大数的 $2k$ 倍，因此深度 $d$ 时最大数小于
+\[
+ k(k+1)(2k)^d.
+\]
+结合有限验证得到的 $d\le12,k\le1000$，该式也远小于 $10^{100}$。实际出现的 $43$ 位数已经可能超过有符号 $128$ 位的范围，因此本方案不能沿用原稿“\texttt{\_\_int128} 一定足够”的笼统说法。
 
 \src{https://www.luogu.com.cn/problem/P1400}
 
 
-\chapter{分层训练与参考解析}
-本章是新增训练，不替代前文原题。学生版只保留题目；教师版在每题后给出结果、关键步骤与评价要点。建议先独立完成，再检查条件和推导，而不是仅比对最后一个数。
-
-\section{A 组：整除、通解与基础建模}
-\begin{problem}{A1：从 gcd 回代到不定方程}
-求 $\gcd(414,662)$，给出 $414x+662y=6$ 的一组整数解与通解。
-\end{problem}
-
-
-\begin{problem}{A2：正整数解的计数}
-求 $14x+21y=147$ 的全部正整数解、解数以及两个变量的极值。
-\end{problem}
-
-
-\begin{problem}{A3：约分会改变模数}
-解 $18x\equiv30\pmod{42}$，并在区间 $[0,42)$ 中列出全部解。
-\end{problem}
-
-
-\begin{problem}{A4：CRT 与下界}
-求满足 $x\equiv1\pmod4$、$x\equiv3\pmod6$ 且 $x\ge40$ 的最小整数。
-\end{problem}
-
-
-\begin{problem}{A5：一个质因数分解对应多种函数}
-计算 $\varphi(72),\mu(72),\tau(72)$ 与 $\sum_{d\mid72}\varphi(d)$。
-\end{problem}
-
-
-\begin{problem}{A6：单次逆元与批量逆元}
-求 $37^{-1}\pmod{101}$；再说明模 $17$ 同时求 $2,3,5$ 的逆元时怎样只做一次一般求逆。
-\end{problem}
-
-
-\begin{problem}{A7：环的连通分量}
-在 $18$ 个点的环上每次加 $12$，有几个循环？从点 $3$ 出发能否到点 $4$？列出点 $3$ 所在循环。
-\end{problem}
-
-
-\begin{problem}{A8：无整数解与无正整数解}
-比较 $6x+10y=7$ 与 $6x+10y=2$。第二个方程中，单独可取得的最小正 $x$、最小正 $y$ 分别是多少？它们能否同时取得？
-\end{problem}
-
-
-\section{B 组：指数、赋值与组合数}
-\begin{problem}{B1：欧拉指数与真实周期}
-求 $7^{123456789}\bmod40$，并分别使用欧拉函数与阶解释降幂依据。
-\end{problem}
-
-
-\begin{problem}{B2：非互质大指数}
-求 $6^{10^{100}}\bmod72$，并说明不计算任何大指数即可得到答案的原因。
-\end{problem}
-
-
-\begin{problem}{B3：先列周期，再写离散对数通解}
-求 $\ord_{17}(4)$，并解 $4^x\equiv13\pmod{17}$。
-\end{problem}
-
-
-\begin{problem}{B4：离散对数的有限前缀}
-分别求 $6^x\equiv12\pmod{18}$ 与 $6^x\equiv0\pmod{18}$ 的最小非负解。
-\end{problem}
-
-
-\begin{problem}{B5：奇素数 LTE}
-求 $\nu_3(10^{81}-1)$，并列出所使用的全部前提。
-\end{problem}
-
-
-\begin{problem}{B6：二的赋值}
-求 $\nu_2(5^{12}-1)$，用一般偶指数形式与 $4\mid x-y$ 的简化形式各算一次。
-\end{problem}
-
-
-\begin{problem}{B7：阶乘赋值与组合数赋值}
-求 $\nu_3(100!)$ 与 $\nu_2\binom{100}{50}$。
-\end{problem}
-
-
-\begin{problem}{B8：一次 Lucas 计算}
-求 $\binom{20}{6}\bmod7$。若把下标改成八，结果是否仍非零？
-\end{problem}
-
-
-\begin{problem}{B9：合数模数不能直接除阶乘}
-求 $\binom{12}{4}\bmod18$，要求按模二和模九分别解释。
-\end{problem}
-
-
-\begin{problem}{B10：辨认计数对象}
-(1) P7488 的三角形模型中 $n=4,m=2$ 的组数是多少？(2) 五件不同礼物分别给两位有编号的人两件、一件，有多少方案？
-\end{problem}
-
-
-\section{C 组：反演与亚线性求和}
-\begin{problem}{C1：手算一次杜教筛}
-计算 $S_\varphi(12)$ 和 $S_\mu(12)$，并写出前者按商分块后的递归式。
-\end{problem}
-
-
-\begin{problem}{C2：矩形上的 gcd 与互质计数}
-求 $\sum_{i\le4,j\le6}\gcd(i,j)$，以及其中互质有序数对的个数。
-\end{problem}
-
-
-\begin{problem}{C3：gcd 的平方应该使用哪个系数？}
-推导 $\sum_{i,j\le n}\gcd(i,j)^2$ 的一维求和式，给出系数在素数幂处的值，并计算 $n=3$ 的答案。
-\end{problem}
-
-
-\begin{problem}{C4：PN 思想的最简单计数应用}
-求不超过三十的平方自由数个数，要求不逐个判定。
-\end{problem}
-
-
-\begin{problem}{C5：PN 卷积商的交叉项}
-设积性函数满足 $f(p^k)=p^{2k}+[k\ge2]$。取 $g(n)=n^2$ 并令 $f=g*h$，求 $h(p),h(p^2),h(p^3)$，设计 $S_f(n)$ 的稀疏求和式。
-\end{problem}
-
-
-\begin{problem}{C6：验证 P4240 的简化系数}
-计算 $f(6),f(12)$，其中 $f(k)=\sum_{d\mid k}d\mu(k/d)/\varphi(d)$；再用 $G$ 形式算 $\sum_{i,j\le3}\varphi(ij)$。
-\end{problem}
-
-
-\section{D 组：证明辨析与综合拓展}
-\begin{problem}{D1：非平凡平方根为何能分解？}
-列出 $x^2\equiv1\pmod{15}$ 的所有解。用其中一个非平凡解找到十五的两个素因子。
-\end{problem}
-
-
-\begin{problem}{D2：相同阶不代表同一个子群}
-比较模十五的 $2,7$ 的阶。是否存在 $a\ge0$ 使 $2^a\equiv7\pmod{15}$？说明 P5605 中原根条件不可删除。
-\end{problem}
-
-
-\begin{problem}{D3：一步边也可能产生多个路径余数}
-两个点仅通过一条边权二的无向边相连，模数为七。允许反复走边，从一端到另一端能得到哪些权值余数？
-\end{problem}
-
-
-\begin{problem}{D4：二维卷积的一次完全消去}
-取 $S(n)=\tau(n)$。证明
-\[
- \tau(xy)=\sum_{d\mid\gcd(x,y)}\mu(d)\tau(x/d)\tau(y/d),
-\]
-并写出 $\sum_{i,j\le n}\tau(ij)$ 的一维表达式。
-\end{problem}
-
-
-\begin{problem}{D5：从最大素因子开始还原}
-已知 $M=1080=N\varphi(N)$ 且解存在，求 $N$，并解释为什么不是直接取 $\sqrt M$。
-\end{problem}
-
-
-\begin{problem}{D6：构造题还需要全局去重}
-当 $k=2$，从种子 $(1,2,6)$ 写出两个孩子。为什么它们都不能作为该种子之后的第二组输出？沿 BFS 继续找一组可用输出。
-\end{problem}
-
-
-
-
-
-
+\clearpage
 \appendix
+\renewcommand{\thepage}{\thechapter\arabic{page}}
+\setcounter{page}{1}
 \chapter{核心模板与接口}
+\begin{chapterintro}[章节导读]
+附录 A 训练的是分析与推导，接下来需要把这些结论真正落到程序接口上。本附录集中整理高频数论模板，并把输入前提、溢出边界、返回值以及空间成本写在代码旁边，方便把数学证明转化为可靠实现。
+\end{chapterintro}
+
 \section{模板使用说明}
+
+\begin{tip}[附录代码怎么读]
+先读注释里的 Contract（前提条件：模数范围、是否互质、输入上限），再读函数体。凡是本书在正文里写「必须先检查」的地方，模板里都有对应的 \texttt{assert} 或返回值；提交时要按题面删掉 \texttt{assert} 以免被卡常数。
+\end{tip}
+
 完整 C++17 实现在资料包 \texttt{code/number\_theory.hpp}。本附录仅摘录关键部分，依赖同文件中的类型别名、\texttt{exgcd} 与相关函数；摘录不是可单独编译的提交文件。测试程序为 \texttt{code/selftest.cpp}。
 
 \begin{longtable}{p{0.28\textwidth}p{0.61\textwidth}}
@@ -1435,6 +3161,11 @@ inline bool is_prime(u64 n) {
 \end{lstlisting}
 
 \section{怎样复现验证}
+
+\begin{tip}[怎么做：对拍的最小可行版本]
+这四条命令是「对拍」的最小可行版本：一份正确但慢的实现 + 一份你写的实现 + 随机数据。竞赛里 90\% 的「WA」能被它抓出来，包括取模负号、最小解、边界 $n=1$ 这类。
+\end{tip}
+
 在资料目录中运行：
 \begin{lstlisting}[language=bash]
 g++ -std=c++17 -O2 -Wall -Wextra -fsanitize=undefined \
@@ -1445,4 +3176,150 @@ python validation/check_happy.py
 python code/vieta_construct.py --verify
 \end{lstlisting}
 C++ 测试程序以 Boost 的大整数作为组合数的独立对照；模板本身无需 Boost。Python 的数学验证仅依赖标准库。
+
+\begin{tip}[提醒：Boost 只出现在自测里]
+Boost 只在自测里当「独立裁判」（用 \texttt{cpp\_int} 精确算组合数再取模）。提交的代码只依赖 \texttt{number\_theory.hpp}。这个区分很重要：对拍用的实现要「笨且显然正确」，被测的实现要「快且接口干净」。
+\end{tip}
+
+
+\clearpage
+\setcounter{page}{1}
+\chapter{主要勘误与严谨性补充}
+% 下表记录合并时的实质性修正，既包括错误，也包括缺失条件与复杂度表述不完整。不是所有列出的原结论都错误：例如 Miller--Rabin 的 $1/2$ 界是可用弱界，但原证明需要重写；经验性构造也应与一般定理区分。
+
+% \begingroup\small
+% \begin{longtable}{p{0.055\textwidth}p{0.20\textwidth}p{0.645\textwidth}}
+% \toprule
+% 编号 & 位置 & 正确表述／本次处理\\\midrule
+% \endfirsthead
+% \toprule 编号 & 位置 & 正确表述／本次处理\\\midrule
+% \endhead
+% 1 & 第一稿：难度定位 & 基础整除可入门，但原根、二维积性函数及随机分解不能定位为小学二年级内容；改为按前置知识分层。\\
+% 2 & 第一稿：P5656 & 整数解存在当且仅当 $\gcd(a,b)\mid c$，不是 $c\mid\gcd(a,b)$。\\
+% 3 & 第一稿：P5656 & 从 $ax+by=d$ 的特解转到右边为 $c$ 时乘 $c/d$，不是 $d/c$。\\
+% 4 & 第一稿：P5656 & 正整数解还需参数区间；有整数解不等于有正整数解；两个单独最小正值不一定能同时取得。\\
+% 5 & 第一稿：P8255 & 应为 $d^2=\gcd(z/x,x^2)$，不是 $\gcd(z/x,a^2)$；还需 $x\mid z$ 与完全平方判定。\\
+% 6 & 第一稿：欧拉展开 & $\gcd(i,n)$ 展开后约数项应为 $\varphi(d)$；保留原 gcd 会重复计数。\\
+% 7 & 第一稿：CRT & 构造应为 $\sum_i a_i(M/m_i)((M/m_i)^{-1}\bmod m_i)$，不能把 $M/m_i$ 误写为 $m_i$。\\
+% 8 & 两稿：CRT & 标准构造需模数两两互质；唯一性是模总乘积的唯一同余类。非互质时先检查相容条件，再取最小公倍数。\\
+% 9 & 第一稿：屠龙勇士 & 选剑是“不高于生命值”的最大值，即 $\le$，不是严格小于。\\
+% 10 & 第一稿：屠龙勇士 & 除同余式外还需攻击伤害下界 $x\ge\ceil{a_i/c_i}$；$a_i\le p_i$ 不是所有测试点的统一条件。\\
+% 11 & 第一稿：LTE & $n=2^e u$ 去掉奇数部分后应为 $x^{2^e}-y^{2^e}$，不是 $x^{2^n}-y^{2^n}$。\\
+% 12 & 第一稿：高阶箭号 & $3\uparrow^33$ 是高度 $3^{27}$ 的三的幂塔，不等于仅四层的 $3^{3^{27}}$。有限枚举需证明稳定高度。\\
+% 13 & 第二稿：分配律 & $(a+b)c\equiv ac+bc$，不是 $ac+ab$。\\
+% 14 & 第二稿：同余除法 & 同除公共因子后模数同步变为 $m/d$；等式中的商仍为原整数 $k$，不要求 $k/d$ 是整数。\\
+% 15 & 第二稿：欧拉定理 & 模数必须为正，通常在 $m\ge2$ 讨论；“非负整数模数”会错误包含零。\\
+% 16 & 第二稿：裴蜀证明 & 用“整数线性组合构成的子群”代替含糊的实向量空间说法，避免张成系数域不同导致误解。\\
+% 17 & 第二稿：根数界 & 因式定理与非零根差的可逆性是在 $\mathbb F_p$ 中使用；合数模数可有超出次数的根数。\\
+% 18 & 两稿：Wilson & 一般单位乘积中的符号按群结构分类；模二时 $1$ 与 $-1$ 是相同余数。\\
+% 19 & 两稿：去因子阶乘 & $U_p(n)$ 是对每个数除尽素数因子后再相乘，不是直接删除所有该素数的倍数。\\
+% 20 & 第二稿：扩展 Lucas & 查询成本含 $\log_p n$ 层递归与逆元成本，不能仅写成模数的函数；预处理要另计模数分解。\\
+% 21 & 第一稿：P2183 & 不可行时原题输出 Impossible；可行方案数取模为零时仍应输出零，二者不等价。\\
+% 22 & 第一稿：P7488 & 腰长彼此不同、底长彼此不同；不是全部腰长与底长数值整体两两不同，等边三角形允许出现。\\
+% 23 & 第二稿：BSGS & 一般互质模数的指数上界来自欧拉定理，不来自只适用于素数的费马小定理。\\
+% 24 & 第二稿：多询问 BSGS & 表可直接复用需要底数与模数都固定；仅固定模数不充分。\\
+% 25 & 第二稿：BSGS 最小解 & 需规定重复余数存储策略与块枚举顺序；随便返回一次碰撞只保证一组解，不保证最小。\\
+% 26 & 第二稿：exBSGS & 每层先检查零指数候选，除 gcd 前需 $d\mid b$；模数一、底数零要单独处理。\\
+% 27 & 第二稿：原根判定 & 枚举的是 $\varphi(m)$ 的不同素因子，且须先保证 $g$ 为单位；不是任意整数因子。\\
+% 28 & 第二稿：求阶复杂度 & 计算／分解 $\varphi(m)$ 是预处理成本，不能藏在每问快速幂成本中；求最小正阶不能直接接受指数零。\\
+% 29 & 第二稿：CF516E & 同一循环只保留最小编号源的支配结论不成立；正文给反例并改成带权多源环扫线。\\
+% 30 & 第二稿：CF571E & 参数是非负整数，不是“正整数且可为零”；各素因子的指数必须共享同一参数。\\
+% 31 & 第二稿：WC2020 & 给出固定子集的最小覆盖询问数及其期望计数式，避免与在线未知答案的策略期望混淆。\\
+% 32 & 第二稿：常见函数 & $\mu(p^k)=-[k=1]$；原稿已有误作 $I$ 的脚注，本次统一常一函数为 $\one$，约数个数为 $\tau$。\\
+% 33 & 两稿：筛法与内存 & $O(N)$ 时间不等于小内存；$N=10^8$ 时多个 int 数组的空间可能不可接受，应按用途选择筛法。\\
+% 34 & 第二稿：倍增估计 & 用端点代替一块各项是常数倍估计，应使用 $O,\Theta$ 或不等式，不是逐步精确相等。\\
+% 35 & 第二稿：杜教筛 & 命中预处理范围应返回存储的前缀和，原稿的“返回 $\sqrt n$”是错误文字。补全阈值条件 $B\ge\sqrt n$。\\
+% 36 & 第二稿：杜教筛 & $O(\sqrt n)$ 个状态，每个状态还有分块工作；未预处理总成本通常为 $O(n^{3/4})$，不是只数状态个数。\\
+% 37 & 第二稿：PN 表示 & 不限制 $b$ 时 $a^2b^3$ 表示不唯一；要求 $b$ 平方自由可得唯一表示。计数上界不需要未经成立的双射。\\
+% 38 & 第二稿：PN 总成本 & $O(\sqrt n)$ 是在相关前缀、局部系数与枚举准备完成后的支撑求和成本；完整算法还要加预处理。\\
+% 39 & 第二稿：洲阁筛 & 第一阶段基函数必须能在非互质乘法中拆积，典型条件是完全积性；仅称积性不够。\\
+% 40 & 第二稿：洲阁筛状态 & 明确排除整数一，原始前缀应减去一；素数幂枚举需有 $p^e\le v$ 上界；原地更新必须匹配旧层依赖。\\
+% 41 & 第二稿：二维计数 & 从 $x,y\le n$ 放宽后应是 $xy\le n^2$，不是 $xy\le n$。\\
+% 42 & 第二稿：二维支撑 & 对未出现的素数允许两边指数都为零；不能对所有素数都要求两边指数至少一。局部常数项必须为一。\\
+% 43 & 第二稿：增长推广 & 应看第一个“非零”局部项而非“非负”项；本讲义明确归一化、非负整数系数与多项式增长条件。\\
+% 44 & 第二稿：二维算法二 & 总成本必须加 $S,D$ 前缀预处理；算法三需要新的批量查询结构，不能把研究方向当成已完成实现。\\
+% 45 & 第二稿：Carmichael & 费马性质针对 $\gcd(a,n)=1$ 的底数，而不是所有 $n\nmid a$ 的底数。\\
+% 46 & 第二稿：Miller--Rabin & $1/2$ 可作为弱界；重新用局部循环群和 CRT 证明，并另给经典 $1/4$ 界。修正原证明中素数幂模数和指数的混写。\\
+% 47 & 第二稿：一般分解 & 应说“没有已知的经典多项式时间算法”，不是断言不存在；复杂度变量是输入位数，并区别量子计算模型。\\
+% 48 & 第二稿：Rho 两两比较 & $O(\sqrt p)$ 个状态若全部两两检查，会产生 $O(p)$ 次 gcd；判环才避免平方次检查。\\
+% 49 & 第二稿：Rho 批处理 & $B\asymp\log n$ 时恢复项为 $O(\log^2n)$，不能不加条件略去；$n^{1/4}$ 是常用启发式量级而非无条件最坏界。\\
+% 50 & 第二稿：$M=N\varphi(N)$ & $V=-1$ 时 $\gcd(V+1,m)=m$，必须找非平凡平方根。不能假设所有递归模数均满足 $\varphi(m)\mid M$，改用条件子群分析。\\
+% 51 & 第二稿：韦达递降 & 另一根是整数但可能非正；应写清正整数解空间的停止条件。全局数字互异不同于三元组互异。\\
+% 52 & 第二稿：P1400 范围 & 最多一百位指小于 $10^{100}$；经验性“128 位足够”不是普遍保证，平方验算还需更大范围。本次提供大整数实现与全参数有限验证。\\
+% \bottomrule
+% \end{longtable}
+% \endgroup
+
+% \section{排版与来源处理}
+% 两稿统一为可用 XeLaTeX 编译的现代 UTF-8 中文文档，使用标准 $11$ 磅字号，避免不受支持的 $10.5$ 磅选项；统一定理、问题、解析、教学提示与警示样式。标题日期明确是本次整理日期，不冒充原讲稿日期；插图使用内嵌 TikZ，移除外部缺失图片依赖。
+
+
+% \chapter{合并对应表、例题索引与延伸阅读}
+% \section{知识点合并对应表}
+% \begin{longtable}{p{0.34\textwidth}p{0.24\textwidth}p{0.31\textwidth}}
+% \toprule
+% 原稿内容 & 本书位置 & 整理方式\\\midrule
+% 最大公约数、裴蜀、exgcd、步长循环 & 第 1 章 & 合并基本证明，补整数参数区间与边界。\\
+% 同余、逆元、费马、欧拉、扩展欧拉 & 第 2 章 & 统一条件与记号，补截断指数接口与两种在线逆元方案。\\
+% 中国剩余定理、扩展 CRT & 第 3 章 & 标准构造与逐式合并并列，补相容性、下界与溢出。\\
+% 阶、原根、离散对数与高阶箭号 & 第 4 章 & 按周期到求指数重排，白泽教育归于此处而非 LTE。\\
+% 第一稿的升幂引理 & 第 5 章 & 完整保留三类结论，重写证明，增加阶的提升例题。\\
+% Wilson、阶乘、Legendre、Kummer、Lucas & 第 6 章 & 两稿合并，补单位阶乘与组合计数建模。\\
+% 积性函数、卷积、线性筛、狄利克雷变换 & 第 7 章 & 统一 $\one,\mu,\tau$，区分完全积性与积性。\\
+% 莫比乌斯／欧拉反演、gcd 求和 & 第 8 章 & 补通式、原题解析及多询问有效表存储。\\
+% 倍增估计、块筛、杜教筛、PN & 第 9 章 & 补预处理／查询成本与局部支撑论证。\\
+% 洲阁筛 & 第 10 章 & 写清两阶段状态、更新顺序与完全积性前提。\\
+% 二维积性函数、UOJ 885 三类算法 & 第 11 章 & 补局部系数递推与更直接的支撑计数；最优改进列为研究拓展。\\
+% 同余代数综合例题 & 第 12 章 & 补指数向量、环扫线、六状态图与期望计数解析。\\
+% 素性判定、Miller--Rabin、Pollard--Rho & 第 13 章 & 区分概率界、确定性范围与启发式性能。\\
+% 给定 $n,\varphi(n)$；构造 $n\varphi(n)$ & 第 14 章 & 补随机分裂的条件证明与选择性剪枝。\\
+% 韦达定理、递降树、P1400 & 第 15 章 & 补正性边界、统一种子、全局去重与有限验证。\\
+% 新增训练与教学资源 & 第 16 章及教师专章、附录 & 三十道分层练习、六个课堂包、模板与勘误。\\
+% \bottomrule
+% \end{longtable}
+
+% \section{原有例题去重索引}
+% \begin{longtable}{p{0.39\textwidth}p{0.12\textwidth}p{0.38\textwidth}}
+% \toprule
+% 题目 & 章节 & 学生基础版解析重点\\\midrule
+% P5656 二元一次不定方程 & 1 & 通解、正解区间、无正解时的特殊输出。\\
+% P8255 数学游戏 & 1 & 平方 gcd 的双向证明与解的唯一性。\\
+% 五类乘法逆元问题 & 2 & 单次、线性、批量、减半递归与分块预处理。\\
+% P4774 屠龙勇士 & 3 & 选剑、带系数同余、伤害下界、exCRT。\\
+% P5605 小 A 与两位神仙 & 4 & 循环单位群、阶整除与非循环反例。\\
+% P6736 白泽教育 & 4 & 幂塔截断、欧拉链稳定、三阶候选上界。\\
+% 原稿两道赋值练习 & 5 & $7$-进差与二进偶指数 LTE。\\
+% HDU 2973 YAPTCHA & 6 & 嵌套取整化为 Wilson 的判素示性函数。\\
+% P2183 礼物 & 6 & 多项式系数与素数幂单位部分。\\
+% P7488 黑色毛衣 & 6 & 阶梯棋盘递推与大参数合数取模。\\
+% P2398 GCD SUM & 8 & 欧拉展开与交换求和。\\
+% 一般加权 gcd 求和 & 8 & 任意数组的卷积差分与倍数后缀。\\
+% P4240 毒瘤之神的考验 & 8 & $\mu^2/\varphi$、变长表与小／大参数分治。\\
+% P4213 杜教筛 & 9 & 两个典型递归、记忆化与阈值分析。\\
+% LOJ 6053 & 9 & 奇素数匹配 $\varphi$，单独处理素数二。\\
+% P5325 & 10 & 素数贡献筛与按最小素因子补合数。\\
+% UOJ 885 红场阅兵 & 11 & 坐标轴／对角线消去、支撑规模；算法三为研究拓展。\\
+% CF516E & 12 & 带权多源环的前后缀最小值，修正原支配结论。\\
+% CF571E & 12 & 两条指数向量射线的交集；大数据 Bonus 为研究拓展。\\
+% AGC031F & 12 & 可逆状态、平移子群、每顶点六状态。\\
+% P6730 WC2020 猜数游戏 & 12 & 阶分组、非单位短幂链、分量贡献期望。\\
+% QOJ 4920 & 14 & 已知群阶倍数的随机非平凡平方根分裂。\\
+% QOJ 1860 & 14 & 唯一性、选择性分解与条件子群分析。\\
+% P1400 Easy Equation & 15 & 韦达跳跃、BFS、全局互异、大整数与全参数验证。\\
+% \bottomrule
+% \end{longtable}
+
+% \section{来源与引用说明}
+% \begin{enumerate}
+% \item 原稿 A 为用户提供的《数论》文本；原稿 B 为用户提供、署名周雨衡、日期为 2025 年 9 月 26 日的同名讲义整理稿。本次不是对原作者原文的逐字复制，而是合并、重排、校订及新增教学阐释。
+% \item 各原题的公开题面链接列在对应例题后，用于复查定义与输入输出。原稿提供的两个博客链接在本次访问时要求阅读密码，因此未把它们当成已阅读内容，也未尝试访问受保护正文；CF571E 与 AGC031F 的讲解根据数学推导及可公开核对的材料补充。
+% \item AGC031F 的六状态路线可参考公开讲解：\url{https://www.luogu.com.cn/article/hz11gwzl}。本书补充了平移等价的条件、更新形式和商模数说明，并用完整小状态图对拍。
+% \item UOJ 885 的延伸阅读为周康阳的专题文章：\url{https://www.cnblogs.com/zkyJuruo/p/18204106}。本书对算法一、二给出独立整理的卷积式与收敛支撑证明，算法三明确保留为专题研究方向。
+% \item 组合数素数幂模数下更深入的算法可参考原稿链接：\url{https://faqak.github.io/misc/binom-mod-pe/}。本书采用适用于素数幂模数较小时的可解释预处理方案，不宣称已覆盖所有最优算法。
+% \item 判素与分解可进一步阅读：\url{https://cp-algorithms.com/algebra/primality_tests.html} 与 \url{https://cp-algorithms.com/algebra/factorization.html}。固定底数保证、随机底数误差和 Rho 的启发式性能需分别理解。
+% \end{enumerate}
+
+% \section{后续修订建议}
+% 对于新的题目或更大的数据范围，先重新写出函数接口、模数条件与资源上界，再复用本书的数学结构。尤其是多次询问、任意模数、高精度输入与最小解要求，经常改变一个本来正确模板的适用范围。任何新增推导都建议配一份独立朴素实现或最小反例，不把一次通过测试当成无条件证明。
+
 \end{document}
