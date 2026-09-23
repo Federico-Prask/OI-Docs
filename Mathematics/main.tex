@@ -1,0 +1,422 @@
+% !TeX program = xelatex
+% ============================================================================
+%  《数学》 For OI  ——  面向信息学竞赛的数学教材（教师版）
+%
+%  全书按“部分（Part）— 章（Chapter）”组织：
+%    第一部分  基础数学
+%    第二部分  数论
+%    第三部分  组合数学
+%    第四部分  博弈论与概率论
+%    第五部分  多项式与生成函数
+%    附录 A--D
+%
+%  每个部分开头是一张“部分页”：页面右下角是由 TikZ 绘制的旋转叠加图案，
+%  左下角是罗马数字与部分名称、部分标题。全部图案均为矢量图，无外部图片依赖。
+%
+%  编译方式：XeLaTeX 编译两遍（第一遍生成目录，第二遍稳定交叉引用）。
+% ============================================================================
+\documentclass[a4paper,twoside,openright,11pt,fontset=fandol]{ctexbook}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[twoside,top=2.3cm,bottom=2.3cm,inner=2.75cm,outer=1.85cm,headheight=16pt]{geometry}
+\usepackage{enumitem,booktabs,longtable,array,multicol}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr,listings,tikz}
+\usepackage{emptypage}
+\usetikzlibrary{arrows.meta,positioning,trees}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=MidnightBlue,urlcolor=MidnightBlue,bookmarksnumbered=true,
+  pdfauthor={Federico Prask},pdftitle={数学 For OI},pdfsubject={信息学竞赛数学教材}}
+
+% ------------------------------------------------------------------ 配色 ----
+\definecolor{ink}{HTML}{173A51}      % 主色：深蓝黑
+\definecolor{accent}{HTML}{187C82}   % 辅色：青绿
+\definecolor{soft}{HTML}{F1F6F8}     % 浅底
+\definecolor{warn}{HTML}{AA8055}     % 警示：棕
+\definecolor{tipbase}{HTML}{079C81}  % 提示：绿
+\definecolor{chapterguide}{HTML}{DB8080} % 章节导读
+
+\ctexset{chapter={format=\raggedright,
+  nameformat=\Large\bfseries\color{ink},
+  titleformat=\Huge\bfseries\color{ink},
+  name={第,章},aftername=\par,number=\arabic{chapter}},
+  section={format=\Large\bfseries\color{ink}},
+  subsection={format=\large\bfseries\color{accent}}}
+\setlength{\parskip}{0.25em}
+\linespread{1.16}
+\setlist{nosep,leftmargin=2em,topsep=0.25em}
+\allowdisplaybreaks[2]
+\emergencystretch=2em
+
+% ------------------------------------------------------------ 页眉页脚 ----
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\color{ink} 数学 \ For OI}          % 偶数页（左手页）外侧
+\fancyhead[RO]{\small\nouppercase{\leftmark}}            % 奇数页（右手页）外侧
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+% ------------------------------------------------------------ 定理环境 ----
+\theoremstyle{definition}
+\newtheorem{definition}{定义}[chapter]
+\newtheorem{theorem}[definition]{定理}
+\newtheorem{lemma}[definition]{引理}
+\newtheorem{corollary}[definition]{推论}
+\newtheorem{example}[definition]{例}
+\renewcommand{\proofname}{证明}
+
+% -------------------------------------------------------------- 色框 -------
+\newtcolorbox{problem}[1]{enhanced,breakable,colback=soft,colframe=ink!60,boxrule=0.5pt,arc=1mm,
+  title={#1},fonttitle=\bfseries,coltitle=white,colbacktitle=ink,
+  left=2mm,right=2mm,top=1mm,bottom=1mm,before skip=8pt,after skip=6pt}
+\newtcolorbox{teach}[1][教学提示]{enhanced,breakable,colback=accent!4,colframe=accent!60,boxrule=0.4pt,arc=2mm,
+  title={#1},fonttitle=\bfseries,colbacktitle=accent,coltitle=white,left=2mm,right=2mm}
+\newtcolorbox{pitfall}[1][易错点]{enhanced,breakable,colback=warn!4,colframe=warn!60,boxrule=0.4pt,arc=2mm,
+  title={#1},fonttitle=\bfseries,colbacktitle=warn,coltitle=white,left=2mm,right=2mm}
+\definecolor{tipbase}{HTML}{079C81}
+\newtcolorbox{tip}[1][顺带说明]{enhanced,breakable,colback=tipbase!4,colframe=tipbase!60,boxrule=0.4pt,arc=2mm,
+  title={#1},fonttitle=\bfseries,colbacktitle=tipbase,coltitle=white,
+  left=2mm,right=2mm,top=1mm,bottom=1mm,before skip=6pt,after skip=6pt}
+\newtcolorbox{chapterintro}[1][章节导读]{enhanced,breakable,colback=chapterguide!5,colframe=chapterguide,boxrule=0.4pt,arc=2mm,
+  title={#1},fonttitle=\bfseries,colbacktitle=chapterguide,coltitle=white,
+  left=2mm,right=2mm,top=1mm,bottom=1mm,before skip=6pt,after skip=8pt}
+
+% ------------------------------------------------------------ 简写命令 ----
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\N}{\mathbb N}
+\newcommand{\Pp}{\mathbb P}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\ord}{\operatorname{ord}}
+\newcommand{\lcm}{\operatorname{lcm}}
+\newcommand{\rad}{\operatorname{rad}}
+\newcommand{\iva}[1]{\left[#1\right]}
+\newcommand{\floor}[1]{\left\lfloor #1\right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil #1\right\rceil}
+\newcommand{\sol}{\par\noindent\textbf{解析.}\ }
+\newcommand{\hint}{\par\noindent\textbf{解题方向.}\ }
+\newcommand{\cost}{\par\noindent\textbf{复杂度与实现.}\ }
+\newcommand{\src}[1]{\par\noindent{\footnotesize 题目／延伸资料：\url{#1}}\par}
+% 博弈论
+\newcommand{\mex}{\operatorname{mex}}
+\newcommand{\SG}{\operatorname{SG}}
+\newcommand{\Np}{N^+}
+\newcommand{\topbit}{\operatorname{topbit}}
+\newcommand{\dep}{\operatorname{dep}}
+\newcommand{\Val}{V}
+% 概率论
+\newcommand{\E}{\mathbb E}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Bern}{\operatorname{Bern}}
+\newcommand{\Bin}{\operatorname{Bin}}
+\newcommand{\Pois}{\operatorname{Pois}}
+\newcommand{\Geom}{\operatorname{Geom}}
+\newcommand{\Harm}{H}
+
+% ------------------------------------------------------------ 代码样式 ----
+\lstset{language=C++,basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{MidnightBlue}\bfseries,commentstyle=\color{gray},
+  stringstyle=\color{accent},showstringspaces=false,breaklines=true,
+  columns=fullflexible,keepspaces=true,frame=single,rulecolor=\color{ink!25},
+  backgroundcolor=\color{soft},tabsize=2}
+
+% ============================================================================
+%                        部分页（Part Page）机制
+% ============================================================================
+% 正式书稿模式：每个部分页都从右页（奇数页）开始，中间留空白页。
+% 若想合辑连续排版（不插空白偶数页），把下面一行改成 \comparisontrue。
+\newif\ifcomparison
+\comparisonfalse
+
+% 定义：\DeclareMotif{编号}{沿局部 x 轴的平移量/mm}{单个元素的路径}
+% 各版的副本大小统一，仅平移/旋转；P2 单元素外接圆半径为 78.4mm。
+\newcommand{\DeclareMotif}[3]{%
+  \expandafter\def\csname Offset#1\endcsname{#2}%
+  \expandafter\def\csname Motif#1\endcsname{#3}%
+}
+
+% 01 正三角形。奇数边正多边形本身不是中心对称图形，
+% 因此这类带平移的图案使用偶数 n，保证成对副本相差 180 度。
+\DeclareMotif{1}{20}{
+  (90:70mm) -- (210:70mm) -- (330:70mm) -- cycle
+}
+% 02 正方形。自身中心对称，n=5，旋转角度 i*72 度。
+\DeclareMotif{2}{0}{
+  (45:78.4mm) -- (135:78.4mm) -- (225:78.4mm) -- (315:78.4mm) -- cycle
+}
+% 03 正五边形。
+\DeclareMotif{3}{18}{
+  (90:65mm) -- (162:65mm) -- (234:65mm) -- (306:65mm) -- (378:65mm) -- cycle
+}
+% 04 四角凹星形。
+\DeclareMotif{4}{0}{
+  (0,86) -- (-30,30) -- (-86,0) -- (-30,-30)
+  -- (0,-86) -- (30,-30) -- (86,0) -- (30,30) -- cycle
+}
+% 05 正七边形。
+\DeclareMotif{5}{18}{
+  (90:65mm) -- (141.428571:65mm) -- (192.857143:65mm)
+  -- (244.285714:65mm) -- (295.714286:65mm)
+  -- (347.142857:65mm) -- (398.571429:65mm) -- cycle
+}
+% 07 圆形。先偏心平移，再按等角度复制；否则同心圆旋转后会完全重合。
+\DeclareMotif{7}{30}{(0,0) circle[radius=48mm]}
+% 12 八角凹星。外半径 84mm，内半径 43mm。
+\DeclareMotif{12}{0}{
+  (90:84mm) -- (112.5:43mm) -- (135:84mm) -- (157.5:43mm)
+  -- (180:84mm) -- (202.5:43mm) -- (225:84mm) -- (247.5:43mm)
+  -- (270:84mm) -- (292.5:43mm) -- (315:84mm) -- (337.5:43mm)
+  -- (360:84mm) -- (382.5:43mm) -- (405:84mm) -- (427.5:43mm) -- cycle
+}
+
+% 用法：\PartPage{形状编号}{副本数 n}{罗马数字}{部分名称}{标题}
+% n 为 >=2 的整数；编号 1、3、5、7 请用偶数 n 保证整体中心对称。
+% 为保留可见的叠加，避免 n 与单个元素的旋转对称性导致完全重合。
+% 本宏绘制开篇页，不自动递增 part 计数器或写入目录。
+\newcommand{\PartPage}[5]{%
+  \ifcomparison\clearpage\else\cleardoublepage\fi
+  \thispagestyle{empty}\null
+  \begin{tikzpicture}[remember picture,overlay]
+    \begin{scope}[shift={(current page.south west)},x=1mm,y=1mm]
+      \clip (0,0) rectangle (210,297);
+      % 默认中心位于纸张右下角；P2 向右、下各偏移2mm。
+      % 该偏移只移动图案，不移动罗马数字或标题。
+      \def\MotifX{210}\def\MotifY{0}
+      \ifnum#1=2\relax\def\MotifX{212}\def\MotifY{-2}\fi
+      % P1（编号1）向左上各偏移16mm；P6（编号7）向左上各偏移8mm。
+      \ifnum#1=1\relax\def\MotifX{194}\def\MotifY{16}\fi
+      \ifnum#1=7\relax\def\MotifX{202}\def\MotifY{8}\fi
+      \begin{scope}[shift={(\MotifX,\MotifY)}]
+        \pgfmathtruncatemacro{\LastCopy}{#2-1}
+        \foreach \i in {0,...,\LastCopy}{%
+          % 统一规则：theta_i = i * (360/n)，i=0,...,n-1。
+          \pgfmathsetmacro{\Angle}{\i*360/#2}
+          \begin{scope}[rotate=\Angle]
+            \begin{scope}[shift={(\csname Offset#1\endcsname,0)}]
+              % 单独填充透明度；不是对整体使用透明组。
+              \fill[ink,fill opacity=0.20] \csname Motif#1\endcsname;
+            \end{scope}
+          \end{scope}
+        }
+      \end{scope}
+      % 数字距纸张右侧、底部各约 12 mm；II、III 向左扩展。
+      \node[anchor=south east,inner sep=0pt,outer sep=0pt,text=white,
+        font=\rmfamily\fontsize{56}{60}\selectfont] at (198,12) {#3};
+      \node[anchor=base west,inner sep=0pt,text=ink,
+        font=\songti\fontsize{20}{26}\selectfont] at (28,162) {#4};
+      \node[anchor=base west,inner sep=0pt,text=ink,
+        font=\songti\fontsize{58}{68}\selectfont] at (28,135) {#5};
+    \end{scope}
+  \end{tikzpicture}%
+  \clearpage
+}
+
+% 部分编号：只用于生成唯一的超链接锚点，不出现在页面上。
+\newcounter{partno}
+\renewcommand{\thepartno}{\Roman{partno}}
+% 各部分的章号都从 1 重新开始；用 partno 限定锚点名，避免重复目标。
+\renewcommand{\theHchapter}{\arabic{partno}.\arabic{chapter}}
+\renewcommand{\theHsection}{\theHchapter.\arabic{section}}
+\renewcommand{\theHsubsection}{\theHsection.\arabic{subsection}}
+\renewcommand{\theHdefinition}{\theHchapter.\arabic{definition}}
+\renewcommand{\theHequation}{\theHchapter.\arabic{equation}}
+\renewcommand{\theHtable}{\theHchapter.\arabic{table}}
+\renewcommand{\theHfigure}{\theHchapter.\arabic{figure}}
+
+% 用法：\BeginPart{形状编号}{副本数 n}{罗马数字}{部分名称}{标题}
+% 依次完成：递增部分编号、重置章号、绘制部分页、写入目录。
+\newcommand{\BeginPart}[5]{%
+  \stepcounter{partno}%
+  \setcounter{chapter}{0}%
+  \PartPage{#1}{#2}{#3}{#4}{#5}%
+  \phantomsection
+  \addcontentsline{toc}{part}{#4\quad #5}%
+}
+
+\begin{document}
+\frontmatter
+
+% ---------------------------------------------------------------- 封面 ----
+\begin{titlepage}
+\setlength{\parindent}{0pt}
+\vspace*{1.2cm}
+{\large\color{accent}MATHEMATICS FOR OLYMPIAD IN INFORMATICS}\par
+\vspace{1cm}
+{\fontsize{46}{65}\selectfont\bfseries\color{ink}数学 \huge{For OI}}\par
+\vspace{0.5cm}
+{\Large 教师版}\par
+\vspace{0.5cm}
+{\color{accent}\rule{\textwidth}{1.2pt}}\par
+\vspace{0.3cm}
+\begin{minipage}{0.9\textwidth}
+\large Federico Prask · 2026\\[0.8em]
+\normalsize 基础数学\quad 数论\quad 组合数学\quad 博弈论与概率论\quad 多项式与生成函数
+\end{minipage}\par
+\vfill
+{\small 全书按“部分—章”组织。每一部分从一张部分页开始：页脚右下角的旋转叠加图案是该部分的标识，罗马数字标出部分的次序。}\par
+{\small XeLaTeX 编译两遍；全部插图均为 TikZ 矢量图，无外部图片依赖。}\par
+\end{titlepage}
+
+% ------------------------------------------------------- 阅读说明 ----
+\chapter*{阅读说明与课程地图}
+\addcontentsline{toc}{chapter}{阅读说明与课程地图}
+\markboth{阅读说明与课程地图}{}
+
+\begin{chapterintro}[章节导读]
+本书把信息学竞赛需要的数学分成五个部分，从最基础的集合、逻辑与代数，一路走到数论、组合数学、博弈论与概率论，最后以多项式与生成函数收尾。每一部分都是自足的：可以从任何一部分开始读，但前面的工具会在后面反复出现。
+\end{chapterintro}
+
+\begin{pitfall}[适用范围与阅读边界]
+本书面向已经掌握初中代数、会写基本循环与递归、了解时间复杂度的信息学竞赛学生。第一部分的第 1--5 章定位为“把高中内容重新讲一遍并补上竞赛缺口”，默认读者已经见过这些概念，只是未必习惯于竞赛里的用法；第 6 章（复数与向量）对纯算法题帮助有限，可以晚一点读。第二部分数论的第 0 章是术语对照，遇到不认识的词先查那里。
+
+同余、线性不定方程可以入门；二维积性函数、洲阁筛、超现实数属于选修提高内容。例题均给教学性摘要，不替代评测网站的完整输入输出说明；标为“研究拓展”的内容只给出可验证的数学路线，不冒充可直接提交的完整程序。实现模板不等于各原题的完整提交代码。
+\end{pitfall}
+
+\begin{tip}[本书的四种框]
+正文里有四种带颜色的框，分工不同：
+\begin{itemize}
+\item \textbf{定义/定理/引理/推论/例}：黑色小标题，是必须记住的结论。先问自己“条件是什么、结论是什么”，再往下看。
+\item \textbf{题目框}（深蓝色标题）：题目与它的解析。标“统一练习”的不是原题，而是把几道题共用的想法抽出来。
+\item \textbf{易错框}（棕黄色标题，标注“易错点”）：这里写的是“大多数人会错在哪”，以及一个具体反例。
+\item \textbf{提示框}（绿色标题）：只解释一个词、一步跳步或一个例子，可以单独读懂。
+\end{itemize}
+\begin{teach}[教学提示框]
+青色标题的“教学提示”框是教师版特有的内容：讲法设计、课堂追问、易漏点检查表与实验任务。课堂追问建议先遮住答案再展示；例题解析不建议原样念完，应在关键换元前暂停。
+\end{teach}
+\end{tip}
+
+\section*{全书地图}
+\begin{longtable}{p{0.09\textwidth}p{0.20\textwidth}p{0.63\textwidth}}
+\toprule
+部分 & 主题 & 主线与可检查的学习产出\\
+\midrule
+\endfirsthead
+\toprule
+部分 & 主题 & 主线与可检查的学习产出\\
+\midrule
+\endhead
+第一部分 & 基础数学 & 集合与逻辑、代数恒等变形、方程与不等式、函数、数列与归纳、复数与向量。产出：能把一句自然语言命题改写成带量词的数学命题，并写出完整的充要性证明。\\
+第二部分 & 数论 & gcd 与 exgcd、同余与逆元、CRT、阶与原根、LTE、阶乘与组合数取模、反演、筛法、随机分解。产出：能写出条件、通解、最小可行解，并说明一次取模是否丢信息。\\
+第三部分 & 组合数学 & 排列组合、二项式系数与恒等式、容斥、递推数列、抽屉原理、格路计数。产出：能把一个计数问题说清“数的是什么”，再选加法或乘法、容斥或递推。\\
+第四部分 & 博弈论与概率论 & PN 态、模仿棋与策略窃取、Nim 与 SG 理论、纳什均衡；概率空间、期望与方差、常用分布与概率算法。产出：能把一个博弈画成状态图并倒推胜负；能把一个随机过程写成期望的线性组合。\\
+第五部分 & 多项式与生成函数 & 形式幂级数、多项式乘法与快速傅里叶变换、生成函数计数。\\
+附录 & A--D & 分层训练、核心模板、课堂设计与判定模板。\\
+\bottomrule
+\end{longtable}
+
+\begin{teach}[建议的教学分层]
+\begin{longtable}{p{0.12\textwidth}p{0.40\textwidth}p{0.38\textwidth}}
+\toprule
+层次 & 主线 & 可检查的学习产出\\
+\midrule
+A：基础 & 集合与逻辑、代数恒等变形、排列组合、PN 态递推 & 能完成充要性两段证明；能对一个小的状态图手工完成逆向归纳。\\
+B：核心 & 同余与逆元、二项式系数、容斥、Nim 与 SG、期望线性性 & 能独立写出“两段式”证明；能把多堆游戏拆成和游戏并异或结算。\\
+C：提高 & LTE、杜教筛、递推数列、反射原理、概率算法 & 能区分预处理和查询成本；能说明每个定理的适用条件缺一条会怎样。\\
+D：专题 & 二维积性函数、洲阁筛、超现实数、混合策略 & 能识别稀疏支撑、状态等价与证明缺口，不只记最终公式。\\
+\bottomrule
+\end{longtable}
+每讲按 $90$ 分钟安排：A 层约 $6$--$8$ 讲，B 层约 $8$--$10$ 讲，C 层约 $6$--$8$ 讲，D 层按选题增加。课时仅作备课建议，不应在一节课内从逆元跳到二维卷积。
+\end{teach}
+
+\section*{统一记号}
+\begin{longtable}{p{0.23\textwidth}p{0.69\textwidth}}
+\toprule
+记号 & 含义与约定\\
+\midrule
+$\Pp,\Z,\N,\Q,\R$ & 分别为素数集、整数集、非负整数集、有理数集、实数集；数论函数的定义域为正整数。本书约定 $\N$ 含 $0$。\\
+$m,M$ & 一般模数，默认为正整数；讨论单位群与逆元时通常 $m\ge2$。$m=1$ 的模运算结果一律为 $0$。\\
+$p,q$ & 素数；$Q=p^\alpha$ 表示素数幂，避免把合数也一律记成 $p$。\\
+$\iva{P}$ & Iverson 括号，命题成立为 $1$，否则为 $0$。\\
+$\nu_p(x)$ & 非零整数 $x$ 中 $p$ 的指数，即 $\nu_p(|x|)$；需要时约定 $\nu_p(0)=+\infty$。\\
+$\varphi,\mu,\tau$ & 欧拉函数、莫比乌斯函数、约数个数函数。原稿的 $d(n)$ 统一写作 $\tau(n)$。\\
+$\one,\eps,\id_t$ & 常一函数、卷积单位函数、$\id_t(n)=n^t$。原稿 $I$ 统一写作 $\one$。\\
+$f*g$ & 狄利克雷卷积；$fg$ 为逐点乘积。卷积除法不使用普通分数线混写。\\
+$S_f(n)$ & $\sum_{i=1}^n f(i)$，并约定 $S_f(0)=0$。\\
+$\ord_m(a)$ & $a$ 模 $m$ 的乘法阶；与原稿 $\delta_m(a)$ 相同。\\
+$A,B$ & 初始状态下的先后手，一旦定下不再变化；具体问题中常用固定的人名。\\
+先手／后手 & 当前局面下的下一步行动者／另一方，随局面变化；“把局面做成 P 态”即将先手让给对方。\\
+P 态／N 态 & 公平组合游戏中后手必胜态（Previous player wins）／先手必胜态（Next player wins）。\\
+$u\to v$，$\Np(u)$ & 状态图的一条合法转移；$u$ 的全部后继构成的集合。\\
+$\oplus$ & 按位异或（Nim 和）；$S=a_1\oplus a_2\oplus\cdots\oplus a_n$。\\
+$(x)_k$ & 非负整数 $x$ 二进制表示的第 $k$ 位；$\topbit(S)$ 为 $S$ 的最高置位。\\
+$\mex(X)$ & 集合 $X$ 中未出现的最小非负整数。\\
+$g(u)$，$\SG(u)$ & 状态 $u$ 的 SG 值（Grundy 值），两者完全同义；$g(u)=0$ 恰为 P 态。\\
+$G=\{G^L\mid G^R\}$ & 游戏的双视角记号：$G^L,G^R$ 分别为 Left／Right 走一步能到达的局面集合。\\
+$\ast$，$\ast_n$ & star：$\ast=\{0\mid 0\}$；一般地 $\ast_n$ 表示 SG 值为 $n$ 的公平游戏（大小为 $n$ 的 Nim 堆）。\\
+$\omega$ & 最小无穷序数对应的超现实数 $\{0,1,2,\ldots\mid\}$。\\
+$W$ & 双人零和博弈的收益矩阵，$W_{i,j}$ 为玩家 A 的收益；B 的收益为其相反数。\\
+纯策略／混合策略 & 固定一种决策／为每种决策分配概率后随机决策。\\
+misère（反规则） & “无法行动者胜”的规则族，如反 Nim 游戏；与正常规则结论可能截然不同。\\
+$\floor{x},\ceil{x}$ & 下取整与上取整。\\
+\bottomrule
+\end{longtable}
+
+\begin{tip}[速查表怎么用]
+上面这张表是\textbf{速查表}，用术语解释术语，适合已经会的人。本书第 0 章（第二部分）与第一部分第 1 章把每一行都翻译成了大白话，并说明这个词为什么会出现。
+\end{tip}
+
+所有复杂度默认采用竞赛中的字长运算模型。高精度题目的“多项式时间”以输入位数 $\log n$ 为变量；$O(n^{1/4})$ 并不是关于输入位数的多项式时间。哈希表复杂度默认期望，随机算法的经验性能与严格最坏界会明确区分。
+
+\begin{tip}[词义：字长模型]
+\textbf{字长模型}= 假设 $64$ 位整数的一次加减乘比较都算一步。它不是真实机器模型（内存不连续时会慢），也不是高精度模型（那时乘法是 $O(n^2)$）。凡是遇到 $10^9$ 以上相乘、$10^{18}$ 以上相加，先想\textbf{会不会溢出 \texttt{long long}}。
+\end{tip}
+
+\tableofcontents
+\mainmatter
+
+% ============================================================================
+%  第一部分  基础数学
+% ============================================================================
+\BeginPart{1}{6}{I}{第一部分}{基础数学}
+\input{part1}
+
+% ============================================================================
+%  第二部分  数论
+% ============================================================================
+\BeginPart{2}{5}{II}{第二部分}{数论}
+\input{part2}
+
+% ============================================================================
+%  第三部分  组合数学
+% ============================================================================
+\BeginPart{3}{6}{III}{第三部分}{组合数学}
+\input{part3}
+
+% ============================================================================
+%  第四部分  博弈论与概率论
+% ============================================================================
+\BeginPart{5}{4}{IV}{第四部分}{博弈论与概率论}
+\input{part4a}
+\input{part4b}
+
+% ============================================================================
+%  第五部分  多项式与生成函数
+% ============================================================================
+\BeginPart{12}{3}{V}{第五部分}{多项式与生成函数}
+\input{part5}
+
+% ============================================================================
+%  附录
+% ============================================================================
+% 附录章号改用 A--D；同时改写 \theHchapter，否则附录 A 的锚点名会与
+% 第五部分第 1 章相同（都是 5.1），hyperref 会报重复目标。
+\appendix
+\renewcommand{\theHchapter}{\Alph{chapter}}
+\renewcommand{\theHsection}{\theHchapter.\arabic{section}}
+\renewcommand{\theHsubsection}{\theHsection.\arabic{subsection}}
+\renewcommand{\theHdefinition}{\theHchapter.\arabic{definition}}
+\renewcommand{\theHequation}{\theHchapter.\arabic{equation}}
+\renewcommand{\theHtable}{\theHchapter.\arabic{table}}
+\renewcommand{\theHfigure}{\theHchapter.\arabic{figure}}
+\ctexset{chapter={format=\raggedright,
+  nameformat=\Large\bfseries\color{ink},
+  titleformat=\Huge\bfseries\color{ink},
+  name={附录,},aftername=\par,number=\Alph{chapter}}}
+\input{appendix}
+
+\end{document}
