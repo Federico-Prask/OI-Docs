@@ -1,0 +1,628 @@
+% !TeX program = xelatex
+% ============================================================================
+%  第四部分（续）  概率论
+%  第 8 章   样本空间与随机事件
+%  第 9 章   随机变量、期望与方差
+%  第 10 章  常用概率模型与随机化算法
+% ============================================================================
+
+\chapter{样本空间与随机事件}
+\begin{chapterintro}[章节导读]
+概率论的第一道门槛不是公式，而是\textbf{把随机现象写成集合}。一旦写清了“所有可能结果是什么”“我们关心其中哪些”，古典概型就退化成一个计数问题——于是第三部分的排列组合、容斥、递推全部可以直接搬过来用。本章先建立这套语言，再处理条件概率与独立性这两个真正容易出错的地方。
+\end{chapterintro}
+
+\begin{tip}[概率论的统一口诀]
+\textbf{先写样本空间，再写事件，最后才写公式。}凡是概率题做错，十有八九是第一二步含糊：或者漏了某些结果，或者把“顺序算不算不同”搞混了。这两件事与第三部分第 1 章的要求完全一致。
+\end{tip}
+
+\section{样本空间与事件}
+\begin{definition}[样本空间]
+一个随机试验的\textbf{所有可能结果}组成的集合 $\Omega$ 叫样本空间，$\Omega$ 中的元素叫样本点。$\Omega$ 的子集叫\textbf{事件}；只含一个样本点的事件叫基本事件。
+\end{definition}
+
+\begin{definition}[古典概型]
+若样本空间 $\Omega$ 有限，且每个样本点等可能发生，则对任意事件 $A$，
+\[
+\Pp(A)=\frac{|A|}{|\Omega|}.
+\]
+\end{definition}
+
+\begin{teach}[古典概型的全部难点都在 $|A|$ 与 $|\Omega|$]
+分子分母必须用\textbf{同一套}计数口径。最常见的错误是分母按“有序”数（例如把两枚骰子看成 $36$ 个有序结果），分子却按“无序”数（例如把“点数之和为 $7$”按 $3$ 种组合数）。\textbf{先约定口径，再分别数分子分母。}
+\end{teach}
+
+\section{事件的运算与概率公理}
+\begin{definition}[事件的运算]
+\begin{itemize}
+\item $A\cup B$：$A$ 或 $B$ 发生；
+\item $A\cap B$：$A$ 且 $B$ 发生，简写 $AB$；
+\item $\overline A=\Omega\setminus A$：$A$ 不发生；
+\item $A\setminus B=A\cap\overline B$：$A$ 发生且 $B$ 不发生；
+\item $A,B$ \textbf{互斥}：$A\cap B=\varnothing$。
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[概率的三条公理]
+\begin{enumerate}
+\item $\Pp(A)\ge0$；
+\item $\Pp(\Omega)=1$；
+\item 若 $A_1,A_2,\ldots$ 两两互斥，则 $\Pp\left(\bigcup_i A_i\right)=\sum_i\Pp(A_i)$。
+\end{enumerate}
+由此立刻得到：
+\[
+\Pp(\overline A)=1-\Pp(A),\qquad
+\Pp(A\cup B)=\Pp(A)+\Pp(B)-\Pp(A\cap B).
+\]
+\end{theorem}
+\begin{proof}
+第二条：$\Omega\cup\varnothing=\Omega$ 且两者互斥，故 $\Pp(\Omega)=\Pp(\Omega)+\Pp(\varnothing)$，得 $\Pp(\varnothing)=0$。再由 $A\cup\overline A=\Omega$ 互斥，$\Pp(A)+\Pp(\overline A)=1$。
+
+第三条是容斥原理的概率版：把 $A\cup B$ 拆成 $A$ 与 $B\setminus A$ 两个互斥部分，$\Pp(A\cup B)=\Pp(A)+\Pp(B\setminus A)$，而 $\Pp(B)=\Pp(B\setminus A)+\Pp(A\cap B)$，代入即得。
+\end{proof}
+
+\begin{pitfall}[“或”仍然不是“异或”]
+$\Pp(A\cup B)=\Pp(A)+\Pp(B)-\Pp(A\cap B)$ 中减去的正是“两者都发生”的部分。如果题目中的 $A,B$ 已经互斥，这一项为 $0$；\textbf{不互斥时千万别忘了减}。这与第三部分第 3 章的容斥原理是同一个道理。
+\end{pitfall}
+
+\section{条件概率}
+\begin{definition}[条件概率]
+设 $\Pp(B)>0$，在 $B$ 发生的条件下 $A$ 发生的概率为
+\[
+\Pp(A\mid B)=\frac{\Pp(A\cap B)}{\Pp(B)}.
+\]
+直观上：样本空间被“缩小”到 $B$，然后数 $A\cap B$ 占 $B$ 的比例。
+\end{definition}
+
+\begin{theorem}[乘法公式]
+\[
+\Pp(A\cap B)=\Pp(B)\Pp(A\mid B)=\Pp(A)\Pp(B\mid A).
+\]
+更一般地，
+\[
+\Pp(A_1\cap\cdots\cap A_n)=\Pp(A_1)\Pp(A_2\mid A_1)\cdots\Pp(A_n\mid A_1\cap\cdots\cap A_{n-1}).
+\]
+\end{theorem}
+
+\begin{theorem}[全概率公式]
+若 $B_1,\ldots,B_n$ 两两互斥且 $\bigcup_i B_i=\Omega$（叫一个\textbf{划分}），则对任意事件 $A$，
+\[
+\Pp(A)=\sum_{i=1}^{n}\Pp(B_i)\Pp(A\mid B_i).
+\]
+\end{theorem}
+\begin{proof}
+$A=A\cap\Omega=A\cap\bigcup_i B_i=\bigcup_i(A\cap B_i)$，右端各项两两互斥（因为 $B_i$ 互斥），由公理 3 与乘法公式即得。
+\end{proof}
+
+\begin{theorem}[贝叶斯公式]
+在同样的记号下，
+\[
+\Pp(B_j\mid A)=\frac{\Pp(B_j)\Pp(A\mid B_j)}{\sum_i\Pp(B_i)\Pp(A\mid B_i)}.
+\]
+\end{theorem}
+\begin{proof}
+分子由乘法公式为 $\Pp(A\cap B_j)=\Pp(A)\Pp(B_j\mid A)$；分母是全概率公式给出的 $\Pp(A)$。相除即得。
+\end{proof}
+
+\begin{teach}[贝叶斯公式的“先验—似然—证据”读法]
+$\Pp(B_j)$ 是\textbf{先验}（看到证据前认为 $B_j$ 成立的概率），$\Pp(A\mid B_j)$ 是\textbf{似然}（在 $B_j$ 成立时看到 $A$ 的概率），分母 $\Pp(A)$ 是\textbf{证据}（看到 $A$ 的总概率）。读题时先把三者分别指出来，再套公式，比直接背公式可靠得多。
+\end{teach}
+
+\section{独立性}
+\begin{definition}[事件的独立性]
+若 $\Pp(A\cap B)=\Pp(A)\Pp(B)$，则称 $A$ 与 $B$ \textbf{相互独立}。等价地（当 $\Pp(B)>0$），$\Pp(A\mid B)=\Pp(A)$。
+\end{definition}
+
+\begin{pitfall}[互斥 $\ne$ 独立]
+两个概率都为正的事件若互斥，则 $\Pp(A\cap B)=0\ne\Pp(A)\Pp(B)$，\textbf{一定不独立}。互斥说“不能同时发生”，独立说“互不影响”，二者方向相反。这是概率论里最常见的一处概念混淆。
+\end{pitfall}
+
+\begin{definition}[多个事件的独立性]
+事件 $A_1,\ldots,A_n$ 相互独立，若对任意 $1\le i_1<\cdots<i_k\le n$ 都有
+\[
+\Pp(A_{i_1}\cap\cdots\cap A_{i_k})=\Pp(A_{i_1})\cdots\Pp(A_{i_k}).
+\]
+\textbf{两两独立不蕴含相互独立}——验证时不能只检查 $k=2$。
+\end{definition}
+
+\section{分层例题与解析}
+\begin{problem}{例 1：古典概型}
+掷两枚均匀的骰子，求点数之和为 $7$ 的概率。
+\end{problem}
+\hint 样本空间按“有序对”数，共 $36$ 个；再数有利结果。
+
+\sol $\Omega=\{(i,j):1\le i,j\le6\}$，$|\Omega|=36$。和为 $7$ 的有序对为 $(1,6),(2,5),(3,4),(4,3),(5,2),(6,1)$，共 $6$ 个。故
+\[
+\Pp(A)=\frac6{36}=\frac16.
+\]
+
+\begin{problem}{例 2：容斥与“或”}
+一副 $52$ 张牌中随机抽一张，求它是红桃或 $K$ 的概率。
+\end{problem}
+\hint $|\text{红桃}|=13$、$|K|=4$、红桃 $K$ 有 $1$ 张。
+
+\sol
+\[
+\Pp=\frac{13+4-1}{52}=\frac{16}{52}=\frac4{13}.
+\]
+
+\begin{problem}{例 3：条件概率}
+一个家庭有两个孩子，已知其中至少有一个是女孩，求两个孩子都是女孩的概率。
+\end{problem}
+\hint 样本空间是 $\{BB,BG,GB,GG\}$（$B$ 男、$G$ 女，顺序表示出生先后）；条件“至少一个女孩”排除了 $BB$。
+
+\sol 设 $A$ 为“都是女孩”，$B$ 为“至少一个女孩”。$\Pp(B)=3/4$，$\Pp(A\cap B)=\Pp(A)=1/4$，故
+\[
+\Pp(A\mid B)=\frac{1/4}{3/4}=\frac13.
+\]
+\textbf{不是 $1/2$。}若把条件改成“较大的那个是女孩”（即先出生的是女孩），答案才是 $1/2$。两个条件的区别是本题的全部内容。
+
+\begin{teach}[“已知有一个女孩”为什么答案会变]
+这道题在概率论教学史上很有名。要点在于：\textbf{信息是如何产生的}。如果这句话来自“我随机告诉你其中一个孩子的性别，结果是女孩”，答案还是 $1/2$；如果来自“我检查了所有孩子，发现至少一个是女孩”，答案是 $1/3$。让学生把两种情形的样本空间分别写出来，比争辩更有用。
+\end{teach}
+
+\begin{problem}{例 4：全概率与贝叶斯}
+某疾病在人群中的患病率是 $0.1\%$。一种检测的灵敏度是 $99\%$（患病者检测为阳性），特异度是 $99\%$（健康者检测为阴性）。若某人检测为阳性，他真正患病的概率是多少？
+\end{problem}
+\hint 用全概率公式算 $\Pp(+)$，再用贝叶斯。
+
+\sol 设 $D$ 为患病，$+$ 为阳性。$\Pp(D)=0.001$，$\Pp(+\mid D)=0.99$，$\Pp(+\mid\overline D)=0.01$。由全概率公式
+\[
+\Pp(+)=0.001\cdot0.99+0.999\cdot0.01=0.00099+0.00999=0.01098.
+\]
+由贝叶斯公式
+\[
+\Pp(D\mid +)=\frac{0.001\cdot0.99}{0.01098}=\frac{0.00099}{0.01098}\approx0.0902.
+\]
+约 $9\%$。\textbf{即使检测准确率高达 $99\%$，阳性者真正患病的概率也不到十分之一}——因为健康人群实在太大。
+
+\begin{pitfall}[基础率越低，越不能只看准确率]
+上题的结论对直觉冲击很大，值得反复讲。要点：阳性者中绝大多数是“健康人被误判”的，因为 $\Pp(\overline D)\approx1$ 而误判率 $0.01$ 已经足够大。这提示：\textbf{任何检测类问题都必须先问基础率。}
+\end{pitfall}
+
+\begin{problem}{统一练习：生日问题}
+一个班有 $23$ 人，求至少两人同生日的概率（假设 $365$ 天等可能，忽略闰年）。
+\end{problem}
+\hint 算补事件“所有人生日互不相同”。
+
+\sol
+\[
+\Pp(\text{无人同日})=\frac{365\cdot364\cdot\cdots\cdot(365-22)}{365^{23}}
+=\prod_{k=0}^{22}\left(1-\frac{k}{365}\right)\approx0.4927.
+\]
+故所求概率为
+\[
+1-0.4927\approx0.5073.
+\]
+
+\begin{teach}[为什么 $23$ 人就超过一半]
+把 $23$ 人两两配对，共有 $\dbinom{23}{2}=253$ 对，每对同生日的概率约 $1/365$。虽然这些事件不独立，但“期望对数”约为 $253/365\approx0.69$，已经足以让概率过半。这个估计解释了数量级，严格的概率要用上面的乘积。\textbf{“数对数”是概率题里最常见的降维手段。}
+\end{teach}
+
+\begin{problem}{统一练习：独立与互斥的辨析}
+判断下列说法是否正确，并说明理由：
+\begin{enumerate}[label=(\alph*)]
+\item 若 $A,B$ 互斥，则 $\Pp(A\cup B)=\Pp(A)+\Pp(B)$。
+\item 若 $A,B$ 独立，则 $\Pp(A\cup B)=\Pp(A)+\Pp(B)$。
+\item 若 $\Pp(A\mid B)=\Pp(A)$，则 $A,B$ 独立。
+\item 若 $A,B$ 互斥且 $\Pp(A),\Pp(B)>0$，则 $A,B$ 独立。
+\end{enumerate}
+\end{problem}
+\hint 逐条对照定义。
+
+\sol (a) 正确，这是公理 3 的直接应用。(b) 错误，独立时应为 $\Pp(A\cup B)=\Pp(A)+\Pp(B)-\Pp(A)\Pp(B)$。(c) 正确（需 $\Pp(B)>0$），这是独立的等价定义。(d) 错误，互斥且概率为正的事件必不独立。
+
+\chapter{随机变量、期望与方差}
+\begin{chapterintro}[章节导读]
+把随机事件的“是/否”变成一个数，就得到随机变量。有了随机变量，概率问题的大部分内容可以归结为计算两个数：\textbf{期望}（平均值）与\textbf{方差}（波动）。本章最重要的是\textbf{期望的线性性}——它不要求任何独立性，是概率工具里性价比最高的一条性质。
+\end{chapterintro}
+
+\section{随机变量与分布}
+\begin{definition}[随机变量]
+从样本空间 $\Omega$ 到 $\R$ 的函数 $X:\Omega\to\R$ 叫随机变量。若 $X$ 只取有限或可数多个值，叫\textbf{离散随机变量}。
+\end{definition}
+
+\begin{definition}[分布列与期望]
+设离散随机变量 $X$ 取值 $x_1,x_2,\ldots$，且 $\Pp(X=x_i)=p_i$（$\sum_i p_i=1$），则
+\[
+\E X=\sum_i x_ip_i
+\]
+叫 $X$ 的\textbf{数学期望}（均值）。
+\end{definition}
+
+\begin{theorem}[期望的线性性]
+对任意随机变量 $X,Y$（不要求独立）与常数 $a,b$，
+\[
+\E[aX+bY]=a\E X+b\E Y.
+\]
+\end{theorem}
+\begin{proof}
+只需对有限个取值的情形验证。设 $X$ 取值 $x_i$、$Y$ 取值 $y_j$，联合概率 $p_{ij}=\Pp(X=x_i,Y=y_j)$，则
+\[
+\E[X+Y]=\sum_{i,j}(x_i+y_j)p_{ij}
+=\sum_{i,j}x_ip_{ij}+\sum_{i,j}y_jp_{ij}
+=\sum_i x_i\Pp(X=x_i)+\sum_j y_j\Pp(Y=y_j)=\E X+\E Y.
+\]
+\textbf{证明中没有用到任何独立性假设}——这是线性性如此强大的原因。
+\end{proof}
+
+\begin{teach}[指示变量法]
+若 $X$ 是“满足条件 $i$ 的对象个数”，令 $I_i=\iva{\text{对象 }i\text{ 满足条件}}$，则 $X=\sum_i I_i$，而 $\E I_i=\Pp(\text{对象 }i\text{ 满足条件})$。于是
+\[
+\E X=\sum_i\Pp(\text{对象 }i\text{ 满足条件}).
+\]
+\textbf{把“数个数”变成“求单个对象的概率再求和”}，这是处理计数型随机变量最通用的办法。
+\end{teach}
+
+\begin{definition}[方差与标准差]
+\[
+\Var X=\E[(X-\E X)^2]=\E[X^2]-(\E X)^2,\qquad
+\sigma_X=\sqrt{\Var X}.
+\]
+\end{definition}
+\begin{theorem}[方差的性质]
+$\Var(aX+b)=a^2\Var X$。若 $X,Y$ \textbf{独立}，则 $\Var(X+Y)=\Var X+\Var Y$。
+\end{theorem}
+\begin{proof}
+$\Var(aX+b)=\E[(aX+b-a\E X-b)^2]=a^2\E[(X-\E X)^2]=a^2\Var X$。独立时
+\[
+\E[(X+Y)^2]=\E[X^2]+2\E[XY]+\E[Y^2]=\E[X^2]+2\E X\E Y+\E[Y^2],
+\]
+减去 $(\E X+\E Y)^2$ 即得。
+\end{proof}
+
+\begin{pitfall}[方差的线性性需要独立性]
+期望的线性性无条件成立，\textbf{方差的加法需要独立}。若 $X=Y$，则 $\Var(X+Y)=\Var(2X)=4\Var X$ 而不是 $2\Var X$。这是初学者最常犯的错之一。
+\end{pitfall}
+
+\section{常用离散分布}
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+分布 & 分布列 & 期望 & 方差\\
+\midrule
+$0$-$1$ 分布（参数 $p$） & $\Pp(X=1)=p$ & $p$ & $p(1-p)$\\
+二项分布 $B(n,p)$ & $\Pp(X=k)=\dbinom nkp^k(1-p)^{n-k}$ & $np$ & $np(1-p)$\\
+几何分布（参数 $p$） & $\Pp(X=k)=(1-p)^{k-1}p$ & $1/p$ & $(1-p)/p^2$\\
+泊松分布（参数 $\lambda$） & $\Pp(X=k)=\dfrac{\lambda^k\mathrm e^{-\lambda}}{k!}$ & $\lambda$ & $\lambda$\\
+\midrule
+均匀分布（$1,\ldots,n$） & $\Pp(X=k)=1/n$ & $(n+1)/2$ & $(n^2-1)/12$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{proof}[二项分布期望的推导（两种方法）]
+\textbf{方法一（定义）}：
+\[
+\E X=\sum_{k=0}^{n}k\binom nkp^k(1-p)^{n-k}
+=np\sum_{k=1}^{n}\binom{n-1}{k-1}p^{k-1}(1-p)^{n-k}=np.
+\]
+\textbf{方法二（线性性）}：把 $X$ 写成 $n$ 个独立的 $0$-$1$ 变量之和 $X=\sum_i I_i$，其中 $\E I_i=p$。由线性性 $\E X=np$。
+
+第二种方法只需两行，而且\textbf{揭示了二项分布的本质：$n$ 次独立重复试验的成功次数}。方差的推导同理：$\Var X=\sum_i\Var I_i=np(1-p)$。
+\end{proof}
+
+\begin{proof}[几何分布期望的推导]
+设 $\E X=\mu$。第一次试验若失败（概率 $1-p$），已经用掉一次且要重新开始，故
+\[
+\mu=1+(1-p)\mu\quad\Longrightarrow\quad \mu=\frac1p.
+\]
+这是\textbf{首步分析}的标准写法：按第一步的结果分类，得到关于 $\mu$ 的方程。
+\end{proof}
+
+\begin{teach}[“首步分析”是概率递推的万能钥匙]
+凡是一个过程每一步形态相同、状态有限，就可以对每个状态 $s$ 设 $f(s)=\E[\text{从 }s\text{ 到结束的代价}]$，按第一步分类列出
+\[
+f(s)=\sum_t p_{s,t}\bigl(c_{s,t}+f(t)\bigr).
+\]
+第四章博弈论里的期望值分析、第 9 章的“掷骰子走路”都是这个式子。\textbf{先设未知函数，再按首步分类}，比硬算分布列可靠。
+\end{teach}
+
+\section{两个不等式}
+\begin{theorem}[马尔可夫不等式]
+设 $X\ge0$，则对任意 $a>0$，
+\[
+\Pp(X\ge a)\le\frac{\E X}{a}.
+\]
+\end{theorem}
+\begin{proof}
+由 $X\ge a\iva{X\ge a}$（因为 $X\ge0$），取期望得 $\E X\ge a\Pp(X\ge a)$。
+\end{proof}
+
+\begin{theorem}[切比雪夫不等式]
+对任意随机变量 $X$ 与 $a>0$，
+\[
+\Pp\bigl(|X-\E X|\ge a\bigr)\le\frac{\Var X}{a^2}.
+\]
+\end{theorem}
+\begin{proof}
+对非负随机变量 $Y=(X-\E X)^2$ 与阈值 $a^2$ 用马尔可夫不等式：
+\[
+\Pp\bigl((X-\E X)^2\ge a^2\bigr)\le\frac{\E[(X-\E X)^2]}{a^2}=\frac{\Var X}{a^2}.
+\]
+\end{proof}
+
+\begin{tip}[两个不等式怎么用]
+它们给出的都是\textbf{上界}，通常很松，但足以证明“偏离平均值的概率很小”。在算法分析中，常用切比雪夫不等式把“期望 $O(n)$”加强为“以高概率 $O(n)$”。第二部分第 13 章的 Miller--Rabin 与 Pollard--Rho 都要靠这类论证。
+\end{tip}
+
+\section{分层例题与解析}
+\begin{problem}{例 1：期望的线性性}
+同时掷 $n$ 枚均匀骰子，求点数之和的期望。
+\end{problem}
+\hint 把总和写成 $n$ 个单枚骰子点数之和。
+
+\sol 每枚骰子的期望为 $(1+2+\cdots+6)/6=7/2$。由线性性，总和期望为 $7n/2$。
+
+\begin{problem}{例 2：指示变量法}
+随机排列 $n$ 个数，求不动点（满足 $a_i=i$ 的位置）个数的期望。
+\end{problem}
+\hint 令 $I_i=\iva{a_i=i}$；$\Pp(a_i=i)=1/n$。
+
+\sol $\E[\text{不动点数}]=\sum_{i=1}^{n}\Pp(a_i=i)=n\cdot\dfrac1n=1$。\textbf{与 $n$ 无关}：无论排列多长，平均总有一个不动点。注意我们完全不需要知道不动点个数的分布。
+
+\begin{problem}{例 3：首步分析}
+从原点出发，每次等概率向右走 $1$ 格或向左走 $1$ 格。求首次到达 $+3$ 的期望步数。
+\end{problem}
+\hint 一维对称随机游走首次到达 $+3$ 的期望步数是无穷大；先证明这件事。
+
+\sol 设 $f(k)$ 为从 $k$ 出发首次到达 $3$ 的期望步数。按第一步分类：
+\[
+f(k)=1+\frac12 f(k+1)+\frac12 f(k-1),\qquad f(3)=0.
+\]
+整理得二阶差分方程
+\[
+f(k+1)-2f(k)+f(k-1)=-2.
+\]
+它的一般解是 $f(k)=-k^2+ak+b$——一条开口向下的抛物线。但 $f(k)$ 是期望步数，必须 $f(k)\ge0$，而当 $k\to-\infty$ 时 $-k^2+ak+b\to-\infty$，矛盾。
+
+所以	extbf{不存在满足条件的非负解}，即期望时间为无穷大。事实上对称随机游走必然到达 $+3$（一维随机游走常返，见第 10 章定理），但期望时间是 $\infty$。
+
+\begin{pitfall}[“必然发生”不等于“期望有限”]
+一维对称随机游走以概率 $1$ 回到原点，但期望回归时间是 $\infty$。初学者常把“迟早会发生”误当成“平均很快发生”。\textbf{概率为 $1$ 只说明时间随机变量几乎必然有限，不说明它的期望有限。}
+\end{pitfall}
+
+\begin{problem}{例 4：优惠券收集}
+一包零食附赠 $n$ 种卡片之一（等概率）。要集齐全部 $n$ 种，期望要买多少包？
+\end{problem}
+\hint 分阶段：已经收集了 $k$ 种时，再获得一种新卡片的期望包数是 $n/(n-k)$。
+
+\sol 设 $T$ 为总包数，$T=T_0+T_1+\cdots+T_{n-1}$，其中 $T_k$ 是“从 $k$ 种到 $k+1$ 种”所需的包数。此时每包获得新卡片的概率为 $(n-k)/n$，由几何分布 $\E T_k=n/(n-k)$。于是
+\[
+\E T=\sum_{k=0}^{n-1}\frac{n}{n-k}=n\sum_{j=1}^{n}\frac1j=nH_n.
+\]
+其中 $H_n$ 是第 $n$ 个调和数，$H_n=\ln n+\gamma+O(1/n)$。所以集齐 $n$ 种卡片大约需要 $\mathrm e\,n\ln n$ 量级的时间。
+
+\begin{teach}[“分阶段”是期望递推的第二种套路]
+第 9 章讲过按\textbf{首步}分类，这里按\textbf{阶段}分类：把一个复杂过程切成若干段，每段内部形态相同、期望好算，再用线性性相加。优惠券收集、随机打乱的比较次数、快速选择的比较次数，都靠这一招。
+\end{teach}
+
+\begin{problem}{例 5：切比雪夫不等式}
+掷 $n$ 枚均匀骰子，用切比雪夫不等式估计点数之和偏离期望超过 $10\sqrt n$ 的概率上界。
+\end{problem}
+\hint 单枚骰子点数 $X_i$：$\E X_i=7/2$、$\Var X_i=(1^2+\cdots+6^2)/6-(7/2)^2=91/6-49/4=35/12$。
+
+\sol 总和 $S=\sum_iX_i$，$\E S=7n/2$，$\Var S=n\cdot\dfrac{35}{12}$。由切比雪夫不等式，
+\[
+\Pp\bigl(|S-\E S|\ge10\sqrt n\bigr)\le\frac{35n/12}{100n}=\frac{35}{1200}=\frac7{240}\approx0.0292.
+\]
+注意这个上界\textbf{与 $n$ 无关}——它虽然正确，但比较粗糙；真实的偏差概率随 $n$ 增大迅速下降（可用中心极限定理给出更精确的估计）。
+
+\begin{problem}{统一练习：把“或”变成“至少一个”}
+$n$ 个人各自独立地把自己的帽子随机放进一个帽子堆再随机取回一顶。求没有人拿到自己帽子的概率（$n=5$ 时计算数值）。
+\end{problem}
+\hint 用容斥；这正是第三部分第 3 章的错位排列。
+
+\sol 设 $A_i$ 为“第 $i$ 个人拿到自己的帽子”。$\Pp(A_i)=1/n$，更一般地 $\Pp(A_{i_1}\cap\cdots\cap A_{i_k})=(n-k)!/n!$。由容斥，
+\[
+\Pp\left(\bigcap_i\overline{A_i}\right)
+=\sum_{k=0}^{n}(-1)^k\binom nk\frac{(n-k)!}{n!}
+=\sum_{k=0}^{n}\frac{(-1)^k}{k!}.
+\]
+$n=5$ 时通分到 $120$：
+\[
+1-1+\frac12-\frac16+\frac1{24}-\frac1{120}
+=\frac{120-120+60-20+5-1}{120}=\frac{44}{120}=\frac{11}{30}\approx0.3667.
+\]
+当 $n\to\infty$ 时趋于 $\mathrm e^{-1}\approx0.3679$。
+
+\begin{teach}[概率与计数的接口]
+本题的容斥过程与第三部分第 3 章推导错位排列数 $D_n$ 完全一样，只是在那里数“排列个数”，在这里数“概率”。\textbf{古典概型下，概率问题就是计数问题除以 $|\Omega|$。}这条对应关系值得反复强调。
+\end{teach}
+
+\chapter{常用概率模型与随机化算法}
+\begin{chapterintro}[章节导读]
+本章把前两章的工具用在两个方向：一是算法设计中的\textbf{随机化}——用随机选择把最坏情况变成期望情况；二是数论与概率的交叉——随机大整数的素性、随机游走的回归。这两块内容在竞赛中出现频率很高，而且都与第二部分数论直接衔接。
+\end{chapterintro}
+
+\section{两类随机化算法}
+\begin{definition}[拉斯维加斯算法]
+总是给出正确答案，但运行时间是随机变量。例如随机快速排序、随机快速选择。
+\end{definition}
+\begin{definition}[蒙特卡洛算法]
+运行时间确定，但有小概率给出错误答案。例如 Miller--Rabin 素性测试、Pollard--Rho 因数分解。
+\end{definition}
+
+\begin{teach}[两类算法的区别要讲透]
+拉斯维加斯算法“可能慢，但不会错”；蒙特卡洛算法“快，但可能错”。重复运行 $k$ 次可以把蒙特卡洛算法的错误率降到 $p^k$——这就是第二部分第 12 章 Miller--Rabin 用若干个底数把错误率压到忽略不计的原因。
+\end{teach}
+
+\section{随机打乱}
+\begin{theorem}[Fisher--Yates 洗牌]
+从后往前遍历 $i=n,n-1,\ldots,2$，每次在 $[1,i]$ 中等概率选一个 $j$ 并交换 $a_i,a_j$。该算法产生全部 $n!$ 个排列的概率相等。
+\end{theorem}
+\begin{proof}[归纳]
+记 $P_n$ 为算法对 $n$ 个元素产生均匀分布。$n=1$ 显然。假设 $P_{n-1}$ 成立。第一步在 $[1,n]$ 中等概率选 $j$ 并交换 $a_n,a_j$，故元素 $x$ 落到位置 $n$ 的概率为 $1/n$，与 $x$ 无关。给定 $x$ 在位置 $n$ 后，剩下 $n-1$ 个元素的排列由同一算法在 $n-1$ 个元素上产生，由归纳假设是均匀的。于是每个完整排列的概率为
+\[
+\frac1n\cdot\frac1{(n-1)!}=\frac1{n!}.
+\]
+\end{proof}
+
+\begin{pitfall}[“每个元素随机交换一次”不是均匀洗牌]
+对 $i=1,\ldots,n$ 都执行“与随机位置交换”会产生 $n^n$ 个等概率的结果，但 $n^n$ 不是 $n!$ 的倍数时无法均分到排列上，分布\textbf{不均匀}。错误写法是竞赛里最常出现的随机化 bug 之一。
+\end{pitfall}
+
+\section{随机快速选择}
+\begin{theorem}[随机快速选择的期望复杂度]
+在 $n$ 个元素中随机选主元求第 $k$ 小，期望比较次数为 $O(n)$。
+\end{theorem}
+\begin{proof}[按主元排名分类]
+设 $C(n)$ 为在 $n$ 个元素上的期望比较次数，$C(0)=C(1)=0$。若主元的排名为 $k$，则划分为左右两部分，规模为 $k-1$ 与 $n-k$，比较次数恰为 $n-1$。于是
+\[
+C(n)\le n+\frac1n\sum_{k=1}^{n}C\bigl(\max(k,n-k)\bigr).
+\]
+把 $k$ 与 $n-k$ 配对（$k=1,\ldots,n$ 时 $\max(k,n-k)$ 的取值在 $\lceil n/2\rceil$ 到 $n-1$ 之间，且每个值至多出现两次）：
+\[
+\frac1n\sum_{k=1}^{n}C\bigl(\max(k,n-k)\bigr)
+\le\frac{2}{n}\sum_{j=\lceil n/2\rceil}^{n-1}C(j).
+\]
+$C$ 单调不减，且项数为 $n/2$、最大下标 $n-1\le\dfrac{3n}{4}$（$n\ge4$），故
+\[
+C(n)\le n+\frac{2}{n}\cdot\frac n2\cdot C\!\left(\frac{3n}{4}\right)
+=n+C\!\left(\frac{3n}{4}\right).
+\]
+设 $C(n)\le cn$（$n\ge4$），则
+\[
+C(n)\le n+c\cdot\frac{3n}{4}=\left(1+\frac{3c}{4}\right)n\le cn
+\quad\Longleftrightarrow\quad c\ge4.
+\]
+取 $c=4$，归纳得 $C(n)\le4n$。更精细的分析可把常数降到约 $3.39$；本估计已足以证明线性。
+\end{proof}
+
+\begin{teach}[“好主元”的期望试验次数]
+每次随机选到中间一半的概率是 $1/2$，所以得到好主元的期望试验次数是 $2$（几何分布，参数 $1/2$）。把“每次都要重新随机”写成“期望 $2$ 次”，是这个证明里唯一的技巧，其余都是代数。
+\end{teach}
+
+\section{随机游走}
+\begin{theorem}[一维随机游走常返]
+在一维整数格 $\Z$ 上，从原点出发每步等概率向 $\pm1$ 移动，则以概率 $1$ 回到原点。
+\end{theorem}
+\begin{proof}[用组合计数]
+回到原点的充要条件是走偶数步 $2n$，其中恰有 $n$ 步向右。设 $u_{2n}$ 为“第 $2n$ 步首次回到原点”的概率，$p_{2n}=\dbinom{2n}{n}2^{-2n}$ 为“第 $2n$ 步在原点”的概率。由首步分解
+\[
+p_{2n}=\sum_{k=1}^{n}u_{2k}p_{2n-2k},\qquad p_0=1.
+\]
+设 $P(z)=\sum_n p_{2n}z^n$、$U(z)=\sum_n u_{2n}z^n$，则 $P(z)=1+P(z)U(z)$，即 $U(z)=1-1/P(z)$。于是
+\[
+\sum_{n\ge0}u_{2n}=U(1)=1-\frac1{P(1)}.
+\]
+而
+\[
+P(1)=\sum_n\binom{2n}{n}2^{-2n}=\frac1{\sqrt{1-4\cdot(1/4)}}=\infty
+\]
+（二项式系数生成函数 $\sum\binom{2n}{n}x^n=(1-4x)^{-1/2}$ 在 $x=1/4$ 处发散）。故 $\sum u_{2n}=1$，即以概率 $1$ 回到原点。
+\end{proof}
+
+\begin{tip}[维度的分界]
+一维与二维简单随机游走\textbf{常返}（必然回到原点），三维及更高维\textbf{瞬态}（有正概率永不回来）。这个结论的证明要用到 $d$ 维的返回概率渐近 $p_{2n}\asymp n^{-d/2}$：$\sum n^{-d/2}$ 当 $d\le2$ 发散、当 $d\ge3$ 收敛。这个事实在第五部分处理生成函数时会给出一个干净的推导。
+\end{tip}
+
+\section{与数论的交叉}
+\subsection{随机大整数的素性}
+由素数定理，$x$ 附近的随机整数是素数的概率约为 $1/\ln x$。这给出一个实用的搜索策略：随机取奇数、过小素数试除、再做 Miller--Rabin。第二部分第 12 章会给出完整流程。
+
+\subsection{二次剩余与“是否为平方”}
+在模奇素数 $p$ 下，$\dfrac{p-1}{2}$ 个非零剩余都是二次剩余，所以“随机非零数是二次剩余”的概率是 $1/2$。第二部分第 6 章用这一点分析 Tonelli--Shanks 的期望表现。
+
+\subsection{随机化 gcd 与 Pollard--Rho}
+Pollard--Rho 的期望复杂度 $O(n^{1/4})$ 依赖于生日悖论：随机函数 $f$ 的迭代序列出现碰撞的期望时间是 $O(\sqrt{n})$。这与本章开头生日问题的“数对数”估计是同一件事。
+
+\begin{problem}{统一练习：生日悖论的精确形式}
+在 $1,\ldots,n$ 中独立随机取 $k$ 个数（可重复），求至少两个数相等的概率；并由此估计 Pollard--Rho 需要多少次迭代才能出现碰撞。
+\end{problem}
+\hint 算补事件；用 $1-x\le\mathrm e^{-x}$ 估计。
+
+\sol 全部不同的概率为
+\[
+\prod_{i=0}^{k-1}\left(1-\frac in\right)
+\le\exp\left(-\sum_{i=0}^{k-1}\frac in\right)
+=\exp\left(-\frac{k(k-1)}{2n}\right).
+\]
+故碰撞概率至少为
+\[
+1-\exp\left(-\frac{k(k-1)}{2n}\right).
+\]
+取 $k=\sqrt{2n}$ 得碰撞概率至少 $1-\mathrm e^{-1}\approx0.63$，取 $k=2\sqrt n$ 则几乎必然碰撞。Pollard--Rho 正是利用这一点：在 $O(\sqrt p)$ 次迭代内以高概率找到模 $p$ 的因子。
+
+\begin{teach}[把生日问题背下来是值得的]
+“$k\approx\sqrt n$ 时碰撞概率过半”这个数量级估计，在哈希、随机游走、因数分解、字符串匹配里反复出现。\textbf{用 $1-x\le\mathrm e^{-x}$ 把乘积变成指数}，是得到这个估计的标准动作。
+\end{teach}
+
+\section{综合例题}
+\begin{problem}{综合 1：期望 DP}
+掷一枚均匀骰子，从格子 $0$ 出发，点数即前进格数。若到达或超过格子 $10$ 就停止。求期望掷骰次数。
+\end{problem}
+\hint 设 $f(i)$ 为从格子 $i$ 出发的期望次数；$i\ge10$ 时 $f(i)=0$。
+
+\sol 设 $f(i)$ 为从格子 $i$ 出发的期望投掷次数。越界即停，故
+\[
+f(i)=0\ (i\ge10),\qquad
+f(i)=1+\frac16\sum_{d=1}^{6}f(i+d)\ (0\le i<10).
+\]
+从 $i=9$ 往 $i=0$ 倒推（下表保留六位小数）：
+\[
+\begin{array}{c|cccccccccc}
+i&0&1&2&3&4&5&6&7&8&9\\\hline
+f(i)&3.3237&3.0433&2.7752&2.5216&2.1614&1.8526&1.5880&1.3611&1.1667&1.0000
+\end{array}
+\]
+故所求期望为 $f(0)\approx3.32$ 次。
+
+（当 $3\le i\le9$ 时有简洁的闭式 $f(i)=\left(\dfrac76\right)^{9-i}$，例如 $f(9)=1$、$f(6)=\dfrac{343}{216}$、$f(3)=\dfrac{117649}{46656}$；$i\le2$ 时该式失效。）
+
+\begin{teach}[期望 DP 的三步]
+\textbf{设对状态、写对转移、注意边界。}本题的状态是“当前格子”，转移是“六种点数各六分之一”，边界是“到达或超过 $10$ 就停”。三步都对，剩下的只是倒推填表。写代码时把 $f(\min(10,i+d))$ 的截断写清楚，是最容易出错的地方。
+\end{teach}
+
+倒推填表的参考实现：
+\begin{lstlisting}[language=C++]
+double f[20];
+for (int i = 9; i >= 0; --i) {
+    double s = 0;
+    for (int d = 1; d <= 6; ++d) s += f[min(10, i + d)];
+    f[i] = 1 + s / 6;          // f[10..15] 初值即为 0
+}
+// 答案 f[0]，约为 3.3237
+\end{lstlisting}
+
+\begin{problem}{综合 2：随机化与确定性}
+一个数组有 $n$ 个元素，其中恰好有一个“特殊”元素。你每次可以随机选一个元素检查。求找到它的期望检查次数。若允许先随机打乱再顺序检查，期望次数是多少？若已知特殊元素在数组的后半段呢？
+\end{problem}
+\hint 分别用几何分布与均匀分布的期望。
+
+\sol 随机检查：每次命中概率 $1/n$，期望 $n$ 次。随机打乱后顺序检查等价于在均匀随机的位置中找特殊元素，期望位置是 $(n+1)/2$。已知在后半段：均匀分布在 $n/2+1,\ldots,n$，期望为
+\[
+\frac{(n/2+1)+n}{2}=\frac{3n}{4}+\frac12.
+\]
+\textbf{信息能换时间}：知道得越多，期望检查次数越少。
+
+\begin{problem}{综合 3：概率与数论}
+设 $p$ 为奇素数，$a$ 为模 $p$ 的非零二次剩余。随机选 $x\in\{1,\ldots,p-1\}$，求 $x^2\equiv a\pmod p$ 的解的个数；并由此说明为什么 Tonelli--Shanks 需要“找非平凡平方根”。
+\end{problem}
+\hint 模 $p$ 的方程 $x^2=a$ 恰有两个解 $x$ 与 $p-x$。
+
+\sol 恰有 $2$ 个解。所以在 $p-1$ 个非零 $x$ 中随机取，命中一个解的概率是 $2/(p-1)$——太小，不能靠随机试。Tonelli--Shanks 的做法是反过来：\textbf{随机取 $x$，计算 $x^2$，若它不是 $a$ 就得到一个非平凡平方根}（即 $x^2$ 的某个平方根 $y$ 满足 $y\not\equiv\pm x$），从而可以逐步降阶。这正是第二部分第 6 章的内容。
+
+\begin{problem}{综合 4：把方差用起来}
+一个哈希表用 $n$ 个桶、$m$ 个键（$m=n$），每个键独立均匀地选一个桶。设 $X$ 为最大桶长的上界估计：用马尔可夫不等式或切比雪夫不等式，估计“某个桶至少有 $10$ 个键”的概率上界。
+\end{problem}
+\hint 先算单个桶的键数 $B_i\sim B(m,1/n)$，再用联合界（union bound）。
+
+\sol 固定一个桶，$B_i\sim B(n,1/n)$，$\E B_i=1$、$\Var B_i=1-\dfrac1n$。由切比雪夫不等式
+\[
+\Pp(B_i\ge10)\le\Pp(|B_i-1|\ge9)\le\frac{1-1/n}{81}\approx0.0123.
+\]
+由联合界，存在某个桶键数 $\ge10$ 的概率至多
+\[
+n\cdot\frac{1-1/n}{81}\approx\frac{n}{81},
+\]
+当 $n>81$ 时这个上界超过 $1$，\textbf{说明切比雪夫给出的界太松}。这是不等式使用的常态：它们给出量级，不给出精确值。精确分析要用泊松化（键数近似 $\mathrm{Pois}(1)$）。
+
+\begin{teach}[第四部分的结课检查]
+让学生独立完成三道小题：
+\begin{enumerate}
+\item 证明：随机排列 $n$ 个数的逆序对数的期望是 $\dfrac{n(n-1)}4$（提示：用指示变量，每对贡献 $1/2$）。
+\item 从 $1$ 到 $n$ 中等概率取一个数，重复取直到出现重复，求期望取多少次（提示：分阶段，答案是 $\dfrac{n(n+1)}{2(n-1)}$ 量级；先算 $n$ 小的情形）。
+\item 一个随机化算法每次运行成功概率为 $p$。要使命失败概率小于 $10^{-6}$，需要独立运行多少次？用 $p=1/2$ 计算。
+\end{enumerate}
+三题全对即可进入第五部分。第三题的答案是 $k\ge20$（因为 $2^{-20}\approx9.5\times10^{-7}$），算不出就回到第 10 章“重复运行压低错误率”那一节。
+\end{teach}

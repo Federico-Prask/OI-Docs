@@ -1,0 +1,902 @@
+% !TeX program = xelatex
+% ============================================================================
+%  第一部分  基础数学
+%  第 1 章  集合、逻辑与证明方法
+%  第 2 章  数系、运算与代数恒等变形
+%  第 3 章  方程与不等式
+%  第 4 章  函数
+%  第 5 章  数列、求和与数学归纳法
+%  第 6 章  复数与平面向量初步
+% ============================================================================
+
+\chapter{集合、逻辑与证明方法}
+\begin{chapterintro}[章节导读]
+从这一章开始，我们把“怎么把一件事说清楚”本身当作一门技术来练。信息学竞赛里大量的失分不是不会算，而是题意翻译错了、条件漏了一条、或者把“有解”和“有正整数解”混为一谈。集合与逻辑给出无歧义的表述工具，证明方法给出检验自己结论的工具。全书后面每一个定理的陈述与证明，用的都是本章的语言。
+\end{chapterintro}
+
+\begin{tip}[这一章解决什么问题]
+本书第二部分的第 0 章是一张“术语速查表”，用术语解释术语；本章则是把这些词从零讲一遍。如果你读到一个词被卡住，先回第二部分第 0 章查表；如果你从来没有用过这些词，从本章读起。
+\end{tip}
+
+\section{集合与元素}
+集合是“一些确定的对象放在一起”。对象叫作\textbf{元素}，$a\in A$ 读作“$a$ 是 $A$ 的元素”，$a\notin A$ 读作“不是”。$A\subseteq B$ 读作“$A$ 的每个元素都在 $B$ 里”（$A$ 含于 $B$）；$\varnothing$ 是空集，不含任何元素。两个集合相等，当且仅当它们互相含于：
+\[
+A=B\iff A\subseteq B\ \text{且}\ B\subseteq A.
+\]
+这句话是证明集合相等的\textbf{唯一标准动作}：要证 $A=B$，就分别证两个方向，不要试图“一步到位”。
+
+本书最常用的几个数集：
+\[
+\Z=\{\ldots,-2,-1,0,1,2,\ldots\},\qquad
+\N=\{0,1,2,\ldots\},\qquad
+\Pp=\{2,3,5,7,11,\ldots\},
+\]
+分别是整数集、非负整数集、素数集；$\Q$、$\R$ 是有理数集与实数集。\textbf{注意本书约定 $\N$ 含 $0$}；如果你手上的教材不含 $0$，读本书时按本书的约定来，否则很多递推的边界会差一项。
+
+描述法的写法 $\{x\in\Z:0\le x<m\}$ 表示“满足后面条件的那些 $x$”，冒号也可写成竖线。集合 $\{0,1,\ldots,m-1\}$ 有 $m$ 个元素——别把“从 $0$ 到 $m-1$”数成 $m-1$ 个，这是最常犯的低级错误之一。
+
+\begin{definition}[交、并、差、补]
+$A\cap B$ 是同时在两者中的元素；$A\cup B$ 是至少在一个中的元素；$A\setminus B$ 是在 $A$ 中但不在 $B$ 中的元素。在全集 $U$ 中，$\overline A=U\setminus A$ 称为 $A$ 的补集。
+\end{definition}
+
+\begin{theorem}[德摩根定律]
+\[
+\overline{A\cup B}=\overline A\cap\overline B,\qquad
+\overline{A\cap B}=\overline A\cup\overline B.
+\]
+\end{theorem}
+\begin{proof}
+证第一个等式，用“两个方向”的标准动作。
+
+充分性（$\overline{A\cup B}\subseteq\overline A\cap\overline B$）。设 $x\in\overline{A\cup B}$，则 $x\notin A\cup B$，于是 $x\notin A$ 且 $x\notin B$，即 $x\in\overline A$ 且 $x\in\overline B$，故 $x\in\overline A\cap\overline B$。
+
+必要性（$\overline A\cap\overline B\subseteq\overline{A\cup B}$）。设 $x\in\overline A\cap\overline B$，则 $x\notin A$ 且 $x\notin B$，所以 $x$ 不属于 $A\cup B$（否则它至少在 $A$ 或 $B$ 之一中），故 $x\in\overline{A\cup B}$。
+
+第二个等式完全同理。
+\end{proof}
+
+\begin{teach}[为什么要练“证集合相等”]
+因为本书后面几乎所有“算法正确”的论证，最后都落在“这两个集合相同”上：欧拉定理里“乘以 $a$ 以后简化剩余系被重排”、中国剩余定理里“解集是一个同余类”、杜教筛里“递归状态落在原商集中”。让学生把“证集合相等=证两个包含”练成肌肉记忆，比多做十道题值钱。
+\end{teach}
+
+\subsection{一个必须分清的区别}
+“$A$ 是 $B$ 的子集”（$A\subseteq B$，集合与集合的关系）和“$a$ 是 $A$ 的元素”（$a\in A$，元素与集合的关系）是两回事。写成 $\{\{1,2\}\}\subseteq\{\{1,2\},\{3\}\}$ 是对的，而 $\{1,2\}\in\{\{1,2\},\{3\}\}$ 也是对的——但 $\{1,2\}\subseteq\{\{1,2\},\{3\}\}$ 是错的。读题时看到“选出一个子集”和“选出一个元素”，先分清在说哪一层。
+
+\section{逻辑联结词与量词}
+\subsection{“或”“且”“非”“当且仅当”}
+\begin{itemize}
+\item “$P$ 且 $Q$”：两者同时成立，符号 $P\land Q$。
+\item “$P$ 或 $Q$”：至少一个成立（可以两个都成立），符号 $P\lor Q$。\textbf{数学里的“或”不是“二选一”}。
+\item “非 $P$”：$P$ 不成立，符号 $\lnot P$。
+\item “$P\Rightarrow Q$”：$P$ 成立时 $Q$ 必须成立，读作“$P$ 推出 $Q$”。这时说“$P$ 是 $Q$ 的\textbf{充分}条件”“$Q$ 是 $P$ 的\textbf{必要}条件”。
+\item “$P\iff Q$”：互相推出，读作“$P$ 当且仅当 $Q$”，也说“$P$ 是 $Q$ 的\textbf{充要条件}”。
+\end{itemize}
+
+\begin{pitfall}[把“或”读成“异或”]
+题目说“$x$ 是偶数或 $x$ 是 $3$ 的倍数”，$x=6$ 当然满足。若你在草稿纸上写下“二选一”，就会把 $6$ 排除，后面的计数全错。组合数学的容斥原理之所以存在，就是因为在数“或”。
+\end{pitfall}
+
+\subsection{量词：任意与存在}
+$\forall$ 读“对任意（所有）”，$\exists$ 读“存在（至少有一个）”，$\exists!$ 读“存在且唯一”。\textbf{量词的顺序改变含义}：
+\[
+\forall n\in\N,\ \exists p\in\Pp,\ p>n\qquad\text{（素数无穷多个）}.
+\]
+$\forall$ 在前表示“先给我 $n$，我再找 $p$”，$p$ 可以依赖 $n$。若写成 $\exists p,\ \forall n$，就变成“有一个固定素数比所有数都大”，荒谬。
+
+否定规则要背熟：
+\[
+\lnot(\forall x,P(x))\iff \exists x,\lnot P(x),\qquad
+\lnot(\exists x,P(x))\iff \forall x,\lnot P(x).
+\]
+于是要推翻“所有情况都好”，只需\textbf{举一个反例}；要反驳“存在坏情况”，必须证明“全都好”。本书第二部分的 Miller--Rabin、第三部分的抽屉原理，反复用到这两句话。
+
+\begin{tip}[做题时的第一动作：把量词写出来]
+拿到一道题，先在草稿纸上把结论的量词结构写出来：“对所有 $x$ 存在 $y$……”还是“存在 $x$ 对所有 $y$……”。很多题的难点就在于这个顺序，而题面用的是自然语言，容易含混。
+\end{tip}
+
+\section{证明的三种基本方法}
+\subsection{直接证明}
+从条件出发，沿着“定义—已知定理—定义”的链条推到结论。本书第二部分第 1 章裴蜀定理的证明就是标准样板：先用 $d=\gcd(a,b)$ 把 $a,b$ 写成 $da',db'$，再把目标式子提一个 $d$ 出来。
+
+\subsection{反证法与最小反例}
+要证“所有 $n$ 都满足 $P(n)$”，可设存在反例，取\textbf{最小的}那个 $n_0$，再由 $n_0$ 造出更小的反例 $n'<n_0$，得到矛盾。这就是\textbf{最小反例法}，它与数学归纳法等价。第二部分第 1 章证明“欧几里得算法正确”、第 15 章的韦达跳跃都用它，因为它们都需要“$n_0$ 的最小性”这一件武器。
+
+\begin{pitfall}[“不停得到更小”需要一个停止条件]
+反证法里“能无限变小”之所以是矛盾，靠的是\textbf{自然数的最小数原理}：非空正整数集有最小元。如果你递减的量不是整数（比如实数、字符串长度），要先说明它良基，否则“无限递减”不构成矛盾。第四部分博弈论里“状态图有环所以没有良基归纳”，正是这一条失效的例子。
+\end{pitfall}
+
+\subsection{数学归纳法}
+写清三件事：命题 $P(n)$ 是什么；$P(1)$（或 $P(0)$）成立；“若对所有 $k<n$ 成立则 $P(n)$ 成立”。需要“所有更小的”而不是只有 $n-1$ 时，叫\textbf{第二归纳法}，本书也说“强归纳”。
+
+\begin{theorem}[二项式定理的归纳证明]
+对任意非负整数 $n$ 与实数 $x,y$，
+\[
+(x+y)^n=\sum_{k=0}^{n}\binom nk x^{n-k}y^{k}.
+\]
+\end{theorem}
+\begin{proof}
+对 $n$ 归纳。$n=0$ 时两边都是 $1$。设结论对 $n$ 成立，则
+\[
+(x+y)^{n+1}=(x+y)\sum_{k=0}^{n}\binom nk x^{n-k}y^{k}
+=\sum_{k=0}^{n}\binom nk x^{n+1-k}y^{k}
+ +\sum_{k=0}^{n}\binom nk x^{n-k}y^{k+1}.
+\]
+把第二个和式的指标换成 $j=k+1$：
+\[
+(x+y)^{n+1}=x^{n+1}+\sum_{k=1}^{n}\left[\binom nk+\binom n{k-1}\right]x^{n+1-k}y^{k}+y^{n+1}.
+\]
+用恒等式 $\dbinom nk+\dbinom n{k-1}=\dbinom{n+1}k$（它是第三部分第 1 章杨辉三角的直接写法），并把两端 $k=0$、$k=n+1$ 的项并回去，即得
+\[
+(x+y)^{n+1}=\sum_{k=0}^{n+1}\binom{n+1}{k}x^{n+1-k}y^{k}.
+\]
+归纳完成。
+\end{proof}
+
+\begin{teach}[归纳法的三个常见断点]
+\begin{enumerate}
+\item 忘了写 $P(1)$：归纳缺了起点，后面的链条挂在空中。
+\item 归纳假设用错：证 $P(n)$ 时只能用 $P(1),\ldots,P(n-1)$，不能顺手用 $P(n)$。
+\item 归纳步里悄悄用了“显然”：把一步代数留给读者，往往正是错的地方。要求学生在归纳步里把换指标的那一行显式写出来。
+\end{enumerate}
+\end{teach}
+
+\section{双向证明的写法}
+要证“$P$ 当且仅当 $Q$”，写两个方向、各起一段，并给每段一个开头词（“必要性.”“充分性.”）。若只证了一边，就把结论降格为“$P$ 推出 $Q$”。
+
+\begin{tip}[“必要性来自……充分性来自……”是在说什么]
+翻译成人话就是：“两个方向分开证”。\textbf{必要性}指“已知 $P$ 成立，去证 $Q$”（不做到的话 $P$ 就不成立，所以 $Q$ 是\emph{必须}的）；\textbf{充分性}指“已知 $Q$ 成立，去造出 $P$”（$Q$ 一条就\emph{足够}了）。一个方向没证，结论就还只是猜测。
+\end{tip}
+
+\section{分层例题与解析}
+以下三题分别练“量词翻译”“集合相等”“归纳与递推”三件基本功。
+
+\begin{problem}{例 1：把自然语言改写成带量词的命题}
+设 $f:\N\to\N$。用 $\forall,\exists$ 与逻辑联结词写出下面两句话，并说明它们是否等价：
+(1) “$f$ 有不动点”，即存在 $n$ 使 $f(n)=n$；
+(2) “$f$ 不把任何两个不同的数映到同一个值”，即 $f$ 是单射。
+\end{problem}
+\hint (1) 只有一个存在量词。(2) 要对“任意两个不同的输入”发言，先固定它们。
+
+\sol (1) 写成 $\exists n\in\N,\ f(n)=n$。(2) 写成
+\[
+\forall a,b\in\N,\ a\ne b\Rightarrow f(a)\ne f(b).
+\]
+两者不等价。$f(n)=n+1$ 是单射但没有不动点；$f(n)=0$（常函数）有不动点（$n=0$）但不是单射。\textbf{把“不变量”和“存在某个特殊值”分开}，是读题的基本功。
+
+\begin{problem}{例 2：证明两个集合相等}
+设 $A=\{3k+1:k\in\N\}$、$B=\{3k-2:k\in\N_{>0}\}$。证明 $A=B$。
+\end{problem}
+\hint 用“互相含于”的标准动作，每一边都把元素写成参数的形式。
+
+\sol 设 $x\in A$，则 $x=3k+1=3(k+1)-2$，其中 $k+1\ge1$，故 $x\in B$。设 $x\in B$，则 $x=3k-2=3(k-1)+1$，其中 $k\ge1$ 故 $k-1\ge0$，于是 $x\in A$。两个方向都成立，$A=B$。
+
+\begin{problem}{例 3：一个容易漏条件的递推}
+在 $n\times n$ 的棋盘上放棋子，要求每行每列恰有一个。设 $n=1,2,3$ 时的放法数为 $f_1,f_2,f_3$。有人断言 $f_n=n!$，并用归纳法“证明”如下：假设 $f_n=n!$，则 $f_{n+1}=(n+1)f_n=(n+1)!$。请指出漏洞。
+\end{problem}
+\hint 归纳步里“$(n+1)f_n$”这一步凭什么成立？$n\times n$ 的解如何变成 $(n+1)\times(n+1)$ 的解？
+
+\sol 结论 $f_n=n!$ 其实是对的（这就是排列数，$n$ 行各选一列且不重复），但\textbf{归纳步的论证不成立}：不是每一个 $(n+1)\times(n+1)$ 的解都能由唯一的 $n\times n$ 的解“加一行一列”得到，因为新增的那一行可能占用原来任意一列，从而把原来的解整体重排。正确的论证是直接的：第 $1$ 行有 $n$ 种选择，第 $2$ 行有 $n-1$ 种，……，共 $n!$ 种。这个例子用来说明：\textbf{递推关系必须先说清“每个对象被数了几次”}，不能只看数值碰巧对上。
+
+\begin{teach}[这一章的离堂检查]
+让学生在 $3$ 分钟内写出：(1) $\lnot(\forall x\exists y,P(x,y))$ 的等价形式；(2) 证 $A\subseteq B$ 的第一步该写什么；(3) 数学归纳法必须写清的三件事。三题全对即可进入第 2 章。
+\end{teach}
+
+\chapter{数系、运算与代数恒等变形}
+\begin{chapterintro}[章节导读]
+代数变形的能力决定了后面所有章节的速度：同余式要变形、不等式要变形、递推要变形、生成函数更要变形。本章不引入新算法，只把运算律、绝对值、乘法公式、指数对数这些“手里的工具”擦亮，并用竞赛里最常见的几种变形模式把它们串起来。
+\end{chapterintro}
+
+\section{数系与运算律}
+自然数 $\N$、整数 $\Z$、有理数 $\Q$、实数 $\R$ 逐层扩张，每一次扩张都是为了“能解更多的方程”：减法要负数，除法要分数，开方与极限要实数。竞赛里绝大多数对象在 $\Z$ 或 $\Q$ 中，$\R$ 只在不等式与连续性讨论中出现。
+
+四则运算满足交换律、结合律、分配律：
+\[
+a+b=b+a,\quad a(b+c)=ab+ac,\quad (ab)c=a(bc).
+\]
+\begin{pitfall}[分配律的常见笔误]
+$(a+b)^2=a^2+2ab+b^2$，不是 $a^2+b^2$；$(a+b)(c+d)=ac+ad+bc+bd$，不是 $ac+bd$。第二部分数论里欧拉定理的证明中，原稿曾把 $(a+b)c$ 写成 $ac+ab$，一个符号错误就让整段证明失效。\textbf{凡是用分配律的地方，逐项写全，不要跳。}
+\end{pitfall}
+
+\subsection{整数除法与取整}
+对整数 $a$ 与非零整数 $b$，带余除法给出唯一的 $q,r$ 使
+\[
+a=qb+r,\qquad 0\le r<|b|.
+\]
+$\floor{x}$ 是“不超过 $x$ 的最大整数”，$\ceil{x}$ 是“不小于 $x$ 的最小整数”。两条常用性质：
+\[
+\floor{\frac ab}=q\iff qb\le a<(q+1)b,\qquad
+\ceil{\frac ab}=q\iff (q-1)b<a\le qb\quad(b>0).
+\]
+第二条也可写成 $\ceil{a/b}=\floor{(a+b-1)/b}$（$a\ge0$、$b>0$ 时）。
+
+\begin{pitfall}[C++ 的除法不是向下取整]
+C++ 的 \texttt{/} 是\textbf{向零取整}（截断）：\texttt{-7/2} 得 $-3$，而 $\floor{-7/2}=-4$。所以本书第二部分模板里所有“整除取商”都写成 \texttt{floor\_div}。对 $b>0$，设 $q_0$ 为 \texttt{a/b}、$r_0$ 为 \texttt{a\%b}，则
+\[
+\operatorname{floorDiv}(a,b)=q_0-\iva{r_0<0},\qquad
+\operatorname{ceilDiv}(a,b)=q_0+\iva{r_0>0}.
+\]
+这样还避免了对最小负整数直接求 $-a$。测试 $a=-5,b=3$ 时应得 floor 为 $-2$、ceil 为 $-1$。
+\end{pitfall}
+
+\section{绝对值}
+\[
+|x|=\begin{cases}x,&x\ge0,\\-x,&x<0.\end{cases}
+\]
+它的代数意义是“到原点的距离”，因此一切距离性质都能翻译成绝对值不等式：
+\[
+|xy|=|x||y|,\qquad \left|\frac xy\right|=\frac{|x|}{|y|}\ (y\ne0),
+\]
+\[
+|x|-|y|\le |x+y|\le |x|+|y|\qquad\text{（三角不等式）},
+\]
+\[
+|x|=|y|\iff x^2=y^2,\qquad |x|<a\iff -a<x<a\quad(a>0).
+\]
+\begin{tip}[绝对值问题的标准动作]
+遇到含绝对值的方程或不等式，标准动作是\textbf{分段去掉绝对值符号}：找到使每个绝对值内部变号的点，把数轴分成若干段，在每一段内绝对值可以放心展开。分段点是唯一需要小心的地方，边界上取等号与否要单独验证。
+\end{tip}
+
+\section{乘法公式与因式分解}
+下面五个公式要能做到“闭着眼睛写出来”：
+\begin{align}
+(a\pm b)^2&=a^2\pm2ab+b^2,\\
+(a+b+c)^2&=a^2+b^2+c^2+2ab+2bc+2ca,\\
+a^2-b^2&=(a-b)(a+b),\\
+a^3\pm b^3&=(a\pm b)(a^2\mp ab+b^2),\\
+(a\pm b)^3&=a^3\pm3a^2b+3ab^2\pm b^3.
+\end{align}
+更一般地，$a^n-b^n$ 总能被 $a-b$ 整除；$n$ 为奇数时 $a^n+b^n$ 能被 $a+b$ 整除。第二部分第 5 章的升幂引理（LTE）研究的就是“$a^n-b^n$ 里到底含多少个 $p$”，那是这条路线的终点。
+
+\subsection{换元的威力}
+很多难题的难点不在公式，而在\textbf{看不出该换什么元}。三条高频换元：
+\begin{itemize}
+\item 对称式：遇到 $x+y$ 与 $xy$ 反复出现，令 $s=x+y$、$p=xy$，把两变量问题化成一变量问题。
+\item 公共因子：遇到 $\gcd(a,b)$，令 $d=\gcd(a,b)$、$a=du$、$b=dv$、$\gcd(u,v)=1$，把“公约数”从“互质部分”中分离出来。这是第二部分第 1 章的起手式。
+\item 缩放：遇到 $ax\equiv bx\pmod m$ 型的同余式，先提出 $\gcd(x,m)$，见第二部分第 2 章。
+\end{itemize}
+
+\begin{teach}[换元的教学顺序]
+先给一个不用换元很难做的题（例如第二部分第 1 章的“数学游戏”），让学生先试 $5$ 分钟；再把换元写在黑板上，问“这个换元把什么分开了”。学生说不出“分开了公约数与互质部分”，就说明还没有学会，只是记住了形式。
+\end{teach}
+
+\section{分式、根式与指数对数}
+\subsection{分式}
+\[
+\frac ab\pm\frac cd=\frac{ad\pm bc}{bd},\qquad
+\frac ab\cdot\frac cd=\frac{ac}{bd},\qquad
+\frac ab\div\frac cd=\frac{ad}{bc}\ (c\ne0).
+\]
+分式运算的第一条纪律：\textbf{先看定义域}。$\dfrac1{x-1}$ 在 $x=1$ 无定义，$\dfrac{x^2-1}{x-1}$ 在 $x=1$ 也无定义（虽然它在 $x\ne1$ 时等于 $x+1$）。竞赛里“约分前后定义域不同”是丢分的常见原因。
+
+\subsection{根式}
+$\sqrt{a}$（$a\ge0$）是 $a$ 的算术平方根。两条高频变形：
+\[
+\sqrt{a^2}=|a|,\qquad
+\frac{1}{\sqrt a+\sqrt b}=\frac{\sqrt a-\sqrt b}{a-b}\quad\text{（分母有理化）}.
+\]
+
+\subsection{指数与对数}
+$a^n$ 表示 $n$ 个 $a$ 相乘，约定 $a^0=1$（包括 $0^0=1$，按组合意义）。指数律：
+\[
+a^ma^n=a^{m+n},\quad (a^m)^n=a^{mn},\quad (ab)^n=a^nb^n.
+\]
+\textbf{注意 $(a^m)^n=a^{mn}$ 与 $a^{m^n}$ 完全不同}：幂塔 $a^{b^c}$ 按\textbf{右结合}读，等于 $a^{(b^c)}$。$3^{3^3}=3^{27}$ 已经约 $7.6\times10^{12}$，所以处理幂塔的核心矛盾是：指数巨大，而余数只有 $m$ 种可能。第二部分第 2 章的扩展欧拉定理就是为此准备的。
+
+对数是指数的逆运算：$y=\log_a x$ 表示 $a^y=x$（$a>0,a\ne1,x>0$）。三条性质：
+\[
+\log_a(xy)=\log_a x+\log_a y,\quad
+\log_a(x^y)=y\log_a x,\quad
+\log_a b=\frac{\log_c b}{\log_c a}.
+\]
+\begin{tip}[换底公式的竞赛用法]
+算法竞赛里 $\log$ 几乎只用来估计复杂度，此时\textbf{底数不影响渐近结论}，$\log_2 n$ 与 $\ln n$ 只差常数倍。但一旦进入精确计算（例如判断 $2^k\ge n$），底数必须写清楚。
+\end{tip}
+
+\section{分层例题与解析}
+\begin{problem}{例 1：化简与定义域}
+化简 $\dfrac{x^2-4}{x^2-5x+6}\cdot\dfrac{x-3}{x+2}$，并指出结果在哪些 $x$ 上成立。
+\end{problem}
+\hint 先因式分解，再约分；约掉因式以后要记住被约掉的因式不能为 $0$。
+
+\sol 分子 $x^2-4=(x-2)(x+2)$，分母 $x^2-5x+6=(x-2)(x-3)$。于是
+\[
+\frac{(x-2)(x+2)}{(x-2)(x-3)}\cdot\frac{x-3}{x+2}=1,
+\]
+但\textbf{仅在 $x\ne\pm2$ 且 $x\ne3$ 时成立}。若题目问“对哪些 $x$ 等式成立”，答案是 $x\in\R\setminus\{-2,2,3\}$；只写 $1$ 不扣定义域是常见错误。
+
+\begin{problem}{例 2：含绝对值的方程}
+解方程 $|x-1|+|x-2|+|x-3|=4$。
+\end{problem}
+\hint 分段点是 $1,2,3$；在每一段内绝对值可以放心展开。
+
+\sol 分四段。$x<1$ 时，原式为 $(1-x)+(2-x)+(3-x)=6-3x=4$，得 $x=\dfrac23$（符合 $x<1$）。$1\le x<2$ 时，原式为 $(x-1)+(2-x)+(3-x)=4-x=4$，得 $x=0$，\textbf{不在本段，舍去}。$2\le x<3$ 时，原式为 $(x-1)+(x-2)+(3-x)=x=4$，舍去。$x\ge3$ 时，原式为 $3x-6=4$，得 $x=\dfrac{10}{3}$。故解为 $x=\dfrac23$ 或 $x=\dfrac{10}{3}$。
+
+\begin{teach}[“舍去”这一步不能省]
+中间两段求出的解不在本段，必须显式写出“舍去”。学生常常算对了却忘了检查分段条件，写出 $x=0$ 这样的假解。要求每段都写“解得 $x=\cdots$，符合／不符合 $x\in[\cdots]$，故保留／舍去”。
+\end{teach}
+
+\begin{problem}{例 3：对称换元}
+已知实数 $x,y$ 满足 $x+y=7$、$xy=12$，求 $x^3+y^3$。
+\end{problem}
+\hint 令 $s=x+y$、$p=xy$，把目标写成 $s,p$ 的多项式。
+
+\sol 用恒等式 $x^3+y^3=(x+y)^3-3xy(x+y)$，代入得
+\[
+x^3+y^3=7^3-3\cdot12\cdot7=343-252=91.
+\]
+不需要解出 $x,y$（它们是 $3$ 与 $4$）——\textbf{能不解就不解}，是代数题的基本修养。
+
+\begin{problem}{例 4：幂塔的结合性}
+比较 $2^{3^2}$ 与 $(2^3)^2$，并计算 $2^{2^{2^2}}$。
+\end{problem}
+\hint 幂塔右结合；$(a^m)^n=a^{mn}$。
+
+\sol $2^{3^2}=2^9=512$，而 $(2^3)^2=2^6=64$，两者不等。$2^{2^{2^2}}=2^{(2^{(2^2)})}=2^{16}=65536$；若误按左结合算成 $((2^2)^2)^2=2^8=256$，两者相差 $256$ 倍。第二部分第 4 章处理高阶箭号时，这个区别会反复出现。
+
+\begin{pitfall}[指数运算的三条红线]
+\begin{enumerate}
+\item $(a^m)^n=a^{mn}$，但 $a^{m^n}=a^{(m^n)}$，两者一般不等。
+\item $(ab)^n=a^nb^n$，但 $(a+b)^n\ne a^n+b^n$。
+\item $a^{m+n}=a^ma^n$，但 $a^{mn}\ne a^ma^n$。
+\end{enumerate}
+\end{pitfall}
+
+\chapter{方程与不等式}
+\begin{chapterintro}[章节导读]
+方程与不等式是“把条件写成式子再求解”的两种基本形态。竞赛里方程的难点常在“解不出来但不需要解出来”（韦达定理、对称性），不等式的难点常在“证明一个数非负”。本章把一元二次方程、韦达定理、基本不等式与柯西不等式讲透，它们是第三部分组合计数与第四部分概率期望的常备工具。
+\end{chapterintro}
+
+\section{一元二次方程}
+$a x^2+bx+c=0$（$a\ne0$）的判别式 $\Delta=b^2-4ac$：
+\begin{itemize}
+\item $\Delta>0$：两个不等实根 $x=\dfrac{-b\pm\sqrt{\Delta}}{2a}$；
+\item $\Delta=0$：重根 $x=-\dfrac b{2a}$；
+\item $\Delta<0$：无实根。
+\end{itemize}
+\begin{theorem}[求根公式]
+$a\ne0$ 时，$ax^2+bx+c=0$ 的根为
+\[
+x_{1,2}=\frac{-b\pm\sqrt{b^2-4ac}}{2a}.
+\]
+\end{theorem}
+\begin{proof}
+$a\ne0$，两边除以 $a$ 并配方：
+\[
+x^2+\frac ba x+\frac ca=0
+\iff \left(x+\frac b{2a}\right)^2=\frac{b^2-4ac}{4a^2}.
+\]
+右边开方（注意 $\sqrt{4a^2}=2|a|$，把符号吸收进 $\pm$ 中即可），移项即得。
+\end{proof}
+
+\begin{pitfall}[数值稳定性]
+用求根公式算根时，若 $b^2\gg4ac$，$\sqrt{b^2-4ac}\approx|b|$，两个根中有一个由“两个相近的数相减”得到，有效数字大量丢失。竞赛中遇到这种情形（例如解 $x^2-10^9x+1=0$），应改用
+\[
+x_1x_2=\frac ca,\qquad x_1+x_2=-\frac ba,
+\]
+先算绝对值大的根，再用乘积关系算另一个根。
+\end{pitfall}
+
+\section{韦达定理}
+\begin{theorem}[韦达定理]
+设 $ax^2+bx+c=0$（$a\ne0$）的两根为 $x_1,x_2$，则
+\[
+x_1+x_2=-\frac ba,\qquad x_1x_2=\frac ca.
+\]
+\end{theorem}
+\begin{proof}
+由求根公式直接相加、相乘：
+\[
+x_1+x_2=\frac{-b+\sqrt\Delta}{2a}+\frac{-b-\sqrt\Delta}{2a}=-\frac ba,
+\]
+\[
+x_1x_2=\frac{(-b)^2-\Delta}{4a^2}=\frac{b^2-(b^2-4ac)}{4a^2}=\frac ca.
+\]
+\end{proof}
+
+韦达定理的真正用处是\textbf{不解方程就能做关于根的对称式计算}。若 $f(x_1,x_2)$ 是对称多项式（交换 $x_1,x_2$ 不变），它一定能写成 $s=x_1+x_2$ 与 $p=x_1x_2$ 的多项式。常用：
+\[
+x_1^2+x_2^2=s^2-2p,\qquad
+x_1^3+x_2^3=s^3-3sp,\qquad
+\frac1{x_1}+\frac1{x_2}=\frac{s}{p}\ (p\ne0).
+\]
+
+\begin{tip}[韦达跳跃]
+把韦达定理反过来用：固定其他变量，把方程看成关于某一个变量的二次方程，那么“另一个根”可以用 $s=\dfrac{-b}{a}$ 减出来。这个技巧在第二部分第 15 章（构造不定方程的解）里会变成一件主武器——从一个已知解造出一个更小的解，从而完成无穷递降。
+\end{tip}
+
+\section{不等式的基本性质}
+对实数 $a,b,c,d$：
+\begin{itemize}
+\item $a>b\Rightarrow a\pm c>b\pm c$（加减不改变方向）；
+\item $a>b$ 且 $c>0\Rightarrow ac>bc$；$a>b$ 且 $c<0\Rightarrow ac<bc$（\textbf{乘负数要变向}）；
+\item $a>b>0\Rightarrow a^2>b^2$、$\dfrac1a<\dfrac1b$；
+\item $a>b$ 且 $c>d\Rightarrow a+c>b+d$（同向可加）；$a>b>0$ 且 $c>d>0\Rightarrow ac>bd$（同正可乘）。
+\end{itemize}
+
+\begin{pitfall}[“同向可乘”要求两边都正]
+$a>b$ 且 $c>d$ \textbf{不能}推出 $ac>bd$：取 $a=1,b=-2,c=-1,d=-3$，有 $ac=-1<bd=6$。乘法保序需要两边同号。
+\end{pitfall}
+
+\section{基本不等式与柯西不等式}
+\begin{theorem}[均值不等式（AM--GM）]
+对正实数 $a_1,\ldots,a_n$，
+\[
+\frac{a_1+\cdots+a_n}{n}\ge\sqrt[n]{a_1a_2\cdots a_n},
+\]
+等号成立当且仅当 $a_1=a_2=\cdots=a_n$。
+\end{theorem}
+\begin{proof}
+$n=2$ 的情形：$(a-b)^2\ge0$ 展开得 $a^2-2ab+b^2\ge0$，即 $a^2+b^2\ge2ab$，令 $a=\sqrt x$、$b=\sqrt y$ 得 $\dfrac{x+y}{2}\ge\sqrt{xy}$。一般情形可用归纳或詹森不等式证明，此处从略；等号条件由 $(a-b)^2=0$ 直接看出。
+\end{proof}
+
+\begin{theorem}[柯西不等式]
+对实数 $a_1,\ldots,a_n$ 与 $b_1,\ldots,b_n$，
+\[
+\left(\sum_{i=1}^n a_ib_i\right)^2\le\left(\sum_{i=1}^n a_i^2\right)\left(\sum_{i=1}^n b_i^2\right),
+\]
+等号成立当且仅当两组数成比例（$a_i=\lambda b_i$ 或 $b_i=\lambda a_i$）。
+\end{theorem}
+\begin{proof}
+考虑关于 $t$ 的二次函数
+\[
+f(t)=\sum_{i=1}^n(a_it-b_i)^2
+=t^2\sum a_i^2-2t\sum a_ib_i+\sum b_i^2.
+\]
+它是平方和，故对一切实数 $t$ 有 $f(t)\ge0$，即判别式非正：
+\[
+4\left(\sum a_ib_i\right)^2-4\left(\sum a_i^2\right)\left(\sum b_i^2\right)\le0.
+\]
+整理即得。等号成立要求 $f$ 有实根 $t_0$，即 $a_it_0-b_i=0$ 对所有 $i$ 成立，两组数成比例。
+\end{proof}
+
+\begin{teach}[配方法的示范价值]
+柯西不等式的证明是“构造一个非负二次函数”的标准样板。这个套路在第三部分（证明组合数不等式）、第四部分（证明概率不超过 $1$）会一再出现。建议把“要证 $X\le Y$，就构造一个平方和”作为一条独立的方法教给学生。
+\end{teach}
+
+\section{分层例题与解析}
+\begin{problem}{例 1：韦达定理求对称式}
+设 $x^2-5x+3=0$ 的两根为 $x_1,x_2$，求 $x_1^2+x_2^2$ 与 $\dfrac1{x_1^2}+\dfrac1{x_2^2}$。
+\end{problem}
+\hint 用 $s=x_1+x_2=5$、$p=x_1x_2=3$。
+
+\sol $x_1^2+x_2^2=s^2-2p=25-6=19$。又
+\[
+\frac1{x_1^2}+\frac1{x_2^2}=\frac{x_1^2+x_2^2}{x_1^2x_2^2}=\frac{19}{9}.
+\]
+注意 $p=3\ne0$，两个倒数都有定义。
+
+\begin{problem}{例 2：均值不等式求最值}
+求 $f(x)=x+\dfrac4x$ 在 $x>0$ 时的最小值。
+\end{problem}
+\hint 直接用两项的 AM--GM，注意等号条件。
+
+\sol 由 AM--GM，$x+\dfrac4x\ge2\sqrt{x\cdot\dfrac4x}=4$，等号当且仅当 $x=\dfrac4x$，即 $x=2$。故最小值为 $4$，在 $x=2$ 处取得。\textbf{必须检查等号条件}：若定义域不含 $2$，就不能说最小值是 $4$。
+
+\begin{pitfall}[忘了检查等号条件]
+求 $x+\dfrac1x$ 在 $x\in[2,3]$ 的最小值：AM--GM 给出下界 $2$，但等号在 $x=1$ 处，不在 $[2,3]$ 内。实际最小值在 $x=2$ 处，为 $2.5$。凡是写“最小值为 $\cdots$”，都要跟一句“等号在 $x=\cdots$ 处成立，且该点在定义域内”。
+\end{pitfall}
+
+\begin{problem}{例 3：柯西不等式}
+设 $a,b,c>0$ 且 $a+b+c=1$，证明 $\dfrac1a+\dfrac1b+\dfrac1c\ge9$。
+\end{problem}
+\hint 把左边看成 $\left(\dfrac1{\sqrt a}\right)^2+\cdots$ 与 $(\sqrt a)^2+\cdots$ 的乘积。
+
+\sol 由柯西不等式，
+\[
+\left(\frac1a+\frac1b+\frac1c\right)(a+b+c)
+=\left[\left(\frac1{\sqrt a}\right)^2+\left(\frac1{\sqrt b}\right)^2+\left(\frac1{\sqrt c}\right)^2\right]
+ \left[(\sqrt a)^2+(\sqrt b)^2+(\sqrt c)^2\right]
+\]
+\[
+\ge\left(\frac1{\sqrt a}\sqrt a+\frac1{\sqrt b}\sqrt b+\frac1{\sqrt c}\sqrt c\right)^2=3^2=9.
+\]
+左边又等于 $\dfrac1a+\dfrac1b+\dfrac1c$（因为 $a+b+c=1$），故得证。等号在 $a=b=c=\dfrac13$ 时成立。
+
+\begin{problem}{例 4：判别式判定无解}
+证明：不存在实数 $x$ 使 $x^2-4x+7=0$。
+\end{problem}
+\hint 算判别式；或者配方。
+
+\sol $\Delta=16-28=-12<0$，故无实根。也可以配方：$x^2-4x+7=(x-2)^2+3\ge3>0$，左边恒正，不可能为 $0$。两种方法都要会；配方在“证明恒正”时更常用。
+
+\chapter{函数}
+\begin{chapterintro}[章节导读]
+函数是“从一个集合到另一个集合的对应规则”。竞赛里的函数题分两类：一类是解析性质（单调、奇偶、周期、值域），一类是迭代与不动点。本章把初等函数的性质整理成可直接调用的工具，并在最后一节给出迭代问题的基本框架——它是第四部分概率与第五部分生成函数的共同基础。
+\end{chapterintro}
+
+\section{函数的定义与表示}
+\begin{definition}[函数]
+从集合 $A$ 到集合 $B$ 的函数 $f$ 是一个规则：对每个 $x\in A$，指定唯一的 $y\in B$ 与之对应，记作 $f(x)$。$A$ 叫定义域，$\{f(x):x\in A\}$ 叫值域。
+\end{definition}
+\textbf{“唯一”是函数的全部要点}。$y^2=x$ 不是 $x$ 的函数（一个 $x$ 对应两个 $y$），$y=|x|$ 是。竞赛里“判断是否为函数”的题，都是考这一条。
+
+\begin{definition}[单射、满射、双射]
+$f$ 是\textbf{单射}：$x_1\ne x_2\Rightarrow f(x_1)\ne f(x_2)$（不同的输入得到不同的输出）。$f$ 是\textbf{满射}：值域等于整个 $B$（每个输出都被取到）。$f$ 既是单射又是满射叫\textbf{双射}。
+\end{definition}
+
+\begin{tip}[有限集上单射自动是双射]
+若 $A$、$B$ 都是有限集且元素个数相同，$f:A\to B$ 是单射就自动是双射——这就是抽屉原理。第二部分第 2 章证明欧拉定理时，“乘以 $a$ 是简化剩余系上的一一对应”只验证了单射那一半，靠的就是这条。
+\end{tip}
+
+\section{单调性、奇偶性、周期性}
+\begin{itemize}
+\item \textbf{单调递增}：$x_1<x_2\Rightarrow f(x_1)\le f(x_2)$；\textbf{严格递增}：$x_1<x_2\Rightarrow f(x_1)<f(x_2)$。单调递减同理。
+\item \textbf{奇函数}：$f(-x)=-f(x)$，图像关于原点对称。\textbf{偶函数}：$f(-x)=f(x)$，图像关于 $y$ 轴对称。
+\item \textbf{周期函数}：存在 $T>0$ 使 $f(x+T)=f(x)$ 对一切 $x$ 成立，最小的这样的 $T$ 叫最小正周期。
+\end{itemize}
+\begin{teach}[单调性怎么用]
+单调性最常见的用法是“把函数值的不等式搬回自变量”：若 $f$ 严格递增，则 $f(a)<f(b)\iff a<b$。第二部分第 4 章求乘法阶、第四部分分析“最优策略随参数变化”时，都是这个套路。反函数存在也要求单调。
+\end{teach}
+
+\section{一次、二次与反比例函数}
+\subsection{一次函数}
+$f(x)=kx+b$（$k\ne0$）严格单调，$k>0$ 递增、$k<0$ 递减，与 $x$ 轴交于 $-\dfrac bk$。
+
+\subsection{二次函数}
+$f(x)=ax^2+bx+c$（$a\ne0$）配方得
+\[
+f(x)=a\left(x+\frac b{2a}\right)^2+\frac{4ac-b^2}{4a^2}.
+\]
+$a>0$ 时开口向上，在 $x=-\dfrac b{2a}$ 处取最小值 $\dfrac{4ac-b^2}{4a^2}$；$a<0$ 时相反。顶点、对称轴、判别式三件套必须熟练。
+
+\subsection{反比例函数}
+$f(x)=\dfrac kx$（$k\ne0$）在 $(-\infty,0)$ 与 $(0,+\infty)$ 上分别单调，但\textbf{在整个定义域上不单调}——这是分段讨论的典型场合。
+
+\section{指数函数与对数函数}
+\begin{itemize}
+\item $a^x$（$a>0,a\ne1$）：$a>1$ 时严格递增，$0<a<1$ 时严格递减；值域 $(0,+\infty)$；恒过 $(0,1)$。
+\item $\log_a x$：$a^x$ 的反函数；$a>1$ 时严格递增，值域 $\R$；恒过 $(1,0)$。
+\end{itemize}
+两条常用的比较：
+\[
+a>1,\ x>0\ \text{时}\ a^x>1;\qquad
+a>1,\ x>1\ \text{时}\ \log_a x>0.
+\]
+\begin{tip}[算法竞赛里的对数]
+估计复杂度时常用两条经验：$\log_2 10^9\approx30$，$\log_2(10^{18})\approx60$。所以“$10^9$ 以内的数二分查找约 $30$ 次”是可靠的第一近似。$\log\log n$ 增长极慢，$\log_2 30\approx5$。
+\end{tip}
+
+\section{函数的复合与迭代}
+\subsection{复合}
+$(f\circ g)(x)=f(g(x))$。复合不满足交换律：一般 $(f\circ g)(x)\ne(g\circ f)(x)$。若 $f$ 与 $g$ 都严格递增，则 $f\circ g$ 也严格递增——这个事实在第四部分证明“最优策略可比较”时有用。
+
+\subsection{迭代与不动点}
+从 $x_0$ 出发反复作用 $f$：$x_{n+1}=f(x_n)$。若存在 $x^*$ 使 $f(x^*)=x^*$，称 $x^*$ 为\textbf{不动点}。若 $f$ 连续且迭代收敛，则极限只能是不动点。
+
+\begin{theorem}[压缩映射的收敛性]
+设 $f$ 在区间 $I$ 上满足 $|f(x)-f(y)|\le q|x-y|$（$0<q<1$），且 $f(I)\subseteq I$。则从任意 $x_0\in I$ 出发，迭代 $x_{n+1}=f(x_n)$ 收敛到唯一的不动点。
+\end{theorem}
+\begin{proof}[证明思路]
+先证 $\{x_n\}$ 是柯西列：$|x_{n+1}-x_n|\le q|x_n-x_{n-1}|\le\cdots\le q^n|x_1-x_0|$，于是对 $m>n$，
+\[
+|x_m-x_n|\le\sum_{i=n}^{m-1}|x_{i+1}-x_i|
+\le(q^n+\cdots+q^{m-1})|x_1-x_0|\le\frac{q^n}{1-q}|x_1-x_0|\to0.
+\]
+由实数完备性，$x_n\to x^*$。再由 $f$ 连续，$x^*=f(x^*)$。唯一性：若 $x^*,y^*$ 都是不动点，则 $|x^*-y^*|=|f(x^*)-f(y^*)|\le q|x^*-y^*|$，因 $q<1$ 只能 $x^*=y^*$。
+\end{proof}
+
+\begin{tip}[迭代在竞赛里的样子]
+真正的竞赛题很少让你算迭代极限，而是问“迭代多少步以后会怎样”。典型形态是第二部分第 4 章的幂塔：指数巨大，但余数只有 $m$ 种，所以关键在于\textbf{证明多少次迭代以后进入周期}，而不是求出极限。第五部分的形式幂级数会把这个想法推到“无穷次迭代的和”。
+\end{tip}
+
+\section{分层例题与解析}
+\begin{problem}{例 1：单调性搬不等式}
+设 $f(x)=x^3+x$。解不等式 $f(2x-1)>f(x+3)$。
+\end{problem}
+\hint $f$ 是否严格递增？递增就可以把 $f$ 去掉。
+
+\sol $f$ 严格递增（$x_1<x_2$ 时 $x_2^3-x_1^3=(x_2-x_1)(x_2^2+x_1x_2+x_1^2)>0$，且 $x_2-x_1>0$）。于是
+\[
+2x-1>x+3\iff x>4.
+\]
+解集为 $(4,+\infty)$。
+
+\begin{problem}{例 2：二次函数的最值}
+求 $f(x)=x^2-6x+11$ 在 $[0,4]$ 上的最大值与最小值。
+\end{problem}
+\hint 配方找顶点，再看顶点是否在区间内。
+
+\sol $f(x)=(x-3)^2+2$，顶点 $x=3\in[0,4]$，故最小值为 $f(3)=2$。最大值在离顶点最远的端点处取得：$|0-3|=3>|4-3|=1$，故最大值为 $f(0)=11$。
+
+\begin{problem}{例 3：复合与定义域}
+设 $f(x)=\dfrac1{x-1}$，$g(x)=x^2$。求 $(f\circ g)(x)$ 与 $(g\circ f)(x)$ 及其定义域。
+\end{problem}
+\hint 逐层代入；定义域要逐层检查。
+
+\sol $(f\circ g)(x)=f(x^2)=\dfrac1{x^2-1}$，定义域 $x\ne\pm1$。$(g\circ f)(x)=g\!\left(\dfrac1{x-1}\right)=\dfrac1{(x-1)^2}$，定义域 $x\ne1$。两者不同，\textbf{复合不可交换}。
+
+\begin{problem}{例 4：一个简单迭代}
+设 $x_0=1$，$x_{n+1}=\dfrac{x_n}{2}+1$。证明 $x_n\to2$。
+\end{problem}
+\hint 算 $|x_{n+1}-2|$ 与 $|x_n-2|$ 的关系。
+
+\sol $x_{n+1}-2=\dfrac{x_n}{2}-1=\dfrac{x_n-2}{2}$，故 $|x_{n+1}-2|=\dfrac12|x_n-2|$，于是 $|x_n-2|=2^{-n}|x_0-2|=2^{-n}\to0$，即 $x_n\to2$。这正是压缩映射的最简单例子。
+
+\chapter{数列、求和与数学归纳法}
+\begin{chapterintro}[章节导读]
+数列是“定义在正整数上的函数”，也是算法分析的基本语言：一个循环跑多少轮、一次递归分几层，答案都是一个数列。本章整理等差数列、等比数列、常用求和方法与一阶线性递推，并把数学归纳法作为证明数列结论的标准工具。
+\end{chapterintro}
+
+\section{等差数列与等比数列}
+\begin{definition}[等差数列]
+若 $a_{n+1}-a_n=d$（常数），则 $\{a_n\}$ 是等差数列，
+\[
+a_n=a_1+(n-1)d,\qquad S_n=\frac{n(a_1+a_n)}2=\frac{n(2a_1+(n-1)d)}2.
+\]
+\end{definition}
+\begin{definition}[等比数列]
+若 $\dfrac{a_{n+1}}{a_n}=q$（常数，$q\ne0$），则 $\{a_n\}$ 是等比数列，
+\[
+a_n=a_1q^{n-1},\qquad
+S_n=\begin{cases}
+\dfrac{a_1(1-q^n)}{1-q},&q\ne1,\\[2mm]
+na_1,&q=1.
+\end{cases}
+\]
+\end{definition}
+\begin{proof}[等比数列求和公式的推导]
+设 $S_n=a_1+a_1q+\cdots+a_1q^{n-1}$，则
+\[
+qS_n=a_1q+a_1q^2+\cdots+a_1q^n=S_n+a_1q^n-a_1,
+\]
+移项得 $(q-1)S_n=a_1(q^n-1)$。$q\ne1$ 时即得公式；$q=1$ 时显然 $S_n=na_1$。
+\end{proof}
+
+\begin{pitfall}[公比为 1 要单独讨论]
+公式 $\dfrac{a_1(1-q^n)}{1-q}$ 在 $q=1$ 时分母为零。写代码时若公比可能为 $1$（例如递推 $a_{n+1}=a_n$），必须特判。这个“分母可能为零”的模式在第二部分（求逆元要先查 $\gcd$）会以更严重的形式出现。
+\end{pitfall}
+
+\section{常用求和方法}
+\subsection{分组求和}
+把和式中的项按来源分组，每组分别用公式。例如 $\sum_{k=1}^n(k^2+2k)$ 分成 $\sum k^2$ 与 $2\sum k$。
+
+\subsection{错位相减（差分抵消）}
+形如 $\sum a_kb_k$，其中 $\{a_k\}$ 等差、$\{b_k\}$ 等比。推导：
+\[
+S_n=\sum_{k=1}^n a_kb_k,\qquad qS_n=\sum_{k=1}^n a_kb_{k+1},
+\]
+两式相减，右边的项两两错位相消。
+
+\subsection{裂项相消}
+若 $a_k=f(k)-f(k+1)$，则 $\sum_{k=1}^n a_k=f(1)-f(n+1)$。最常见的形式：
+\[
+\frac1{k(k+1)}=\frac1k-\frac1{k+1},\qquad
+\frac1{\sqrt{k+1}+\sqrt k}=\sqrt{k+1}-\sqrt k.
+\]
+
+\begin{teach}[裂项的三个步骤]
+\begin{enumerate}
+\item 猜分母（或根式）的差分结构；
+\item 待定系数：设 $\dfrac{1}{k(k+2)}=\dfrac{A}{k}+\dfrac{B}{k+2}$，解得 $A=\dfrac12$、$B=-\dfrac12$；
+\item 写出来验证前两项与最后两项是否抵消。
+\end{enumerate}
+要求学生每步都写“抵消后剩下 $f(1)-f(n+1)$”，而不是直接写答案。
+\end{teach}
+
+\subsection{递推求和的识别}
+看到 $\sum_{k=1}^n f(k)$ 而 $f$ 有递推关系（例如 $f(k)=f(k-1)+\cdots$），优先尝试\textbf{裂项}或\textbf{引出一个辅助和式}。第三部分第 4 章的经典数列大量使用这一招。
+
+\section{一阶线性递推}
+\begin{theorem}[一阶线性递推的通项]
+设 $x_{n+1}=ax_n+b$（$a\ne0$），$x_0$ 给定。若 $a\ne1$，令 $c=\dfrac{b}{1-a}$，则
+\[
+x_n-c=a^n(x_0-c),
+\]
+即 $x_n=c+a^n(x_0-c)$。若 $a=1$，则 $x_n=x_0+nb$。
+\end{theorem}
+\begin{proof}
+设 $y_n=x_n-c$，则
+\[
+y_{n+1}=x_{n+1}-c=ax_n+b-c=a(y_n+c)+b-c=ay_n+(ac+b-c).
+\]
+取 $c=\dfrac{b}{1-a}$ 即使 $ac+b-c=0$，于是 $y_{n+1}=ay_n$，即 $y_n=a^ny_0$。代回即得。
+\end{proof}
+
+\begin{tip}[不动点换元的通用性]
+上面令 $c=\dfrac{b}{1-a}$，$c$ 正是不动点方程 $x=ax+b$ 的解。\textbf{“减去不动点把线性递推变成等比数列”是一个通用技巧}：凡是形如 $x_{n+1}=f(x_n)$ 且 $f$ 是线性分式变换的，都可以先找不动点再换元。第四部分概率里的很多期望递推也是这个形状。
+\end{tip}
+
+\section{数学归纳法的应用}
+归纳法在数列里的标准用法是“猜通项—证通例”。操作流程：
+\begin{enumerate}
+\item 写出前若干项，观察规律，猜出 $a_n$ 的表达式；
+\item 用归纳法证明：$n=1$ 验证；假设 $a_k$ 已知，从递推式推出 $a_{k+1}$ 的表达式。
+\end{enumerate}
+
+\begin{problem}{统一练习：斐波那契数列}
+设 $F_1=F_2=1$，$F_{n+2}=F_{n+1}+F_n$。证明 $F_1+F_2+\cdots+F_n=F_{n+2}-1$。
+\end{problem}
+\hint 对 $n$ 归纳；归纳步只需要用递推式，不需要通项。
+
+\sol $n=1$ 时 $F_1=1=F_3-1$，成立。设结论对 $n$ 成立，则
+\[
+F_1+\cdots+F_n+F_{n+1}=F_{n+2}-1+F_{n+1}=F_{n+3}-1,
+\]
+即结论对 $n+1$ 成立。归纳完成。注意这里完全不需要 $F_n$ 的通项公式——\textbf{能用递推就不要用通项}。
+
+\section{分层例题与解析}
+\begin{problem}{例 1：错位相减}
+求 $S_n=1\cdot2+2\cdot2^2+3\cdot2^3+\cdots+n2^n$。
+\end{problem}
+\hint 写 $S_n$ 与 $2S_n$，相减。
+
+\sol
+\[
+S_n=\sum_{k=1}^n k2^k,\qquad
+2S_n=\sum_{k=1}^n k2^{k+1}=\sum_{k=2}^{n+1}(k-1)2^k.
+\]
+相减：
+\[
+S_n-2S_n=\sum_{k=1}^n k2^k-\sum_{k=2}^{n+1}(k-1)2^k
+=2+\sum_{k=2}^{n}(k-(k-1))2^k-(n)2^{n+1}
+=2+(2^2+\cdots+2^n)-n2^{n+1}.
+\]
+于是 $-S_n=2+2^{n+1}-4-n2^{n+1}=(1-n)2^{n+1}-2$，故
+\[
+S_n=(n-1)2^{n+1}+2.
+\]
+验算 $n=1$：$1\cdot2=2=(1-1)2^2+2$ ✓；$n=2$：$2+8=10=(2-1)2^3+2$ ✓。
+
+\begin{problem}{例 2：裂项}
+求 $\sum_{k=1}^n\dfrac1{k(k+2)}$。
+\end{problem}
+\hint 待定系数拆成两个分式之差。
+
+\sol 设 $\dfrac1{k(k+2)}=\dfrac A{k}+\dfrac B{k+2}$，通分得 $1=A(k+2)+Bk=(A+B)k+2A$，故 $A=\dfrac12$、$B=-\dfrac12$。于是
+\[
+\sum_{k=1}^n\frac1{k(k+2)}
+=\frac12\sum_{k=1}^n\left(\frac1k-\frac1{k+2}\right)
+=\frac12\left(1+\frac12-\frac1{n+1}-\frac1{n+2}\right).
+\]
+注意\textbf{剩下的是前两项与后两项}，不是首尾各一项——这是裂项时最容易错的地方。
+
+\begin{problem}{例 3：一阶线性递推}
+设 $a_1=3$，$a_{n+1}=2a_n+1$。求 $a_n$。
+\end{problem}
+\hint 找不动点。
+
+\sol 不动点方程 $x=2x+1$ 给出 $x=-1$。令 $b_n=a_n+1$，则
+\[
+b_{n+1}=a_{n+1}+1=2a_n+2=2(a_n+1)=2b_n,
+\]
+$b_1=4$，故 $b_n=4\cdot2^{n-1}=2^{n+1}$，$a_n=2^{n+1}-1$。验算 $a_1=2^2-1=3$ ✓，$a_2=2\cdot3+1=7=2^3-1$ ✓。
+
+\begin{problem}{例 4：归纳法证明不等式}
+证明：对一切正整数 $n$，$2^n\ge n+1$。
+\end{problem}
+\hint 对 $n$ 归纳；归纳步用 $2^{n+1}=2\cdot2^n$。
+
+\sol $n=1$ 时 $2\ge2$ ✓。设 $2^n\ge n+1$，则
+\[
+2^{n+1}=2\cdot2^n\ge2(n+1)=2n+2\ge n+2,
+\]
+最后一步因 $n\ge1$。归纳完成。
+
+\begin{teach}[数列章的离堂检查]
+给一道“求和 $\sum_{k=1}^{n}\dfrac{k}{(k+1)!}$”的小题（提示：$\dfrac{k}{(k+1)!}=\dfrac1{k!}-\dfrac1{(k+1)!}$），要求写出裂项的两步与最终剩余项。做不出就回到裂项小节重做例 2。
+\end{teach}
+
+\chapter{复数与平面向量初步}
+\begin{chapterintro}[章节导读]
+复数在算法竞赛里出场不多，但它是两条重要路线的入口：一是旋转与几何（复数乘法就是旋转加缩放），二是单位根与分治（第五部分的快速傅里叶变换全靠 $n$ 次单位根）。本章只讲竞赛用得着的那一部分：平面向量、复数四则运算、单位根。
+\end{chapterintro}
+
+\section{平面向量}
+\begin{definition}[平面向量]
+平面向量是有大小和方向的量，记作 $\vec v=(x,y)$ 或粗体 $\mathbf v$。两个向量相等当且仅当它们的分量分别相等。
+\end{definition}
+运算：
+\[
+\mathbf u+\mathbf v=(u_1+v_1,u_2+v_2),\qquad
+\lambda\mathbf v=(\lambda v_1,\lambda v_2),
+\]
+\[
+\mathbf u\cdot\mathbf v=u_1v_1+u_2v_2=|\mathbf u||\mathbf v|\cos\theta,
+\]
+其中 $\theta$ 是两向量夹角。由第二式得两条常用结论：
+\[
+\mathbf u\perp\mathbf v\iff \mathbf u\cdot\mathbf v=0,\qquad
+\cos\theta=\frac{\mathbf u\cdot\mathbf v}{|\mathbf u||\mathbf v|}.
+\]
+\textbf{点积为 0 是判定垂直的最快方法}，在计算几何题里比斜率比较可靠（斜率在竖直时会爆炸）。
+
+\section{复数及其运算}
+\begin{definition}[复数]
+形如 $z=a+b\mathrm i$ 的数叫复数，其中 $a,b\in\R$，$\mathrm i^2=-1$。$a$ 叫实部，$b$ 叫虚部。$\overline z=a-b\mathrm i$ 叫共轭复数，$|z|=\sqrt{a^2+b^2}$ 叫模。
+\end{definition}
+四则运算按 $\mathrm i^2=-1$ 展开：
+\[
+(a+b\mathrm i)+(c+d\mathrm i)=(a+c)+(b+d)\mathrm i,
+\]
+\[
+(a+b\mathrm i)(c+d\mathrm i)=(ac-bd)+(ad+bc)\mathrm i.
+\]
+共轭的两条性质：
+\[
+z\overline z=|z|^2,\qquad \overline{z+w}=\overline z+\overline w,\qquad \overline{zw}=\overline z\,\overline w.
+\]
+由第一条得到\textbf{除法的标准做法}——分子分母同乘分母的共轭：
+\[
+\frac{z_1}{z_2}=\frac{z_1\overline{z_2}}{|z_2|^2}\quad(z_2\ne0).
+\]
+
+\begin{pitfall}[$|z_1+z_2|$ 不等于 $|z_1|+|z_2|$]
+复数也有三角不等式：$|z_1+z_2|\le|z_1|+|z_2|$，等号仅当两复数同向（辐角相同）时成立。把它当成等式是最常见的错误。
+\end{pitfall}
+
+\section{复数的几何意义与单位根}
+把 $z=a+b\mathrm i$ 看成平面上的点 $(a,b)$，则
+\[
+z=r(\cos\theta+\mathrm i\sin\theta),\qquad r=|z|,\ \theta=\arg z,
+\]
+这叫复数的\textbf{三角形式}。两个复数相乘，模相乘、辐角相加：
+\[
+r_1(\cos\theta_1+\mathrm i\sin\theta_1)\cdot r_2(\cos\theta_2+\mathrm i\sin\theta_2)
+=r_1r_2\bigl(\cos(\theta_1+\theta_2)+\mathrm i(\theta_1+\theta_2)\bigr).
+\]
+于是\textbf{乘以一个模为 $1$ 的复数就是一次旋转}——这是复数在几何题里最有用的性质。
+
+\begin{definition}[$n$ 次单位根]
+满足 $z^n=1$ 的复数叫 $n$ 次单位根。它们恰好是
+\[
+\omega_k=\mathrm e^{2\pi\mathrm ik/n}=\cos\frac{2\pi k}{n}+\mathrm i\sin\frac{2\pi k}{n},
+\qquad k=0,1,\ldots,n-1.
+\]
+\end{definition}
+\begin{theorem}[单位根的两条基本性质]
+设 $\omega=\mathrm e^{2\pi\mathrm i/n}$，则
+\[
+1+\omega+\omega^2+\cdots+\omega^{n-1}=0\quad(n\ge2),
+\]
+且 $\omega^k\ne1$ 对 $1\le k<n$ 成立（即 $\omega$ 的阶恰为 $n$）。
+\end{theorem}
+\begin{proof}
+第一条：$(\omega^n-1)=(\omega-1)(1+\omega+\cdots+\omega^{n-1})$，而 $\omega^n=1$ 且 $\omega\ne1$，故第二个因子为 $0$。这条证明正是第二部分第 2 章“等比数列求和”的直接应用。
+
+第二条：若 $\omega^k=1$ 且 $1\le k<n$，则 $\cos\dfrac{2\pi k}{n}=1$，即 $\dfrac{2\pi k}{n}$ 是 $2\pi$ 的倍数，于是 $n\mid k$，与 $1\le k<n$ 矛盾。
+\end{proof}
+
+\begin{tip}[单位根为什么重要]
+第五部分的多项式乘法需要“把两个次数为 $n$ 的多项式相乘从 $O(n^2)$ 降到 $O(n\log n)$”，核心就是取 $2n$ 次单位根作为求值点：单位根处求值有大量重复结构，可以分治。第二部分第 4 章讲“阶”的时候也会再用到 $\omega$ 的阶是 $n$ 这一事实。
+\end{tip}
+
+\section{分层例题与解析}
+\begin{problem}{例 1：复数运算}
+计算 $(1+\mathrm i)^2$ 与 $\dfrac{1+\mathrm i}{1-\mathrm i}$。
+\end{problem}
+\hint 直接展开；除法用共轭。
+
+\sol $(1+\mathrm i)^2=1+2\mathrm i+\mathrm i^2=2\mathrm i$。又
+\[
+\frac{1+\mathrm i}{1-\mathrm i}=\frac{(1+\mathrm i)^2}{(1-\mathrm i)(1+\mathrm i)}=\frac{2\mathrm i}{2}=\mathrm i.
+\]
+注意 $\dfrac{1+\mathrm i}{1-\mathrm i}=\mathrm i$ 意味着“乘以 $\mathrm i$ 就是旋转 $90^\circ$”。
+
+\begin{problem}{例 2：单位根求和}
+设 $\omega=\mathrm e^{2\pi\mathrm i/5}$，求 $1+\omega+\omega^2+\omega^3+\omega^4$。
+\end{problem}
+\hint 用定理中的求和公式。
+
+\sol 由定理，直接得 $0$。
+
+\begin{problem}{例 3：旋转}
+把点 $(1,0)$ 绕原点逆时针旋转 $60^\circ$，求新坐标。
+\end{problem}
+\hint 旋转 $60^\circ$ 就是乘以 $\cos60^\circ+\mathrm i\sin60^\circ$。
+
+\sol 乘以 $\dfrac12+\dfrac{\sqrt3}{2}\mathrm i$，得
+\[
+1\cdot\left(\frac12+\frac{\sqrt3}{2}\mathrm i\right)=\frac12+\frac{\sqrt3}{2}\mathrm i,
+\]
+即新坐标为 $\left(\dfrac12,\dfrac{\sqrt3}{2}\right)$。
+
+\begin{problem}{例 4：模长计算}
+设 $|z|=2$，求 $|z+\overline z|$ 的最大值。
+\end{problem}
+\hint 设 $z=a+b\mathrm i$，则 $z+\overline z=2a$。
+
+\sol $z+\overline z=2a=2\operatorname{Re}(z)$，而 $|a|\le|z|=2$，故 $|z+\overline z|=2|a|\le4$。最大值 $4$ 在 $z=\pm2$ 时取得。
+
+\begin{teach}[复数章的取舍建议]
+如果课时紧张，本章可以只讲第 1、2 节（向量点积与复数四则运算），把单位根留给第五部分讲快速傅里叶变换时再引入。但要注意：第二部分第 4 章讲“原根”时用的是完全不同的乘法结构（模 $m$ 的整数乘法），不要与这里的单位根混淆——一个是“旋转”，一个是“模幂周期”。
+\end{teach}
